@@ -34,12 +34,6 @@ const App = () => {
   };
 
  // Determine if hooksManagement is None (to enable/disable state management and middleware)
- //const isHooksNone = hooksManagement === 'None';
-  
- // If hooks are selected, set state and middleware to None and disable them
- // isStateManagementDisabled = hooksManagement !== 'None';
- //const isMiddlewareDisabled = hooksManagement !== 'None';
-
  const isHooksNone = hooksManagement === 'None';
  const isStateManagementDisabled = !isHooksNone;
  const isMiddlewareDisabled = !isHooksNone;
@@ -76,7 +70,6 @@ const App = () => {
             <label className="font-medium text-gray-700 mb-2">Types of Hooks</label>
             <select
               value={hooksManagement}
-//onChange={(e) => setHooksManagement(e.target.value)}
               onChange={handleHooksChange}
               className="border border-gray-300 rounded-md p-2"
             >
