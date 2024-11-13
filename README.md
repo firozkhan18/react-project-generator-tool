@@ -86,17 +86,11 @@ The backend handles the logic for generating the React project based on user inp
 
 The frontend React app allows users to select the configuration options (React version, hooks, state management, middleware, CSS framework) and submit the request to generate the project.
 
-##### a. **Create the React Project**
-1. **Create a React app** (if you haven’t already):
-   ```bash
-   npx create-react-app react-project-generator
-   cd react-project-generator
-   ```
-2. **Install axios** to make HTTP requests to the backend:
+1. **Install axios** to make HTTP requests to the backend:
    ```bash
    npm install axios
    ```
-3. Replace the contents of `src/App.js` with the React code you provided (the frontend code).
+2. Replace the contents of `src/App.js` with the React code you provided (the frontend code).
 
 ##### b. **Update the Backend API URL**
 - Make sure that the API URL in the React code points to the correct backend:
