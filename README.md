@@ -128,9 +128,16 @@ Once both the frontend (React app) and backend (Express server) are running, fol
 
 2. **Configure Your React Project:**
    - **Select React Version:** Choose between `React 18` or `React 17`.
+     ![Desktop Screenshot](images/none-all.GIF)
    - **Choose Hooks Management:** Select `useState`, `useEffect`, or `None`.
+     ![Desktop Screenshot](images/hooks.GIF)
+     ![Desktop Screenshot](images/useEffect.GIF)
    - **Choose State Management:** Choose `Redux`, `Context API`, or `None` (disabled if `None` is selected for hooks).
+     ![Desktop Screenshot](images/context-api.GIF)
+     ![Desktop Screenshot](images/context-api-2.GIF)
    - **Choose Middleware:** Choose `Redux-Thunk`, `Redux-Saga`, or `None` (disabled if `None` is selected for hooks).
+     ![Desktop Screenshot](images/redux-saga.GIF)
+     ![Desktop Screenshot](images/redux-thunk.GIF)
    - **Choose CSS Framework:** Choose `Tailwind`, `Bootstrap`, or `None`.
 
 3. **Generate the Project:**
