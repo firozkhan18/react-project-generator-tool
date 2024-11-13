@@ -76,7 +76,8 @@ The backend handles the logic for generating the React project based on user inp
 ##### b. **Run the Backend Server**
 - After setting up `server.js`, run the backend server:
   ```bash
-  node server.js
+  D:\react-project-initializer>cd react-project-generator
+  D:\react-project-initializer\react-project-generator>node server.js
   ```
 - This will start the server on port `5000` (or any other port specified in the code).
 - Make sure the backend is running and listening on `http://localhost:5000`.
@@ -113,7 +114,7 @@ The frontend React app allows users to select the configuration options (React v
 ##### c. **Run the React Frontend**
 - Start the frontend app:
    ```bash
-   npm start
+   D:\react-project-initializer>npm start
    ```
 - This will run the frontend on `http://localhost:3000` by default.
 - Open `http://localhost:3000` in your browser to use the React Project Generator tool.
