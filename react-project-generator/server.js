@@ -10,7 +10,7 @@ const port = 5000;
 
 // Use CORS middleware to allow requests from specific origin
 app.use(cors({
-  origin: 'http://localhost:3001', // Allow requests from frontend
+  origin: 'http://localhost:3000', // Allow requests from frontend
 }));
 
 app.use(express.json());
