@@ -550,6 +550,185 @@ const App = () => {
 };
 ```
 
+In React, passing data from a parent component to a child component is done via **props**. The parent component passes the data as props to the child, which the child can then use within its own render function.
+
+Here's a simple example to demonstrate how data flows from parent to child.
+
+### Example of Passing Data from Parent to Child
+
+#### 1. **Parent Component:**
+
+The parent component defines the data it wants to send to the child and passes it as a prop.
+
+```jsx
+import React from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+  const parentData = "Hello from Parent!"; // This is the data to pass to the child
+
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <ChildComponent dataFromParent={parentData} />
+    </div>
+  );
+}
+
+export default ParentComponent;
+```
+
+#### 2. **Child Component:**
+
+The child component receives the prop and uses it within its own render method.
+
+```jsx
+import React from 'react';
+
+function ChildComponent({ dataFromParent }) {
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <p>{dataFromParent}</p> {/* Display the data received from the parent */}
+    </div>
+  );
+}
+
+export default ChildComponent;
+```
+
+### Explanation:
+
+1. **Parent Component**:
+   - The parent defines a piece of state or variable, in this case `parentData`.
+   - This data is passed to the child component as a prop named `dataFromParent`.
+
+2. **Child Component**:
+   - The child component receives `dataFromParent` as a prop.
+   - The child can use this data within its render method (in the example, it displays it inside a `<p>` tag).
+
+### Key Concepts:
+- **Props**: Props are the mechanism by which data is passed from a parent component to a child component. In the example above, `dataFromParent` is a prop that the parent provides to the child.
+- **Read-Only**: Props are read-only. The child cannot modify the props it receives directly. If the child needs to modify data, it would typically use an event handler to notify the parent, who can then update the state and pass new props down to the child.
+
+### Example with Dynamic Data (State in Parent):
+
+You can also pass dynamic data (state) from parent to child. Here's an example where the parent component has state that it passes to the child.
+
+```jsx
+import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+  const [parentData, setParentData] = useState("Initial data from parent");
+
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <button onClick={() => setParentData("Updated data from parent")}>
+        Update Data
+      </button>
+      <ChildComponent dataFromParent={parentData} />
+    </div>
+  );
+}
+
+export default ParentComponent;
+```
+
+In this case:
+- The `parentData` is stored in the parent's state using `useState`.
+- The parent can update this state (e.g., via a button click), and the updated data will automatically be passed down to the child as a prop.
+
+### Key Points:
+- **Props are read-only**: The child can use the data but cannot directly change it. If the child needs to change the data, it must communicate this to the parent, which can then modify its state and pass the updated data back to the child.
+- **One-way data flow**: React follows a one-way data flow, meaning data is passed down from parent to child but not the other way around.
+
+This approach is the fundamental way React handles communication from parent to child components.
+
+In React, passing data from a child component to a parent component is done through **callback functions** (also known as event handlers) that are passed down as props to the child component. The child component can then invoke the callback function, which triggers an update in the parent component.
+
+### Example of Passing Data from Child to Parent
+
+Let's say we have a parent component that wants to receive some data from its child component.
+
+#### 1. **Parent Component:**
+
+The parent component defines a function to handle the data and then passes it to the child as a prop.
+
+```jsx
+import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+  const [childData, setChildData] = useState("");
+
+  // Callback function to handle data from the child
+  const handleDataFromChild = (data) => {
+    setChildData(data);  // Update state with data received from child
+  };
+
+  return (
+    <div>
+      <h1>Data from Child: {childData}</h1>
+      <ChildComponent onSendData={handleDataFromChild} />
+    </div>
+  );
+}
+
+export default ParentComponent;
+```
+
+#### 2. **Child Component:**
+
+The child component receives the callback function via props and calls it when it wants to send data back to the parent.
+
+```jsx
+import React, { useState } from 'react';
+
+function ChildComponent({ onSendData }) {
+  const [inputData, setInputData] = useState("");
+
+  const handleInputChange = (e) => {
+    setInputData(e.target.value);
+  };
+
+  const sendDataToParent = () => {
+    onSendData(inputData);  // Call the parent's callback function with the input data
+  };
+
+  return (
+    <div>
+      <input 
+        type="text" 
+        value={inputData} 
+        onChange={handleInputChange} 
+        placeholder="Enter some data"
+      />
+      <button onClick={sendDataToParent}>Send Data to Parent</button>
+    </div>
+  );
+}
+
+export default ChildComponent;
+```
+
+### Explanation:
+
+1. **Parent Component**:
+   - The parent defines a function `handleDataFromChild` to update its state with data from the child.
+   - It passes this function as a prop to the child, named `onSendData`.
+
+2. **Child Component**:
+   - The child receives the `onSendData` prop and uses it to send data to the parent.
+   - When the user types something in the input field and clicks the "Send Data to Parent" button, it calls `onSendData(inputData)` with the current value of the input.
+
+### Key Concepts:
+- **Callback Prop**: The parent passes a function down to the child. The child invokes this function when it needs to send data back up to the parent.
+- **State**: The parent typically holds the state that is updated when data is received from the child.
+
+This pattern allows the parent component to control the flow of data while letting the child component trigger changes in the parent's state.
+
 ---
 
 ### 10. ReactJS - State
