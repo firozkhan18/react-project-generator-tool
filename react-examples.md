@@ -25,16 +25,16 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 17    | ReactJS - List Rendering                                                | [ReactJS - List Rendering](#17-reactjs---list-rendering)                  |
 | 18    | ReactJS - Lists and Keys                                                | [ReactJS - Lists and Keys](#18-reactjs---lists-and-keys)                  |
 | 19    | ReactJS - Index as Key Anti-pattern                                     | [ReactJS - Index as Key Anti-pattern](#19-reactjs---index-as-key-anti-pattern) |
-| 20    | ReactJS - Styling and CSS Basics                                        | [ReactJS - Styling and CSS Basics](#reactjs---styling-and-css-basics)  |
-| 21    | ReactJS - Basics of Form Handling                                       | [ReactJS - Basics of Form Handling](#reactjs---basics-of-form-handling) |
-| 22    | ReactJS - Component Lifecycle Methods                                   | [ReactJS - Component Lifecycle Methods](#reactjs---component-lifecycle-methods) |
-| 23    | ReactJS - Component Mounting Lifecycle Methods                         | [ReactJS - Component Mounting Lifecycle Methods](#reactjs---component-mounting-lifecycle-methods) |
-| 24    | ReactJS - Component Updating Lifecycle Methods                         | [ReactJS - Component Updating Lifecycle Methods](#reactjs---component-updating-lifecycle-methods) |
-| 25    | ReactJS - Fragments                                                     | [ReactJS - Fragments](#reactjs---fragments)                            |
-| 26    | ReactJS - Pure Components                                               | [ReactJS - Pure Components](#reactjs---pure-components)                |
-| 27    | ReactJS - memo                                                          | [ReactJS - memo](#reactjs---memo)                                      |
-| 28    | ReactJS - Refs                                                           | [ReactJS - Refs](#reactjs---refs)                                       |
-| 29    | ReactJS - Refs with Class Components                                    | [ReactJS - Refs with Class Components](#reactjs---refs-with-class-components) |
+| 20    | ReactJS - Styling and CSS Basics                                        | [ReactJS - Styling and CSS Basics](#20-reactjs---styling-and-css-basics)  |
+| 21    | ReactJS - Basics of Form Handling                                       | [ReactJS - Basics of Form Handling](#21-reactjs---basics-of-form-handling) |
+| 22    | ReactJS - Component Lifecycle Methods                                   | [ReactJS - Component Lifecycle Methods](#22-reactjs---component-lifecycle-methods) |
+| 23    | ReactJS - Component Mounting Lifecycle Methods                         | [ReactJS - Component Mounting Lifecycle Methods](#23-reactjs---component-mounting-lifecycle-methods) |
+| 24    | ReactJS - Component Updating Lifecycle Methods                         | [ReactJS - Component Updating Lifecycle Methods](#24-reactjs---component-updating-lifecycle-methods) |
+| 25    | ReactJS - Fragments                                                     | [ReactJS - Fragments](#25-reactjs---fragments)                            |
+| 26    | ReactJS - Pure Components                                               | [ReactJS - Pure Components](#26-reactjs---pure-components)                |
+| 27    | ReactJS - memo                                                          | [ReactJS - memo](#27-reactjs---memo)                                      |
+| 28    | ReactJS - Refs                                                           | [ReactJS - Refs](#28-reactjs---refs)                                       |
+| 29    | ReactJS - Refs with Class Components                                    | [ReactJS - Refs with Class Components](#29-reactjs---refs-with-class-components) |
 | 30    | ReactJS - Forwarding Refs                                               | [ReactJS - Forwarding Refs](#reactjs---forwarding-refs)                |
 | 31    | ReactJS - Portals                                                       | [ReactJS - Portals](#reactjs---portals)                                |
 | 32    | ReactJS - Error Boundary                                                | [ReactJS - Error Boundary](#reactjs---error-boundary)                  |
@@ -543,7 +543,7 @@ export default ButtonClick;
 ---
 
 
-### 14. ReactJS - 14 - Binding Event Handlers
+### 14. ReactJS - Binding Event Handlers
 
 - **Concepts Covered**:
   - Binding event handlers in class components.
@@ -588,7 +588,7 @@ Alternatively, binding can also be done using an arrow function:
 
 ---
 
-### 15. ReactJS - 15 - Methods as Props
+### 15. ReactJS - Methods as Props
 
 - **Concepts Covered**:
   - Passing methods as props from parent to child components.
@@ -616,7 +616,7 @@ export default App;
 
 ---
 
-### 16. ReactJS - 16 - Conditional Rendering
+### 16. ReactJS - Conditional Rendering
 
 - **Concepts Covered**:
   - Conditionally rendering components using JavaScript expressions.
@@ -672,7 +672,7 @@ export default List;
 
 ---
 
-### 18. ReactJS - 18 - Lists and Keys
+### 18. ReactJS - Lists and Keys
 
 - **Concepts Covered**:
   - Using `key` prop when rendering lists to optimize performance and ensure proper re-rendering.
@@ -698,7 +698,7 @@ export default List;
 
 ---
 
-### 19. ReactJS - 19 - Index as Key Anti-pattern
+### 19. ReactJS - Index as Key Anti-pattern
 
 - **Concepts Covered**:
   - Why using the index as the key can be problematic, especially with dynamic lists.
@@ -742,7 +742,7 @@ const List = () => {
 
 ---
 
-### 20. ReactJS - 20 - Styling and CSS Basics
+### 20. ReactJS - Styling and CSS Basics
 
 - **Concepts Covered**:
   - Different ways to style React components (inline styles, external CSS, CSS modules).
@@ -803,7 +803,7 @@ export default App;
 
 ---
 
-### 21. ReactJS - 21 - Basics of Form Handling
+### 21. ReactJS - Basics of Form Handling
 
 - **Concepts Covered**:
   - Handling forms in React with controlled components.
@@ -834,7 +834,7 @@ export default Form;
 
 ---
 
-### 22. ReactJS - 22 - Component Lifecycle Methods
+### 22. ReactJS - Component Lifecycle Methods
 
 - **Concepts Covered**:
   - Lifecycle methods such as `componentDidMount` and `componentDidUpdate` in class components.
@@ -862,7 +862,7 @@ export default DataFetcher;
 
 ---
 
-### 23. ReactJS - 23 - Component Mounting Lifecycle Methods
+### 23. ReactJS - Component Mounting Lifecycle Methods
 
 - **Concepts Covered**:
   - Mounting phase lifecycle methods: `constructor()`, `render()`, `componentDidMount()`.
@@ -893,7 +893,7 @@ export default App;
 
 ---
 
-### 24. ReactJS - 24 - Component Updating Lifecycle Methods
+### 24. ReactJS - Component Updating Lifecycle Methods
 
 - **Concepts Covered**:
   - Lifecycle methods for handling updates: `shouldComponentUpdate`, `componentDidUpdate`.
@@ -921,7 +921,7 @@ export default App;
 
 ---
 
-### 25. ReactJS - 25 - Fragments
+### 25. ReactJS - Fragments
 
 - **Concepts Covered**:
   - Using `React.Fragment` to group elements without adding extra DOM nodes.
