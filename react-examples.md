@@ -147,10 +147,35 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 
 ---
 
-
 Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution React tutorial series**:
 
 ---
+
+### Table of Contents
+
+1. [ReactJS - Introduction](#reactjs---introduction)
+2. [ReactJS - Hello World](#reactjs---hello-world)
+3. [ReactJS - Folder Structure](#reactjs---folder-structure)
+4. [ReactJS - Components](#reactjs---components)
+
+---
+
+### ReactJS - Introduction
+
+ReactJS is a JavaScript library used for building user interfaces. It allows developers to create reusable UI components.
+
+---
+
+### ReactJS - Hello World
+
+In this tutorial, we will create a simple "Hello World" app using ReactJS.
+
+---
+
+### ReactJS - Folder Structure
+
+The folder structure in React applications follows a specific pattern for better organization and maintainability.
+
 
 ### **1. ReactJS - Introduction**
 
