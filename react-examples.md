@@ -72,9 +72,7 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 57    | React Hooks - Fetching data with useEffect Part 3                       | [React Hooks - Fetching data with useEffect Part 3](#react-hooks-fetching-data-with-useeffect-part-3) |
 | 58    | React Hooks - useContext Hook Part 1                                     | [React Hooks - useContext Hook Part 1](#react-hooks-usecontext-hook-part-1) |
 | 59    | React Hooks - useContext Hook Part 2                                     | [React Hooks - useContext Hook Part 2](#react-hooks-usecontext-hook-part-2) |
-| 60    | React Hooks - useContext Hook Part 3                                     | [React Hooks - useContext Hook
-
- Part 3](#react-hooks-usecontext-hook-part-3) |
+| 60    | React Hooks - useContext Hook Part 3                                     | [React Hooks - useContext Hook Part 3](#react-hooks-usecontext-hook-part-3) |
 | 61    | React Hooks - useReducer Hook                                           | [React Hooks - useReducer Hook](#react-hooks-usereducer-hook)       |
 | 62    | React Hooks - useReducer (simple state & action)                        | [React Hooks - useReducer (simple state & action)](#react-hooks-usereducer-simple-state-action) |
 | 63    | React Hooks - useReducer (complex state & action)                       | [React Hooks - useReducer (complex state & action)](#react-hooks-usereducer-complex-state-action) |
