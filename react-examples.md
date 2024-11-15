@@ -15,9 +15,9 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#7-reactjs---hooks-update)                      |
 | 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#8-reactjs---jsx)                                        |
 | 9     | ReactJS - Props                                                         | [ReactJS - Props](#9-reactjs---props)                                    |
-| 10    | ReactJS - State                                                         | [ReactJS - State](#1-0-reactjs---state)                                    |
-| 11    | ReactJS - setState                                                      | [ReactJS - setState](#1-1reactjs---setstate)                              |
-| 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#reactjs---destructuring-props-and-state) |
+| 10    | ReactJS - State                                                         | [ReactJS - State](#10-reactjs---state)                                    |
+| 11    | ReactJS - setState                                                      | [ReactJS - setState](#11reactjs---setstate)                              |
+| 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#12-reactjs---destructuring-props-and-state) |
 | 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#13-reactjs---event-handling)                  |
 | 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs---binding-event-handlers)  |
 | 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#reactjs---methods-as-props)               |
