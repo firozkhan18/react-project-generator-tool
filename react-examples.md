@@ -7,10 +7,10 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
 | 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#1-reactjs---introduction)            |
-| 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#reactjs---hello-world)                        |
-| 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#reactjs---folder-structure)              |
-| 4     | ReactJS - Components                                                    | [ReactJS - Components](#reactjs---components)                          |
-| 5     | ReactJS - Functional Components                                         | [ReactJS - Functional Components](#reactjs---functional-components)    |
+| 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#2-reactjs---hello-world)                        |
+| 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#3-reactjs---folder-structure)              |
+| 4     | ReactJS - Components                                                    | [ReactJS - Components](#4-reactjs---components)                          |
+| 5     | ReactJS - Functional Components                                         | [ReactJS - Functional Components](#5-reactjs---functional-components)    |
 | 6     | ReactJS - Class Components                                              | [ReactJS - Class Components](#reactjs---class-components)              |
 | 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#reactjs---hooks-update)                      |
 | 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#reactjs---jsx)                                        |
