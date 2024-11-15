@@ -147,10 +147,6 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 
 ---
 
-Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution React tutorial series**:
-
----
-
 ### 1. ReactJS - Introduction
 
 - **Concepts Covered**:
