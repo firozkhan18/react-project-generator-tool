@@ -1,5 +1,219 @@
 ### Complete Setup for JMeter with Redis, InfluxDB, Grafana, and Docker
 
+This guide will walk you through the setup of Apache JMeter, Redis, InfluxDB, and Grafana with Docker for performance testing, metrics collection, and visualization.
+
+### Prerequisites
+- Docker and Docker Compose installed on your machine.
+- Basic understanding of JMeter, Redis, InfluxDB, and Grafana.
+
+### Steps:
+
+#### Step 1: Create a Docker Compose File for All Services
+
+We'll start by defining the Docker environment with `docker-compose.yml` that will bring up all necessary services:
+
+1. **Create a folder** for your project and navigate into it:
+
+   ```bash
+   mkdir jmeter-setup
+   cd jmeter-setup
+   ```
+
+2. **Create the `docker-compose.yml` file** inside this folder:
+
+   ```yaml
+   version: "3.8"
+
+   services:
+     # Redis service
+     redis:
+       image: redis:latest
+       container_name: redis
+       ports:
+         - "6379:6379"
+       networks:
+         - jmeter-network
+     
+     # InfluxDB service
+     influxdb:
+       image: influxdb:latest
+       container_name: influxdb
+       environment:
+         INFLUXDB_DB: jmeter
+         INFLUXDB_ADMIN_USER: admin
+         INFLUXDB_ADMIN_PASSWORD: adminpassword
+       ports:
+         - "8086:8086"
+       volumes:
+         - influxdb-storage:/var/lib/influxdb
+       networks:
+         - jmeter-network
+     
+     # Grafana service
+     grafana:
+       image: grafana/grafana:latest
+       container_name: grafana
+       environment:
+         GF_SECURITY_ADMIN_PASSWORD: admin
+       ports:
+         - "3000:3000"
+       networks:
+         - jmeter-network
+       depends_on:
+         - influxdb
+     
+     # JMeter service
+     jmeter:
+       image: justb4/jmeter:latest
+       container_name: jmeter
+       volumes:
+         - ./jmeter-scripts:/jmeter/scripts
+       entrypoint: "/bin/bash -c 'jmeter -n -t /jmeter/scripts/test_plan.jmx'"
+       networks:
+         - jmeter-network
+       depends_on:
+         - redis
+         - influxdb
+     
+   networks:
+     jmeter-network:
+       driver: bridge
+     
+   volumes:
+     influxdb-storage:
+   ```
+
+- **Redis** will be used as a cache or message broker, depending on your testing scenario.
+- **InfluxDB** will store time-series metrics from JMeter.
+- **Grafana** will visualize the data coming from InfluxDB.
+- **JMeter** will perform the load testing.
+
+#### Step 2: Prepare JMeter Test Plan and Scripts
+
+1. Create a **`jmeter-scripts`** folder in the same directory where your `docker-compose.yml` file is located.
+   
+   ```bash
+   mkdir jmeter-scripts
+   ```
+
+2. Inside the `jmeter-scripts` folder, create a simple JMeter test plan file (`test_plan.jmx`) that includes:
+
+   - A **Thread Group** for load generation.
+   - **Redis** as a target (if you're using Redis).
+   - **InfluxDB** configuration for collecting performance metrics.
+   
+   Here’s a sample snippet for the **InfluxDB Listener** in the JMeter test plan:
+   
+   ```xml
+   <influxdbListener>
+     <influxdbListener host="influxdb" port="8086" db="jmeter" username="admin" password="adminpassword" />
+   </influxdbListener>
+   ```
+
+   You can create this file using JMeter GUI or by writing it manually in XML format.
+
+3. Add more elements as needed (e.g., HTTP Request, assertions, etc.) based on your test scenario.
+
+#### Step 3: Run Docker Containers
+
+1. Navigate back to the root folder (where the `docker-compose.yml` file is located) and run the following command to start all the services:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   This will start all the services in the background. You can check the status of the containers using:
+
+   ```bash
+   docker-compose ps
+   ```
+
+#### Step 4: Access Grafana to View Metrics
+
+1. Once the containers are up and running, you can access **Grafana** on your browser at:
+
+   ```
+   http://localhost:3000
+   ```
+
+   - **Username**: `admin`
+   - **Password**: `admin`
+
+2. **Add InfluxDB as a Data Source** in Grafana:
+   - In the Grafana UI, go to **Configuration > Data Sources**.
+   - Select **InfluxDB**.
+   - Configure the data source with the following settings:
+     - **URL**: `http://influxdb:8086`
+     - **Database**: `jmeter`
+     - **User**: `admin`
+     - **Password**: `adminpassword`
+
+3. **Create Dashboards** in Grafana to visualize the metrics from InfluxDB:
+   - After connecting to InfluxDB, you can create a new dashboard and use the **InfluxDB** metrics to display graphs and tables.
+
+#### Step 5: Start JMeter Load Testing
+
+1. Once everything is set up, JMeter will automatically start executing the test plan (`test_plan.jmx`) that you placed in the `jmeter-scripts` folder when the container starts.
+2. JMeter will collect the performance metrics (e.g., response times, throughput) and store them in **InfluxDB**.
+
+#### Step 6: Monitor Results in Grafana
+
+1. In Grafana, after running the load tests, go to your dashboards to visualize the performance data from InfluxDB.
+2. You can create graphs for metrics like:
+   - Requests per second
+   - Response time (latency)
+   - Error rates
+
+#### Step 7: Stopping and Cleaning Up
+
+1. Once you are done with your testing, you can stop the Docker containers by running:
+
+   ```bash
+   docker-compose down
+   ```
+
+   This will stop and remove all containers.
+
+---
+
+### Optional Configuration and Tweaks
+
+1. **Custom JMeter Plugins**:
+   - If you need advanced listeners or reporting, you can modify the JMeter container to include additional JMeter plugins. For example, you can use the **JMeter Plugin Manager** to add plugins.
+
+2. **Persistent Data Storage**:
+   - You can persist data from **Redis** and **InfluxDB** by using volumes in Docker, as done in the `docker-compose.yml`.
+
+3. **Scaling JMeter Tests**:
+   - If you want to scale up the load test, you can modify the **JMeter container** in the `docker-compose.yml` to run multiple instances of JMeter.
+
+---
+
+### Troubleshooting
+
+- If Grafana doesn't display data, check that InfluxDB is receiving metrics from JMeter. You can query the InfluxDB container to check:
+  
+  ```bash
+  docker exec -it influxdb influx
+  ```
+
+  Then check the available databases:
+
+  ```bash
+  SHOW DATABASES
+  ```
+
+  You should see `jmeter` listed.
+
+- If JMeter isn’t sending data to InfluxDB, verify the **InfluxDB Listener** configuration in your JMeter test plan.
+
+---
+
+This setup provides a comprehensive, Dockerized performance testing environment using JMeter, Redis, InfluxDB, and Grafana. You can easily scale it and integrate more complex monitoring and alerting as needed.
+
+
+### Complete Setup for JMeter with Redis, InfluxDB, Grafana, and Docker
+
 This setup involves creating a full load-testing stack using **JMeter**, **Redis**, **InfluxDB**, and **Grafana** with Docker containers, as well as setting up JMeter in **distributed mode** (master/slave setup). We’ll also set up Redis with SSL and configure JMeter to use it for load testing.
 
 ### Step 1: **Sample JMeter Test with Redis and InfluxDB**
@@ -351,216 +565,3 @@ This command runs the test in non-GUI mode and generates the result file and HTM
 ---
 
 This setup provides a scalable, distributed load-testing environment using JMeter, Redis, InfluxDB, and Grafana—all running in Docker containers.
-
-### Complete Setup for JMeter with Redis, InfluxDB, Grafana, and Docker
-
-This guide will walk you through the setup of Apache JMeter, Redis, InfluxDB, and Grafana with Docker for performance testing, metrics collection, and visualization.
-
-### Prerequisites
-- Docker and Docker Compose installed on your machine.
-- Basic understanding of JMeter, Redis, InfluxDB, and Grafana.
-
-### Steps:
-
-#### Step 1: Create a Docker Compose File for All Services
-
-We'll start by defining the Docker environment with `docker-compose.yml` that will bring up all necessary services:
-
-1. **Create a folder** for your project and navigate into it:
-
-   ```bash
-   mkdir jmeter-setup
-   cd jmeter-setup
-   ```
-
-2. **Create the `docker-compose.yml` file** inside this folder:
-
-   ```yaml
-   version: "3.8"
-
-   services:
-     # Redis service
-     redis:
-       image: redis:latest
-       container_name: redis
-       ports:
-         - "6379:6379"
-       networks:
-         - jmeter-network
-     
-     # InfluxDB service
-     influxdb:
-       image: influxdb:latest
-       container_name: influxdb
-       environment:
-         INFLUXDB_DB: jmeter
-         INFLUXDB_ADMIN_USER: admin
-         INFLUXDB_ADMIN_PASSWORD: adminpassword
-       ports:
-         - "8086:8086"
-       volumes:
-         - influxdb-storage:/var/lib/influxdb
-       networks:
-         - jmeter-network
-     
-     # Grafana service
-     grafana:
-       image: grafana/grafana:latest
-       container_name: grafana
-       environment:
-         GF_SECURITY_ADMIN_PASSWORD: admin
-       ports:
-         - "3000:3000"
-       networks:
-         - jmeter-network
-       depends_on:
-         - influxdb
-     
-     # JMeter service
-     jmeter:
-       image: justb4/jmeter:latest
-       container_name: jmeter
-       volumes:
-         - ./jmeter-scripts:/jmeter/scripts
-       entrypoint: "/bin/bash -c 'jmeter -n -t /jmeter/scripts/test_plan.jmx'"
-       networks:
-         - jmeter-network
-       depends_on:
-         - redis
-         - influxdb
-     
-   networks:
-     jmeter-network:
-       driver: bridge
-     
-   volumes:
-     influxdb-storage:
-   ```
-
-- **Redis** will be used as a cache or message broker, depending on your testing scenario.
-- **InfluxDB** will store time-series metrics from JMeter.
-- **Grafana** will visualize the data coming from InfluxDB.
-- **JMeter** will perform the load testing.
-
-#### Step 2: Prepare JMeter Test Plan and Scripts
-
-1. Create a **`jmeter-scripts`** folder in the same directory where your `docker-compose.yml` file is located.
-   
-   ```bash
-   mkdir jmeter-scripts
-   ```
-
-2. Inside the `jmeter-scripts` folder, create a simple JMeter test plan file (`test_plan.jmx`) that includes:
-
-   - A **Thread Group** for load generation.
-   - **Redis** as a target (if you're using Redis).
-   - **InfluxDB** configuration for collecting performance metrics.
-   
-   Here’s a sample snippet for the **InfluxDB Listener** in the JMeter test plan:
-   
-   ```xml
-   <influxdbListener>
-     <influxdbListener host="influxdb" port="8086" db="jmeter" username="admin" password="adminpassword" />
-   </influxdbListener>
-   ```
-
-   You can create this file using JMeter GUI or by writing it manually in XML format.
-
-3. Add more elements as needed (e.g., HTTP Request, assertions, etc.) based on your test scenario.
-
-#### Step 3: Run Docker Containers
-
-1. Navigate back to the root folder (where the `docker-compose.yml` file is located) and run the following command to start all the services:
-
-   ```bash
-   docker-compose up -d
-   ```
-
-   This will start all the services in the background. You can check the status of the containers using:
-
-   ```bash
-   docker-compose ps
-   ```
-
-#### Step 4: Access Grafana to View Metrics
-
-1. Once the containers are up and running, you can access **Grafana** on your browser at:
-
-   ```
-   http://localhost:3000
-   ```
-
-   - **Username**: `admin`
-   - **Password**: `admin`
-
-2. **Add InfluxDB as a Data Source** in Grafana:
-   - In the Grafana UI, go to **Configuration > Data Sources**.
-   - Select **InfluxDB**.
-   - Configure the data source with the following settings:
-     - **URL**: `http://influxdb:8086`
-     - **Database**: `jmeter`
-     - **User**: `admin`
-     - **Password**: `adminpassword`
-
-3. **Create Dashboards** in Grafana to visualize the metrics from InfluxDB:
-   - After connecting to InfluxDB, you can create a new dashboard and use the **InfluxDB** metrics to display graphs and tables.
-
-#### Step 5: Start JMeter Load Testing
-
-1. Once everything is set up, JMeter will automatically start executing the test plan (`test_plan.jmx`) that you placed in the `jmeter-scripts` folder when the container starts.
-2. JMeter will collect the performance metrics (e.g., response times, throughput) and store them in **InfluxDB**.
-
-#### Step 6: Monitor Results in Grafana
-
-1. In Grafana, after running the load tests, go to your dashboards to visualize the performance data from InfluxDB.
-2. You can create graphs for metrics like:
-   - Requests per second
-   - Response time (latency)
-   - Error rates
-
-#### Step 7: Stopping and Cleaning Up
-
-1. Once you are done with your testing, you can stop the Docker containers by running:
-
-   ```bash
-   docker-compose down
-   ```
-
-   This will stop and remove all containers.
-
----
-
-### Optional Configuration and Tweaks
-
-1. **Custom JMeter Plugins**:
-   - If you need advanced listeners or reporting, you can modify the JMeter container to include additional JMeter plugins. For example, you can use the **JMeter Plugin Manager** to add plugins.
-
-2. **Persistent Data Storage**:
-   - You can persist data from **Redis** and **InfluxDB** by using volumes in Docker, as done in the `docker-compose.yml`.
-
-3. **Scaling JMeter Tests**:
-   - If you want to scale up the load test, you can modify the **JMeter container** in the `docker-compose.yml` to run multiple instances of JMeter.
-
----
-
-### Troubleshooting
-
-- If Grafana doesn't display data, check that InfluxDB is receiving metrics from JMeter. You can query the InfluxDB container to check:
-  
-  ```bash
-  docker exec -it influxdb influx
-  ```
-
-  Then check the available databases:
-
-  ```bash
-  SHOW DATABASES
-  ```
-
-  You should see `jmeter` listed.
-
-- If JMeter isn’t sending data to InfluxDB, verify the **InfluxDB Listener** configuration in your JMeter test plan.
-
----
-
-This setup provides a comprehensive, Dockerized performance testing environment using JMeter, Redis, InfluxDB, and Grafana. You can easily scale it and integrate more complex monitoring and alerting as needed.
