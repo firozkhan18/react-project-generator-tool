@@ -150,13 +150,13 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 ### 1. ReactJS - Introduction
 
 - **Concepts Covered**:
- - Introduction to React
+ - ### Introduction to React
 
 **React** is a powerful JavaScript library for building user interfaces, developed and maintained by Facebook. It enables developers to create dynamic, efficient, and interactive user interfaces (UIs) by breaking down complex UIs into smaller, reusable components. React is primarily used for building single-page applications (SPAs) where the user interaction happens without requiring page reloads.
 
 React has grown in popularity due to its simplicity, flexibility, and high performance. It's used by major companies like Facebook, Instagram, Netflix, Airbnb, and many others. React's virtual DOM (Document Object Model) allows for fast updates and rendering of user interfaces, making it an excellent choice for high-performance web applications.
 
- - Why use React?
+ - ### Why use React?
 
 There are several reasons why developers and teams choose React for building modern web applications:
 
@@ -180,7 +180,7 @@ There are several reasons why developers and teams choose React for building mod
 6. **Cross-Platform Development (React Native)**:
    - With **React Native**, developers can use the same React concepts to build mobile applications for **iOS** and **Android**, effectively allowing for code reuse across platforms and reducing development time and cost.
      
- - Core features of React (Declarative, Component-based, Learn once, write anywhere, etc.)
+ - ### Core features of React (Declarative, Component-based, Learn once, write anywhere, etc.)
 
 React’s core features set it apart from other JavaScript libraries and frameworks. These features make it easy to build modern, interactive UIs that are highly performant, maintainable, and scalable.
 
