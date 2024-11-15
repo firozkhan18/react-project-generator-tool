@@ -6,7 +6,7 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
-| 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#reactjs-introduction)            |
+| 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#1-reactjs---introduction)            |
 | 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#reactjs---hello-world)                        |
 | 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#reactjs---folder-structure)              |
 | 4     | ReactJS - Components                                                    | [ReactJS - Components](#reactjs---components)                          |
@@ -18,7 +18,7 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 10    | ReactJS - State                                                         | [ReactJS - State](#reactjs---state)                                    |
 | 11    | ReactJS - setState                                                      | [ReactJS - setState](#reactjs---setstate)                              |
 | 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#reactjs---destructuring-props-and-state) |
-| 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#reactjs---event-handling)                  |
+| 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#13-reactjs---event-handling)                  |
 | 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs---binding-event-handlers)  |
 | 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#reactjs---methods-as-props)               |
 | 16    | ReactJS - Conditional Rendering                                         | [ReactJS - Conditional Rendering](#reactjs---conditional-rendering)    |
