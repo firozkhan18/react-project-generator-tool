@@ -5,145 +5,145 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 ### **ReactJS Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
-|-------|------------------------------------------------------------------------|---------------------------------------------------------------------|
+|---|----------------------------|---------------------------|
 | 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#reactjs---introduction)            |
-| 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#reactjs-hello-world)                        |
-| 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#reactjs-folder-structure)              |
-| 4     | ReactJS - Components                                                    | [ReactJS - Components](#reactjs-components)                          |
-| 5     | ReactJS - Functional Components                                         | [ReactJS - Functional Components](#reactjs-functional-components)    |
-| 6     | ReactJS - Class Components                                              | [ReactJS - Class Components](#reactjs-class-components)              |
-| 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#reactjs-hooks-update)                      |
-| 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#reactjs-jsx)                                        |
-| 9     | ReactJS - Props                                                         | [ReactJS - Props](#reactjs-props)                                    |
-| 10    | ReactJS - State                                                         | [ReactJS - State](#reactjs-state)                                    |
-| 11    | ReactJS - setState                                                      | [ReactJS - setState](#reactjs-setstate)                              |
-| 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#reactjs-destructuring-props-and-state) |
-| 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#reactjs-event-handling)                  |
-| 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs-binding-event-handlers)  |
-| 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#reactjs-methods-as-props)               |
-| 16    | ReactJS - Conditional Rendering                                         | [ReactJS - Conditional Rendering](#reactjs-conditional-rendering)    |
-| 17    | ReactJS - List Rendering                                                | [ReactJS - List Rendering](#reactjs-list-rendering)                  |
-| 18    | ReactJS - Lists and Keys                                                | [ReactJS - Lists and Keys](#reactjs-lists-and-keys)                  |
-| 19    | ReactJS - Index as Key Anti-pattern                                     | [ReactJS - Index as Key Anti-pattern](#reactjs-index-as-key-anti-pattern) |
-| 20    | ReactJS - Styling and CSS Basics                                        | [ReactJS - Styling and CSS Basics](#reactjs-styling-and-css-basics)  |
-| 21    | ReactJS - Basics of Form Handling                                       | [ReactJS - Basics of Form Handling](#reactjs-basics-of-form-handling) |
-| 22    | ReactJS - Component Lifecycle Methods                                   | [ReactJS - Component Lifecycle Methods](#reactjs-component-lifecycle-methods) |
-| 23    | ReactJS - Component Mounting Lifecycle Methods                         | [ReactJS - Component Mounting Lifecycle Methods](#reactjs-component-mounting-lifecycle-methods) |
-| 24    | ReactJS - Component Updating Lifecycle Methods                         | [ReactJS - Component Updating Lifecycle Methods](#reactjs-component-updating-lifecycle-methods) |
-| 25    | ReactJS - Fragments                                                     | [ReactJS - Fragments](#reactjs-fragments)                            |
-| 26    | ReactJS - Pure Components                                               | [ReactJS - Pure Components](#reactjs-pure-components)                |
-| 27    | ReactJS - memo                                                          | [ReactJS - memo](#reactjs-memo)                                      |
-| 28    | ReactJS - Refs                                                           | [ReactJS - Refs](#reactjs-refs)                                       |
-| 29    | ReactJS - Refs with Class Components                                    | [ReactJS - Refs with Class Components](#reactjs-refs-with-class-components) |
-| 30    | ReactJS - Forwarding Refs                                               | [ReactJS - Forwarding Refs](#reactjs-forwarding-refs)                |
-| 31    | ReactJS - Portals                                                       | [ReactJS - Portals](#reactjs-portals)                                |
-| 32    | ReactJS - Error Boundary                                                | [ReactJS - Error Boundary](#reactjs-error-boundary)                  |
-| 33    | ReactJS - Higher Order Components (Part 1)                              | [ReactJS - Higher Order Components (Part 1)](#reactjs-higher-order-components-part-1) |
-| 34    | ReactJS - Higher Order Components (Part 2)                              | [ReactJS - Higher Order Components (Part 2)](#reactjs-higher-order-components-part-2) |
-| 35    | ReactJS - Higher Order Components (Part 3)                              | [ReactJS - Higher Order Components (Part 3)](#reactjs-higher-order-components-part-3) |
-| 36    | ReactJS - Render Props (Part 1)                                         | [ReactJS - Render Props (Part 1)](#reactjs-render-props-part-1)       |
-| 37    | ReactJS - Render Props (Part 2)                                         | [ReactJS - Render Props (Part 2)](#reactjs-render-props-part-2)       |
-| 38    | ReactJS - Context (Part 1)                                              | [ReactJS - Context (Part 1)](#reactjs-context-part-1)                |
-| 39    | ReactJS - Context (Part 2)                                              | [ReactJS - Context (Part 2)](#reactjs-context-part-2)                |
-| 40    | ReactJS - Context (Part 3)                                              | [ReactJS - Context (Part 3)](#reactjs-context-part-3)                |
-| 41    | ReactJS - HTTP and React                                                | [ReactJS - HTTP and React](#reactjs-http-and-react)                  |
-| 42    | ReactJS - HTTP GET Request                                              | [ReactJS - HTTP GET Request](#reactjs-http-get-request)              |
-| 43    | ReactJS - HTTP Post Request                                             | [ReactJS - HTTP Post Request](#reactjs-http-post-request)            |
+| 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#reactjs---hello-world)                        |
+| 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#reactjs---folder-structure)              |
+| 4     | ReactJS - Components                                                    | [ReactJS - Components](#reactjs---components)                          |
+| 5     | ReactJS - Functional Components                                         | [ReactJS - Functional Components](#reactjs---functional-components)    |
+| 6     | ReactJS - Class Components                                              | [ReactJS - Class Components](#reactjs---class-components)              |
+| 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#reactjs---hooks-update)                      |
+| 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#reactjs---jsx)                                        |
+| 9     | ReactJS - Props                                                         | [ReactJS - Props](#reactjs---props)                                    |
+| 10    | ReactJS - State                                                         | [ReactJS - State](#reactjs---state)                                    |
+| 11    | ReactJS - setState                                                      | [ReactJS - setState](#reactjs---setstate)                              |
+| 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#reactjs---destructuring-props-and-state) |
+| 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#reactjs---event-handling)                  |
+| 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs---binding-event-handlers)  |
+| 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#reactjs---methods-as-props)               |
+| 16    | ReactJS - Conditional Rendering                                         | [ReactJS - Conditional Rendering](#reactjs---conditional-rendering)    |
+| 17    | ReactJS - List Rendering                                                | [ReactJS - List Rendering](#reactjs---list-rendering)                  |
+| 18    | ReactJS - Lists and Keys                                                | [ReactJS - Lists and Keys](#reactjs---lists-and-keys)                  |
+| 19    | ReactJS - Index as Key Anti-pattern                                     | [ReactJS - Index as Key Anti-pattern](#reactjs---index-as-key-anti-pattern) |
+| 20    | ReactJS - Styling and CSS Basics                                        | [ReactJS - Styling and CSS Basics](#reactjs---styling-and-css-basics)  |
+| 21    | ReactJS - Basics of Form Handling                                       | [ReactJS - Basics of Form Handling](#reactjs---basics-of-form-handling) |
+| 22    | ReactJS - Component Lifecycle Methods                                   | [ReactJS - Component Lifecycle Methods](#reactjs---component-lifecycle-methods) |
+| 23    | ReactJS - Component Mounting Lifecycle Methods                         | [ReactJS - Component Mounting Lifecycle Methods](#reactjs---component-mounting-lifecycle-methods) |
+| 24    | ReactJS - Component Updating Lifecycle Methods                         | [ReactJS - Component Updating Lifecycle Methods](#reactjs---component-updating-lifecycle-methods) |
+| 25    | ReactJS - Fragments                                                     | [ReactJS - Fragments](#reactjs---fragments)                            |
+| 26    | ReactJS - Pure Components                                               | [ReactJS - Pure Components](#reactjs---pure-components)                |
+| 27    | ReactJS - memo                                                          | [ReactJS - memo](#reactjs---memo)                                      |
+| 28    | ReactJS - Refs                                                           | [ReactJS - Refs](#reactjs---refs)                                       |
+| 29    | ReactJS - Refs with Class Components                                    | [ReactJS - Refs with Class Components](#reactjs---refs-with-class-components) |
+| 30    | ReactJS - Forwarding Refs                                               | [ReactJS - Forwarding Refs](#reactjs---forwarding-refs)                |
+| 31    | ReactJS - Portals                                                       | [ReactJS - Portals](#reactjs---portals)                                |
+| 32    | ReactJS - Error Boundary                                                | [ReactJS - Error Boundary](#reactjs---error-boundary)                  |
+| 33    | ReactJS - Higher Order Components (Part 1)                              | [ReactJS - Higher Order Components (Part 1)](#reactjs---higher-order-components-part-1) |
+| 34    | ReactJS - Higher Order Components (Part 2)                              | [ReactJS - Higher Order Components (Part 2)](#reactjs---higher-order-components-part-2) |
+| 35    | ReactJS - Higher Order Components (Part 3)                              | [ReactJS - Higher Order Components (Part 3)](#reactjs---higher-order-components-part-3) |
+| 36    | ReactJS - Render Props (Part 1)                                         | [ReactJS - Render Props (Part 1)](#reactjs---render-props-part-1)       |
+| 37    | ReactJS - Render Props (Part 2)                                         | [ReactJS - Render Props (Part 2)](#reactjs---render-props-part-2)       |
+| 38    | ReactJS - Context (Part 1)                                              | [ReactJS - Context (Part 1)](#reactjs---context-part-1)                |
+| 39    | ReactJS - Context (Part 2)                                              | [ReactJS - Context (Part 2)](#reactjs---context-part-2)                |
+| 40    | ReactJS - Context (Part 3)                                              | [ReactJS - Context (Part 3)](#reactjs---context-part-3)                |
+| 41    | ReactJS - HTTP and React                                                | [ReactJS - HTTP and React](#reactjs---http-and-react)                  |
+| 42    | ReactJS - HTTP GET Request                                              | [ReactJS - HTTP GET Request](#reactjs---http-get-request)              |
+| 43    | ReactJS - HTTP Post Request                                             | [ReactJS - HTTP Post Request](#reactjs---http-post-request)            |
 
 ---
 
 ### **React Hooks Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
-|-------|------------------------------------------------------------------------|---------------------------------------------------------------------|
-| 44    | React Hooks - Introduction                                               | [React Hooks - Introduction](#react-hooks-introduction)             |
-| 45    | React Hooks - useState Hook                                              | [React Hooks - useState Hook](#react-hooks-usestate-hook)            |
-| 46    | React Hooks - useState with previous state                              | [React Hooks - useState with previous state](#react-hooks-usestate-with-previous-state) |
-| 47    | React Hooks - useState with object                                       | [React Hooks - useState with object](#react-hooks-usestate-with-object) |
-| 48    | React Hooks - useState with array                                        | [React Hooks - useState with array](#react-hooks-usestate-with-array) |
-| 49    | React Hooks - useEffect Hook                                             | [React Hooks - useEffect Hook](#react-hooks-useeffect-hook)          |
-| 50    | React Hooks - useEffect after render                                    | [React Hooks - useEffect after render](#react-hooks-useeffect-after-render) |
-| 51    | React Hooks - Conditionally run effects                                 | [React Hooks - Conditionally run effects](#react-hooks-conditionally-run-effects) |
-| 52    | React Hooks - Run effects only once                                     | [React Hooks - Run effects only once](#react-hooks-run-effects-only-once) |
-| 53    | React Hooks - useEffect with cleanup                                    | [React Hooks - useEffect with cleanup](#react-hooks-useeffect-with-cleanup) |
-| 54    | React Hooks - useEffect with incorrect dependency                       | [React Hooks - useEffect with incorrect dependency](#react-hooks-useeffect-with-incorrect-dependency) |
-| 55    | React Hooks - Fetching data with useEffect Part 1                       | [React Hooks - Fetching data with useEffect Part 1](#react-hooks-fetching-data-with-useeffect-part-1) |
-| 56    | React Hooks - Fetching data with useEffect Part 2                       | [React Hooks - Fetching data with useEffect Part 2](#react-hooks-fetching-data-with-useeffect-part-2) |
-| 57    | React Hooks - Fetching data with useEffect Part 3                       | [React Hooks - Fetching data with useEffect Part 3](#react-hooks-fetching-data-with-useeffect-part-3) |
-| 58    | React Hooks - useContext Hook Part 1                                     | [React Hooks - useContext Hook Part 1](#react-hooks-usecontext-hook-part-1) |
-| 59    | React Hooks - useContext Hook Part 2                                     | [React Hooks - useContext Hook Part 2](#react-hooks-usecontext-hook-part-2) |
-| 60    | React Hooks - useContext Hook Part 3                                     | [React Hooks - useContext Hook Part 3](#react-hooks-usecontext-hook-part-3) |
-| 61    | React Hooks - useReducer Hook                                           | [React Hooks - useReducer Hook](#react-hooks-usereducer-hook)       |
-| 62    | React Hooks - useReducer (simple state & action)                        | [React Hooks - useReducer (simple state & action)](#react-hooks-usereducer-simple-state-action) |
-| 63    | React Hooks - useReducer (complex state & action)                       | [React Hooks - useReducer (complex state & action)](#react-hooks-usereducer-complex-state-action) |
-| 64    | React Hooks - Multiple useReducers                                      | [React Hooks - Multiple useReducers](#react-hooks-multiple-usereducers) |
-| 65    | React Hooks - useReducer with useContext                                | [React Hooks - useReducer with useContext](#react-hooks-usereducer-with-usecontext) |
-| 66    | React Hooks - Fetching data with useReducer Part 1                       | [React Hooks - Fetching data with useReducer Part 1](#react-hooks-fetching-data-with-usereducer-part-1) |
-| 67    | React Hooks - Fetching data with useReducer Part 2                       | [React Hooks - Fetching data with useReducer Part 2](#react-hooks-fetching-data-with-usereducer-part-2) |
-| 68    | React Hooks - useState vs useReducer                                     | [React Hooks - useState vs useReducer](#react-hooks-usestate-vs-usereducer) |
-| 69    | React Hooks - useCallback Hook                                           | [React Hooks - useCallback Hook](#react-hooks-usecallback-hook)     |
-| 70    | React Hooks - useMemo Hook                                              | [React Hooks - useMemo Hook](#react-hooks-usememo-hook)             |
-| 71    | React Hooks - useRef Hook Part 1                                         | [React Hooks - useRef Hook Part 1](#react-hooks-useref-hook-part-1) |
-| 72    | React Hooks - useRef Hook Part 2                                         | [React Hooks - useRef Hook Part 2](#react-hooks-useref-hook-part-2) |
-| 73    | React Hooks - Custom Hooks                                              | [React Hooks - Custom Hooks](#react-hooks-custom-hooks)            |
-| 74    | React Hooks - useDocumentTitle Custom Hook                              | [React Hooks - useDocumentTitle Custom Hook](#react-hooks-usedocumenttitle-custom-hook) |
-| 75    | React Hooks - useCounter Custom Hook                                    | [React Hooks - useCounter Custom Hook](#react-hooks-usecounter-custom-hook) |
-| 76    | React Hooks - useInput Custom Hook                                      | [React Hooks - useInput Custom Hook](#react-hooks-useinput-custom-hook) |
+|---|----------------------------|---------------------------|
+| 44    | React Hooks - Introduction                                               | [React Hooks - Introduction](#react-hooks---introduction)             |
+| 45    | React Hooks - useState Hook                                              | [React Hooks - useState Hook](#react-hooks---usestate-hook)            |
+| 46    | React Hooks - useState with previous state                              | [React Hooks - useState with previous state](#react-hooks---usestate-with-previous-state) |
+| 47    | React Hooks - useState with object                                       | [React Hooks - useState with object](#react-hooks---usestate-with-object) |
+| 48    | React Hooks - useState with array                                        | [React Hooks - useState with array](#react-hooks---usestate-with-array) |
+| 49    | React Hooks - useEffect Hook                                             | [React Hooks - useEffect Hook](#react-hooks---useeffect-hook)          |
+| 50    | React Hooks - useEffect after render                                    | [React Hooks - useEffect after render](#react-hooks---useeffect-after-render) |
+| 51    | React Hooks - Conditionally run effects                                 | [React Hooks - Conditionally run effects](#react-hooks---conditionally-run-effects) |
+| 52    | React Hooks - Run effects only once                                     | [React Hooks - Run effects only once](#react-hooks---run-effects-only-once) |
+| 53    | React Hooks - useEffect with cleanup                                    | [React Hooks - useEffect with cleanup](#react-hooks---useeffect-with-cleanup) |
+| 54    | React Hooks - useEffect with incorrect dependency                       | [React Hooks - useEffect with incorrect dependency](#react-hooks---useeffect-with-incorrect-dependency) |
+| 55    | React Hooks - Fetching data with useEffect Part 1                       | [React Hooks - Fetching data with useEffect Part 1](#react-hooks---fetching-data-with-useeffect-part-1) |
+| 56    | React Hooks - Fetching data with useEffect Part 2                       | [React Hooks - Fetching data with useEffect Part 2](#react-hooks---fetching-data-with-useeffect-part-2) |
+| 57    | React Hooks - Fetching data with useEffect Part 3                       | [React Hooks - Fetching data with useEffect Part 3](#react-hooks---fetching-data-with-useeffect-part-3) |
+| 58    | React Hooks - useContext Hook Part 1                                     | [React Hooks - useContext Hook Part 1](#react-hooks---usecontext-hook-part-1) |
+| 59    | React Hooks - useContext Hook Part 2                                     | [React Hooks - useContext Hook Part 2](#react-hooks---usecontext-hook-part-2) |
+| 60    | React Hooks - useContext Hook Part 3                                     | [React Hooks - useContext Hook Part 3](#react-hooks---usecontext-hook-part-3) |
+| 61    | React Hooks - useReducer Hook                                           | [React Hooks - useReducer Hook](#react-hooks---usereducer-hook)       |
+| 62    | React Hooks - useReducer (simple state & action)                        | [React Hooks - useReducer (simple state & action)](#react-hooks---usereducer-simple-state-action) |
+| 63    | React Hooks - useReducer (complex state & action)                       | [React Hooks - useReducer (complex state & action)](#react-hooks---usereducer-complex-state-action) |
+| 64    | React Hooks - Multiple useReducers                                      | [React Hooks - Multiple useReducers](#react-hooks---multiple-usereducers) |
+| 65    | React Hooks - useReducer with useContext                                | [React Hooks - useReducer with useContext](#react-hooks---usereducer-with-usecontext) |
+| 66    | React Hooks - Fetching data with useReducer Part 1                       | [React Hooks - Fetching data with useReducer Part 1](#react-hooks---fetching-data-with-usereducer-part-1) |
+| 67    | React Hooks - Fetching data with useReducer Part 2                       | [React Hooks - Fetching data with useReducer Part 2](#react-hooks---fetching-data-with-usereducer-part-2) |
+| 68    | React Hooks - useState vs useReducer                                     | [React Hooks - useState vs useReducer](#react-hooks---usestate-vs-usereducer) |
+| 69    | React Hooks - useCallback Hook                                           | [React Hooks - useCallback Hook](#react-hooks---usecallback-hook)     |
+| 70    | React Hooks - useMemo Hook                                              | [React Hooks - useMemo Hook](#react-hooks---usememo-hook)             |
+| 71    | React Hooks - useRef Hook Part 1                                         | [React Hooks - useRef Hook Part 1](#react-hooks---useref-hook-part-1) |
+| 72    | React Hooks - useRef Hook Part 2                                         | [React Hooks - useRef Hook Part 2](#react-hooks---useref-hook-part-2) |
+| 73    | React Hooks - Custom Hooks                                              | [React Hooks - Custom Hooks](#react-hooks---custom-hooks)            |
+| 74    | React Hooks - useDocumentTitle Custom Hook                              | [React Hooks - useDocumentTitle Custom Hook](#react-hooks---usedocumenttitle-custom-hook) |
+| 75    | React Hooks - useCounter Custom Hook                                    | [React Hooks - useCounter Custom Hook](#react-hooks---usecounter-custom-hook) |
+| 76    | React Hooks - useInput Custom Hook                                      | [React Hooks - useInput Custom Hook](#react-hooks---useinput-custom-hook) |
 
 ---
 
 ### **React Render Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
-|-------|------------------------------------------------------------------------|---------------------------------------------------------------------|
-| 77    | React Render - Introduction                                              | [React Render - Introduction](#react-render-introduction)          |
-| 78    | React Render - Rendering                                                 | [React Render - Rendering](#react-render-rendering)                |
-| 79    | React Render - useState                                                 | [React Render - useState](#react-render-usestate)                   |
-| 80    | React Render - useReducer                                               | [React Render - useReducer](#react-render-usereducer)               |
-| 81    | React Render - State Immutability                                       | [React Render - State Immutability](#react-render-state-immutability) |
-| 82    | React Render - Parent and Child                                         | [React Render - Parent and Child](#react-render-parent-and-child)  |
-| 83    | React Render - Same Element Reference                                   | [React Render - Same Element Reference](#react-render-same-element-reference) |
-| 84    | React Render - React memo                                               | [React Render - React memo](#react-render-react-memo)               |
-| 85    | React Render - Questions on Optimization                                | [React Render - Questions on Optimization](#react-render-questions-on-optimization) |
-| 86    | React Render - Incorrect memo with children                             | [React Render - Incorrect memo with children](#react-render-incorrect-memo-with-children) |
-| 87    | React Render - Incorrect memo with Impure Component                     | [React Render - Incorrect memo with Impure Component](#react-render-incorrect-memo-with-impure-component) |
-| 88    | React Render - Incorrect memo with props Reference                      | [React Render - Incorrect memo with props Reference](#react-render-incorrect-memo-with-props-reference) |
-| 89    | React Render - useMemo and useCallback                                  | [React Render - useMemo and useCallback](#react-render-usememo-and-usecallback) |
-| 90    | React Render - Context                                                  | [React Render - Context](#react-render-context)                     |
-| 91    | React Render - Context and memo                                         | [React Render - Context and memo](#react-render-context-and-memo)  |
-| 92    | React Render - Context and Same Element Reference                       | [React Render - Context and Same Element Reference](#react-render-context-and-same-element-reference) |
+|---|----------------------------|---------------------------|
+| 77    | React Render - Introduction                                              | [React Render - Introduction](#react-render---introduction)          |
+| 78    | React Render - Rendering                                                 | [React Render - Rendering](#react-render---rendering)                |
+| 79    | React Render - useState                                                 | [React Render - useState](#react-render---usestate)                   |
+| 80    | React Render - useReducer                                               | [React Render - useReducer](#react-render---usereducer)               |
+| 81    | React Render - State Immutability                                       | [React Render - State Immutability](#react-render---state-immutability) |
+| 82    | React Render - Parent and Child                                         | [React Render - Parent and Child](#react-render---parent-and-child)  |
+| 83    | React Render - Same Element Reference                                   | [React Render - Same Element Reference](#react-render---same-element-reference) |
+| 84    | React Render - React memo                                               | [React Render - React memo](#react-render---react-memo)               |
+| 85    | React Render - Questions on Optimization                                | [React Render - Questions on Optimization](#react-render---questions-on-optimization) |
+| 86    | React Render - Incorrect memo with children                             | [React Render - Incorrect memo with children](#react-render---incorrect-memo-with-children) |
+| 87    | React Render - Incorrect memo with Impure Component                     | [React Render - Incorrect memo with Impure Component](#react-render---incorrect-memo-with-impure-component) |
+| 88    | React Render - Incorrect memo with props Reference                      | [React Render - Incorrect memo with props Reference](#react-render---incorrect-memo-with-props-reference) |
+| 89    | React Render - useMemo and useCallback                                  | [React Render - useMemo and useCallback](#react-render---usememo-and-usecallback) |
+| 90    | React Render - Context                                                  | [React Render - Context](#react-render---context)                     |
+| 91    | React Render - Context and memo                                         | [React Render - Context and memo](#react-render---context-and-memo)  |
+| 92    | React Render - Context and Same Element Reference                       | [React Render - Context and Same Element Reference](#react-render---context-and-same-element-reference) |
 
 ---
 
 ### **React with TypeScript Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
-|-------|------------------------------------------------------------------------|---------------------------------------------------------------------|
-| 93    | React TypeScript - Introduction                                          | [React TypeScript - Introduction](#react-typescript-introduction)   |
-| 94    | React TypeScript - Getting Started                                      | [React TypeScript - Getting Started](#react-typescript-getting-started) |
-| 95    | React TypeScript - Typing Props                                         | [React TypeScript - Typing Props](#react-typescript-typing-props)    |
-| 96    | React TypeScript - Basic Props                                          | [React TypeScript - Basic Props](#react-typescript-basic-props)      |
-| 97    | React TypeScript - Advanced Props                                       | [React TypeScript - Advanced Props](#react-typescript-advanced-props) |
-| 98    | React TypeScript - Event Props                                          | [React TypeScript - Event Props](#react-typescript-event-props)      |
-| 99    | React TypeScript - Style Props                                          | [React TypeScript - Style Props](#react-typescript-style-props)      |
-| 100   | React TypeScript - Prop Types and Tips                                  | [React TypeScript - Prop Types and Tips](#react-typescript-prop-types-and-tips) |
-| 101   | React TypeScript - useState Hook                                        | [React TypeScript - useState Hook](#react-typescript-usestate-hook) |
-| 102   | React TypeScript - useState Future Value                                | [React TypeScript - useState Future Value](#react-typescript-usestate-future-value) |
-| 103   | React TypeScript - useState Type Assertion                              | [React TypeScript - useState Type Assertion](#react-typescript-usestate-type-assertion) |
-| 104   | React TypeScript - useReducer Hook                                      | [React TypeScript - useReducer Hook](#react-typescript-usereducer-hook) |
-| 105   | React TypeScript - useReducer Strict Action Types                       | [React TypeScript - useReducer Strict Action Types](#react-typescript-usereducer-strict-action-types) |
-| 106   | React TypeScript - useContext Hook                                      | [React TypeScript - useContext Hook](#react-typescript-usecontext-hook) |
-| 107   | React TypeScript - useContext Future Value                              | [React TypeScript - useContext Future Value](#react-typescript-usecontext-future-value) |
-| 108   | React TypeScript - useRef Hook                                          | [React TypeScript - useRef Hook](#react-typescript-useref-hook)     |
-| 109   | React TypeScript - Class Component                                      | [React TypeScript - Class Component](#react-typescript-class-component) |
-| 110   | React TypeScript - Component Prop                                       | [React TypeScript - Component Prop](#react-typescript-component-prop) |
-| 111   | React TypeScript - Generic Props                                        | [React TypeScript - Generic Props](#react-typescript-generic-props)  |
-| 112   | React TypeScript - Restricting Props                                    | [React TypeScript - Restricting Props](#react-typescript-restricting-props) |
-| 113   | React TypeScript - Template Literals and Exclude                        | [React TypeScript - Template Literals and Exclude](#react-typescript-template-literals-and-exclude) |
-| 114   | React TypeScript - Wrapping HTML Elements                               | [React TypeScript - Wrapping HTML Elements](#react-typescript-wrapping-html-elements) |
-| 115   | React TypeScript - Extracting a Components Prop Types                   | [React TypeScript - Extracting a Components Prop Types](#react-typescript-extracting-a-components-prop-types) |
-| 116   | React TypeScript - Polymorphic Components                               | [React TypeScript - Polymorphic Components](#react-typescript-polymorphic-components) |
-| 117   | React TypeScript - Wrapping up                                          | [React TypeScript - Wrapping up](#react-typescript-wrapping-up)      |
+|---|----------------------------|---------------------------|
+| 93    | React TypeScript - Introduction                                          | [React TypeScript - Introduction](#react-typescript---introduction)   |
+| 94    | React TypeScript - Getting Started                                      | [React TypeScript - Getting Started](#react-typescript---getting-started) |
+| 95    | React TypeScript - Typing Props                                         | [React TypeScript - Typing Props](#react-typescript---typing-props)    |
+| 96    | React TypeScript - Basic Props                                          | [React TypeScript - Basic Props](#react-typescript---basic-props)      |
+| 97    | React TypeScript - Advanced Props                                       | [React TypeScript - Advanced Props](#react-typescript---advanced-props) |
+| 98    | React TypeScript - Event Props                                          | [React TypeScript - Event Props](#react-typescript---event-props)      |
+| 99    | React TypeScript - Style Props                                          | [React TypeScript - Style Props](#react-typescript---style-props)      |
+| 100   | React TypeScript - Prop Types and Tips                                  | [React TypeScript - Prop Types and Tips](#react-typescript---prop-types-and-tips) |
+| 101   | React TypeScript - useState Hook                                        | [React TypeScript - useState Hook](#react-typescript---usestate-hook) |
+| 102   | React TypeScript - useState Future Value                                | [React TypeScript - useState Future Value](#react-typescript---usestate-future-value) |
+| 103   | React TypeScript - useState Type Assertion                              | [React TypeScript - useState Type Assertion](#react-typescript---usestate-type-assertion) |
+| 104   | React TypeScript - useReducer Hook                                      | [React TypeScript - useReducer Hook](#react-typescript---usereducer-hook) |
+| 105   | React TypeScript - useReducer Strict Action Types                       | [React TypeScript - useReducer Strict Action Types](#react-typescript---usereducer-strict-action-types) |
+| 106   | React TypeScript - useContext Hook                                      | [React TypeScript - useContext Hook](#react-typescript---usecontext-hook) |
+| 107   | React TypeScript - useContext Future Value                              | [React TypeScript - useContext Future Value](#react-typescript---usecontext-future-value) |
+| 108   | React TypeScript - useRef Hook                                          | [React TypeScript - useRef Hook](#react-typescript---useref-hook)     |
+| 109   | React TypeScript - Class Component                                      | [React TypeScript - Class Component](#react-typescript---class-component) |
+| 110   | React TypeScript - Component Prop                                       | [React TypeScript - Component Prop](#react-typescript---component-prop) |
+| 111   | React TypeScript - Generic Props                                        | [React TypeScript - Generic Props](#react-typescript---generic-props)  |
+| 112   | React TypeScript - Restricting Props                                    | [React TypeScript - Restricting Props](#react-typescript---restricting-props) |
+| 113   | React TypeScript - Template Literals and Exclude                        | [React TypeScript - Template Literals and Exclude](#react-typescript---template-literals-and-exclude) |
+| 114   | React TypeScript - Wrapping HTML Elements                               | [React TypeScript - Wrapping HTML Elements](#react-typescript---wrapping-html-elements) |
+| 115   | React TypeScript - Extracting a Components Prop Types                   | [React TypeScript - Extracting a Components Prop Types](#react-typescript---extracting-a-components-prop-types) |
+| 116   | React TypeScript - Polymorphic Components                               | [React TypeScript - Polymorphic Components](#react-typescript---polymorphic-components) |
+| 117   | React TypeScript - Wrapping up                                          | [React TypeScript - Wrapping up](#react-typescript---wrapping-up)      |
 
 ---
 
@@ -151,33 +151,7 @@ Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution Re
 
 ---
 
-### Table of Contents
-
-1. [ReactJS - Introduction](#reactjs---introduction)
-2. [ReactJS - Hello World](#reactjs---hello-world)
-3. [ReactJS - Folder Structure](#reactjs---folder-structure)
-4. [ReactJS - Components](#reactjs---components)
-
----
-
-### ReactJS - Introduction
-
-ReactJS is a JavaScript library used for building user interfaces. It allows developers to create reusable UI components.
-
----
-
-### ReactJS - Hello World
-
-In this tutorial, we will create a simple "Hello World" app using ReactJS.
-
----
-
-### ReactJS - Folder Structure
-
-The folder structure in React applications follows a specific pattern for better organization and maintainability.
-
-
-### **1. ReactJS - Introduction**
+### 1. ReactJS - Introduction
 
 - **Concepts Covered**:
   - Introduction to React
