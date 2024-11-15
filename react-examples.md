@@ -6,7 +6,7 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
-| 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#reactjs---introduction)            |
+| 1     | ReactJS - Introduction                                                  | [ReactJS - Introduction](#reactjs-introduction)            |
 | 2     | ReactJS - Hello World                                                   | [ReactJS - Hello World](#reactjs---hello-world)                        |
 | 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#reactjs---folder-structure)              |
 | 4     | ReactJS - Components                                                    | [ReactJS - Components](#reactjs---components)                          |
