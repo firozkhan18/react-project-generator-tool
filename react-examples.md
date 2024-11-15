@@ -152,7 +152,7 @@ Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution Re
 
 ---
 
-### **1. ReactJS - Introduction** 
+### 1. ReactJS - Introduction
 
 - **Concepts Covered**:
   - Introduction to React
