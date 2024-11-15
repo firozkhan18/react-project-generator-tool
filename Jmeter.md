@@ -209,11 +209,144 @@ This will run the test in non-GUI mode, with the JMeter master controlling the J
 6. **Run JMeter Master**:  
    `docker run -d --name jmeter-master --network jmeter-network apache/jmeter:latest`
 
-7. **Run JMeter Test
-
-**:  
+7. **Run JMeter Test**:  
    `docker exec -it jmeter-master bash`
    `jmeter -n -t /path/to/test.jmx -l /path/to/results/result.jtl -e -o /path/to/results/report`
+
+---
+
+This setup provides a scalable, distributed load-testing environment using JMeter, Redis, InfluxDB, and Grafana—all running in Docker containers.
+
+Here is the cleaned-up version of the markdown without transcript timings:
+
+---
+
+## 1. Sample JMeter Test with Redis and InfluxDB
+
+This demo demonstrates a JMeter distributed testing setup using Docker containers. The test is designed to test the HTTP bin API. The test will send data to Redis and metrics to InfluxDB using a backend listener.
+
+## 2. Docker Images
+
+We will use Docker containers for JMeter, Redis, InfluxDB, and Grafana. The necessary Docker images for these services are available in Docker Hub:
+
+- **JMeter**: Official image available on Docker Hub.
+- **Redis**: Official Redis image.
+- **InfluxDB**: Official InfluxDB image.
+- **Grafana**: Official Grafana image.
+
+Links to these images will be provided in the description.
+
+## 3. Create Docker Network
+
+To ensure that all containers can communicate, we need to create a dedicated Docker network:
+
+```bash
+docker network create --driver bridge jmeter-network
+```
+
+This command creates a new network named `jmeter-network` with the bridge driver. The network will allow containers to communicate using private IPs.
+
+## 4. Redis DB with Docker and SSL
+
+To set up Redis with SSL, we first need to generate a certificate and key using OpenSSL:
+
+```bash
+openssl req -newkey rsa:2048 -days 365 -nodes -keyout redis-key.pem -x509 -out redis-cert.pem
+```
+
+Next, we run the Redis container with the generated certificate and key:
+
+```bash
+docker run -d --name redis \
+  --network jmeter-network \
+  -v /path/to/redis-cert.pem:/etc/ssl/certs/redis-cert.pem \
+  -v /path/to/redis-key.pem:/etc/ssl/private/redis-key.pem \
+  redis:latest
+```
+
+This command runs the Redis container on the `jmeter-network` and mounts the certificate files as Docker volumes.
+
+## 5. InfluxDB Setup with Docker
+
+We need to set up InfluxDB, where we will store test results. First, create directories for the InfluxDB data and dashboard templates:
+
+```bash
+mkdir -p /path/to/influxdb/data
+mkdir -p /path/to/influxdb/dashboards
+```
+
+Run the InfluxDB Docker container:
+
+```bash
+docker run -d --name influxdb \
+  --network jmeter-network \
+  -v /path/to/influxdb/data:/var/lib/influxdb \
+  -v /path/to/influxdb/dashboards:/etc/influxdb/dashboards \
+  influxdb:latest
+```
+
+Access the InfluxDB UI on `localhost:8086` to configure your instance.
+
+## 6. Grafana Setup with Docker
+
+Grafana will be used for visualizing the test results from InfluxDB. Start the Grafana container:
+
+```bash
+docker run -d --name grafana \
+  --network jmeter-network \
+  -v /path/to/grafana/dashboards:/etc/grafana/dashboards \
+  grafana/grafana:latest
+```
+
+Grafana can be accessed via `localhost:3000`. The default username and password are both `admin`.
+
+## 7. Create Keystore for JMeter
+
+JMeter will use a Java keystore (JKS) file to trust the Redis database's certificate. Use the `keytool` utility to create the keystore:
+
+```bash
+keytool -import -alias redis-cert -file /path/to/redis-cert.pem \
+  -keystore /path/to/jmeter/keystore.jks -storepass changeit
+```
+
+Copy the keystore file to the appropriate directory in your JMeter Docker container.
+
+## 8. JMeter Server/Slave with Docker
+
+To start the JMeter server (slave), use the following command:
+
+```bash
+docker run -d --name jmeter-server \
+  --network jmeter-network \
+  -v /path/to/jmeter/keystore.jks:/etc/ssl/certs/jmeter-keystore.jks \
+  jmeter/jmeter-server:latest
+```
+
+This runs the JMeter server container and ensures it can communicate with Redis, InfluxDB, and Grafana.
+
+## 9. JMeter Master/Client with Docker
+
+Next, start the JMeter master container in interactive mode:
+
+```bash
+docker run -it --name jmeter-master \
+  --network jmeter-network \
+  -v /path/to/jmeter/keystore.jks:/etc/ssl/certs/jmeter-keystore.jks \
+  -v /path/to/test/files:/mnt/tests \
+  jmeter/jmeter-master:latest bash
+```
+
+In this step, we mount the necessary directories containing the test files and properties for running the JMeter test.
+
+## 10. Run Tests with JMeter Master/Client Docker Container
+
+Once the master container is running, execute the JMeter test by pointing to the test file and properties:
+
+```bash
+jmeter -n -t /mnt/tests/test.jmx -l /mnt/results/results.jtl -e -o /mnt/results/report
+```
+
+This command runs the test in non-GUI mode and generates the result file and HTML report.
 
 ---
 
