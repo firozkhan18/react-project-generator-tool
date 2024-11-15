@@ -154,9 +154,9 @@ Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution Re
 ### 1. ReactJS - Introduction
 
 - **Concepts Covered**:
-  - Introduction to React
-  - Why use React?
-  - Core features of React (Declarative, Component-based, Learn once, write anywhere, etc.)
+ - Introduction to React
+ - Why use React?
+ - Core features of React (Declarative, Component-based, Learn once, write anywhere, etc.)
 
 - **Example**:
   React is a declarative, efficient, and flexible JavaScript library for building user interfaces. It lets you build complex UIs from small and isolated pieces of code called “components.”
@@ -181,8 +181,8 @@ export default App;
 ### 2. ReactJS - Hello World
 
 - **Concepts Covered**:
-  - How to set up a simple React app
-  - Running React in the browser using `create-react-app`
+ - How to set up a simple React app
+ - Running React in the browser using `create-react-app`
 
 - **Example**:
   Here’s a simple "Hello World" app. You can use `create-react-app` to quickly start a React app.
@@ -214,8 +214,8 @@ export default App;
 ### 3. ReactJS - Folder Structure
 
 - **Concepts Covered**:
-  - Typical folder structure in a React project.
-  - How to organize components, assets, and config files.
+ - Typical folder structure in a React project.
+ - How to organize components, assets, and config files.
 
 - **Example**:
   Here’s an ideal folder structure for a React project:
@@ -250,8 +250,8 @@ export default App;
 ### 4. ReactJS - Components
 
 - **Concepts Covered**:
-  - Functional vs. Class components in React.
-  - Creating reusable components.
+ - Functional vs. Class components in React.
+ - Creating reusable components.
 
 - **Example**:
   **Functional Component:**
@@ -280,10 +280,10 @@ export default Greeting;
 
 ---
 
-### 5. ReactJS  - Functional Components
+### 5. ReactJS - Functional Components
 
 - **Concepts Covered**:
-  - Writing functional components using JSX syntax.
+ - Writing functional components using JSX syntax.
 
 - **Example**:
   Here’s a stateless functional component that displays a greeting:
@@ -315,11 +315,11 @@ export default App;
 
 ---
 
-### 6. ReactJS  - Class Components
+### 6. ReactJS - Class Components
 
 - **Concepts Covered**:
-  - Creating class-based components.
-  - Lifecycle methods in class components.
+ - Creating class-based components.
+ - Lifecycle methods in class components.
 
 - **Example**:
   Class components come with lifecycle methods such as `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount`.
@@ -354,11 +354,11 @@ export default Counter;
 
 ---
 
-### 7. ReactJS  - Hooks Update
+### 7. ReactJS - Hooks Update
 
 - **Concepts Covered**:
-  - Introduction to React Hooks.
-  - Using `useState` and `useEffect`.
+ - Introduction to React Hooks.
+ - Using `useState` and `useEffect`.
 
 - **Example**:
   Using the `useState` hook for managing state in a functional component:
@@ -384,10 +384,10 @@ export default Counter;
 
 ---
 
-### 8. ReactJS  - JSX
+### 8. ReactJS - JSX
 
 - **Concepts Covered**:
-  - Understanding JSX and how it’s compiled to React’s `createElement`.
+ - Understanding JSX and how it’s compiled to React’s `createElement`.
 
 - **Example**:
   JSX is a syntax extension for JavaScript that looks similar to HTML. It allows us to write elements and components in a declarative way.
@@ -404,11 +404,11 @@ const element = React.createElement('h1', null, 'Hello, World!');
 
 ---
 
-### 9. ReactJS  - Props
+### 9. ReactJS - Props
 
 - **Concepts Covered**:
-  - Props in React components.
-  - Passing data from parent to child components.
+ - Props in React components.
+ - Passing data from parent to child components.
 
 - **Example**:
   Here’s how you can pass props to a child component:
@@ -425,10 +425,10 @@ const App = () => {
 
 ---
 
-### 10. ReactJS  - State
+### 10. ReactJS - State
 
 - **Concepts Covered**:
-  - Introduction to state in React and how to manage it.
+ - Introduction to state in React and how to manage it.
 
 - **Example**:
   A controlled form component that updates state based on user input:
@@ -454,10 +454,10 @@ export default Form;
 
 ---
 
-### 11. ReactJS  - setState
+### 11. ReactJS - setState
 
 - **Concepts Covered**:
-  - Using `setState` in class components to update the state.
+ - Using `setState` in class components to update the state.
 
 - **Example**:
   Here’s how you use `setState` to update state in class components:
@@ -490,10 +490,10 @@ export default Counter;
 
 ---
 
-### 12. ReactJS  - Destructuring props and state
+### 12. ReactJS - Destructuring props and state
 
 - **Concepts Covered**:
-  - Destructuring props and state to improve code readability.
+ - Destructuring props and state to improve code readability.
 
 - **Example**:
   Here’s how destructuring works in functional components:
@@ -513,10 +513,10 @@ In this example, `name` and `age` are destructured directly from `props`.
 
 ---
 
-### 13. ReactJS  - Event Handling
+### 13. ReactJS - Event Handling
 
 - **Concepts Covered**:
-  - Handling events like `onClick`, `onSubmit` in React.
+ - Handling events like `onClick`, `onSubmit` in React.
 
 - **Example**:
   Handling a click event in React:
@@ -546,11 +546,11 @@ It seems I still haven't covered everything from the ReactJS tutorial series! Le
 
 ---
 
-## 26. ReactJS  - Pure Components
+## 26. ReactJS - Pure Components
 
 - **Concepts Covered**:
-  - Using `React.PureComponent` to optimize performance by preventing unnecessary re-renders.
-  - `PureComponent` performs a shallow comparison of props and state to determine whether the component needs to re-render.
+ - Using `React.PureComponent` to optimize performance by preventing unnecessary re-renders.
+ - `PureComponent` performs a shallow comparison of props and state to determine whether the component needs to re-render.
 
 - **Example**:
   If a component's state or props haven't changed, it won't re-render, improving performance.
@@ -582,10 +582,10 @@ export default Counter;
 
 ---
 
-### 27. ReactJS  - memo
+### 27. ReactJS - memo
 
 - **Concepts Covered**:
-  - `React.memo` for functional component optimization by memoizing the component and preventing unnecessary re-renders when props haven't changed.
+ - `React.memo` for functional component optimization by memoizing the component and preventing unnecessary re-renders when props haven't changed.
 
 - **Example**:
   Wrapping a functional component with `React.memo()` to optimize rendering:
@@ -608,11 +608,11 @@ export default Counter;
 
 ---
 
-### 28. ReactJS  - Refs
+### 28. ReactJS - Refs
 
 - **Concepts Covered**:
-  - Using `refs` to interact directly with DOM elements or React components.
-  - `refs` are useful for tasks like focusing an input field, measuring elements, or triggering animations.
+ - Using `refs` to interact directly with DOM elements or React components.
+ - `refs` are useful for tasks like focusing an input field, measuring elements, or triggering animations.
 
 - **Example**:
   Focusing an input field using a ref:
@@ -642,10 +642,10 @@ Here, `useRef` is used to create a reference to the input element, which we can 
 
 ---
 
-### ReactJS  - Refs with Class Components
+### ReactJS - Refs with Class Components
 
 - **Concepts Covered**:
-  - Handling `refs` in class components.
+ - Handling `refs` in class components.
 
 - **Example**:
   Using `refs` in a class component to access a DOM element:
@@ -680,11 +680,11 @@ In class components, `React.createRef()` is used to create refs, which are then 
 
 ---
 
-### 30. ReactJS  - Forwarding Refs
+### 30. ReactJS - Forwarding Refs
 
 - **Concepts Covered**:
-  - Forwarding refs to child components using `React.forwardRef()`.
-  - This is useful when you need to pass refs through higher-order components or functional components.
+ - Forwarding refs to child components using `React.forwardRef()`.
+ - This is useful when you need to pass refs through higher-order components or functional components.
 
 - **Example**:
   Forwarding refs to a child component:
@@ -718,10 +718,10 @@ Here, `React.forwardRef` allows the `Input` component to accept a `ref` passed f
 
 ---
 
-### 31. ReactJS  - Portals
+### 31. ReactJS - Portals
 
 - **Concepts Covered**:
-  - Using `ReactDOM.createPortal` to render a component outside its parent DOM hierarchy, useful for modals, tooltips, etc.
+ - Using `ReactDOM.createPortal` to render a component outside its parent DOM hierarchy, useful for modals, tooltips, etc.
 
 - **Example**:
   Creating a modal component with portals:
@@ -746,10 +746,10 @@ Here, the modal is rendered outside the main React component tree, allowing it t
 
 ---
 
-### 32. ReactJS  - Error Boundary
+### 32. ReactJS - Error Boundary
 
 - **Concepts Covered**:
-  - Using Error Boundaries to catch JavaScript errors in components and display a fallback UI.
+ - Using Error Boundaries to catch JavaScript errors in components and display a fallback UI.
 
 - **Example**:
   Implementing an Error Boundary to handle errors gracefully:
@@ -793,10 +793,10 @@ export default App;
 
 ---
 
-### 33. ReactJS  - Higher Order Components (Part 1)
+### 33. ReactJS - Higher Order Components (Part 1)
 
 - **Concepts Covered**:
-  - Introduction to Higher-Order Components (HOCs), which are functions that take a component and return a new component with enhanced functionality.
+ - Introduction to Higher-Order Components (HOCs), which are functions that take a component and return a new component with enhanced functionality.
 
 - **Example**:
   Creating a `withLoader` HOC that adds loading functionality to a component:
@@ -831,10 +831,10 @@ export default UserWithLoader;
 
 ---
 
-### 34. ReactJS  - Higher Order Components (Part 2)
+### 34. ReactJS - Higher Order Components (Part 2)
 
 - **Concepts Covered**:
-  - More examples of HOCs, such as adding authentication checks to components.
+ - More examples of HOCs, such as adding authentication checks to components.
 
 - **Example**:
   Creating an `withAuth` HOC that ensures the user is authenticated:
@@ -863,10 +863,10 @@ export default ProtectedDashboard;
 
 ---
 
-### 35. ReactJS  - Higher Order Components (Part 3)
+### 35. ReactJS - Higher Order Components (Part 3)
 
 - **Concepts Covered**:
-  - Handling more complex scenarios with HOCs, like error handling.
+ - Handling more complex scenarios with HOCs, like error handling.
 
 - **Example**:
   Creating a `withErrorHandler` HOC to handle errors in the wrapped component:
@@ -902,7 +902,7 @@ This HOC catches errors in `SomeComponent` and displays an error message instead
  36 - Render Props (Part 1)
 
 - **Concepts Covered**:
-  - Introduction to the Render Props pattern, where a component receives a function as a prop and calls it to render dynamic content.
+ - Introduction to the Render Props pattern, where a component receives a function as a prop and calls it to render dynamic content.
 
 - **Example**:
   Creating a `MouseTracker` component using Render Props:
@@ -941,11 +941,11 @@ It looks like I still haven’t completed the full series! Let's continue from w
 
 ---
 
-### 37. ReactJS  - Render Props (Part 2)
+### 37. ReactJS - Render Props (Part 2)
 
 - **Concepts Covered**:
-  - Advanced techniques using Render Props to pass dynamic props to child components.
-  - Using render props to handle dynamic content or actions (like fetching data).
+ - Advanced techniques using Render Props to pass dynamic props to child components.
+ - Using render props to handle dynamic content or actions (like fetching data).
 
 - **Example**:
   Passing a dynamic prop to a child component using render props:
@@ -980,11 +980,11 @@ In this case, `DataFetcher` fetches data and passes it to the child component th
 
 ---
 
-### 38. ReactJS  - Context (Part 1)
+### 38. ReactJS - Context (Part 1)
 
 - **Concepts Covered**:
-  - Introduction to the React Context API.
-  - Context is a way to share data (like a global state) across multiple components without passing props down manually through each level.
+ - Introduction to the React Context API.
+ - Context is a way to share data (like a global state) across multiple components without passing props down manually through each level.
 
 - **Example**:
   Using the Context API to share a theme across components:
@@ -1029,10 +1029,10 @@ In this example, `ThemeContext` allows components to access and update the theme
 
 ---
 
-### 39. ReactJS  - Context (Part 2)
+### 39. ReactJS - Context (Part 2)
 
 - **Concepts Covered**:
-  - Consuming context in functional components using the `useContext` hook.
+ - Consuming context in functional components using the `useContext` hook.
 
 - **Example**:
   Using `useContext` to access context values:
@@ -1078,7 +1078,7 @@ export default App;
 ### 40. ReactJS 0 - Context (Part 3)
 
 - **Concepts Covered**:
-  - Advanced context patterns: Updating context dynamically in a component.
+ - Advanced context patterns: Updating context dynamically in a component.
 
 - **Example**:
   Updating the context dynamically within a component:
@@ -1126,8 +1126,8 @@ Here, the `UserContext` allows multiple components to access and update the shar
 ### 41. ReactJS 1 - HTTP and React
 
 - **Concepts Covered**:
-  - Making HTTP requests in React using `fetch` or `axios`.
-  - Handling API requests to fetch data or send data.
+ - Making HTTP requests in React using `fetch` or `axios`.
+ - Handling API requests to fetch data or send data.
 
 - **Example**:
   Fetching data from an API using `fetch`:
@@ -1161,7 +1161,7 @@ This example demonstrates how to fetch and display data from an API inside a Rea
 ### 42. ReactJS 2 - HTTP GET Request
 
 - **Concepts Covered**:
-  - Handling GET requests in React to retrieve data from a server or public API.
+ - Handling GET requests in React to retrieve data from a server or public API.
 
 - **Example**:
   Making a GET request using `axios`:
@@ -1195,7 +1195,7 @@ Here, we use `axios` to make an HTTP GET request and display the retrieved data.
 ### 43. ReactJS 3 - HTTP Post Request
 
 - **Concepts Covered**:
-  - Handling POST requests in React to send data to a server.
+ - Handling POST requests in React to send data to a server.
 
 - **Example**:
   Sending data using a POST request with `axios`:
@@ -1242,9 +1242,9 @@ This example sends a POST request with form data to an API using `axios`.
 #### 44. React Hooks - Introduction
 
 - **Concepts Covered**:
-  - Introduction to React Hooks, and why they were introduced.
-  - Hooks provide a way to use state and lifecycle methods in functional components.
-  - Hooks help simplify code by allowing components to manage state, side effects, and context without the need for class components.
+ - Introduction to React Hooks, and why they were introduced.
+ - Hooks provide a way to use state and lifecycle methods in functional components.
+ - Hooks help simplify code by allowing components to manage state, side effects, and context without the need for class components.
 
 - **Example**:
   Transition from a class component to a functional component using `useState`:
@@ -1291,8 +1291,8 @@ const Counter = () => {
 #### 45. React Hooks - useState Hook
 
 - **Concepts Covered**:
-  - Using the `useState` hook to add state to functional components.
-  - `useState` returns an array: the current state value and a function to update it.
+ - Using the `useState` hook to add state to functional components.
+ - `useState` returns an array: the current state value and a function to update it.
 
 - **Example**: A simple counter app using `useState`.
 
@@ -1314,8 +1314,8 @@ const Counter = () => {
 #### 46. React Hooks - useState with Previous State
 
 - **Concepts Covered**:
-  - Updating state based on the previous state using `useState`.
-  - It's important to use the callback version of the state setter function when updating based on the current state.
+ - Updating state based on the previous state using `useState`.
+ - It's important to use the callback version of the state setter function when updating based on the current state.
 
 - **Example**: Incrementing the counter with the previous state value.
 
@@ -1336,11 +1336,11 @@ const Counter = () => {
 
 ---
 
-#### 47. React Hooks  - useState with Object
+#### 47. React Hooks - useState with Object
 
 - **Concepts Covered**:
-  - Storing and updating objects using `useState`.
-  - To update specific properties of an object, use the spread operator to maintain the previous state.
+ - Storing and updating objects using `useState`.
+ - To update specific properties of an object, use the spread operator to maintain the previous state.
 
 - **Example**: Updating user profile information stored as an object.
 
@@ -1362,11 +1362,11 @@ const UserProfile = () => {
 
 ---
 
-#### 48. React Hooks  - useState with Array
+#### 48. React Hooks - useState with Array
 
 - **Concepts Covered**:
-  - Storing arrays in state and updating array items using `useState`.
-  - When updating arrays, make sure to create a new array using methods like `concat`, `slice`, or spread operator.
+ - Storing arrays in state and updating array items using `useState`.
+ - When updating arrays, make sure to create a new array using methods like `concat`, `slice`, or spread operator.
 
 - **Example**: Adding/removing items from a list.
 
@@ -1400,11 +1400,11 @@ const TodoList = () => {
 
 ---
 
-#### 49. React Hooks  - useEffect Hook
+#### 49. React Hooks - useEffect Hook
 
 - **Concepts Covered**:
-  - `useEffect` hook allows you to perform side effects (e.g., data fetching, subscriptions) in functional components.
-  - Runs after the component renders.
+ - `useEffect` hook allows you to perform side effects (e.g., data fetching, subscriptions) in functional components.
+ - Runs after the component renders.
 
 - **Example**: Fetching data in `useEffect` on component mount.
 
@@ -1426,11 +1426,11 @@ const DataFetcher = () => {
 
 ---
 
-#### 50. React Hooks  - useEffect after Render
+#### 50. React Hooks - useEffect after Render
 
 - **Concepts Covered**:
-  - Running `useEffect` after every render to monitor state or props changes.
-  - Useful for debugging or when side effects depend on dynamic state.
+ - Running `useEffect` after every render to monitor state or props changes.
+ - Useful for debugging or when side effects depend on dynamic state.
 
 - **Example**: Debugging component renders with `useEffect`.
 
@@ -1453,10 +1453,10 @@ const Counter = () => {
 
 ---
 
-#### 51. React Hooks  - Conditionally Run Effects
+#### 51. React Hooks - Conditionally Run Effects
 
 - **Concepts Covered**:
-  - You can conditionally run effects based on state or props changes by specifying dependencies in the dependency array of `useEffect`.
+ - You can conditionally run effects based on state or props changes by specifying dependencies in the dependency array of `useEffect`.
 
 - **Example**: Fetching data when a particular state changes.
 
@@ -1489,10 +1489,10 @@ const FetchOnChange = () => {
 
 ---
 
-#### 52. React Hooks  - Run Effects Only Once
+#### 52. React Hooks - Run Effects Only Once
 
 - **Concepts Covered**:
-  - You can run `useEffect` only once when the component mounts by passing an empty dependency array `[]`.
+ - You can run `useEffect` only once when the component mounts by passing an empty dependency array `[]`.
 
 - **Example**: Setting up event listeners or fetching data once on component mount.
 
@@ -1509,10 +1509,10 @@ const Component = () => {
 
 ---
 
-#### 53. React Hooks  - useEffect with Cleanup
+#### 53. React Hooks - useEffect with Cleanup
 
 - **Concepts Covered**:
-  - Cleaning up side effects when the component unmounts using the return function inside `useEffect`.
+ - Cleaning up side effects when the component unmounts using the return function inside `useEffect`.
 
 - **Example**: Cleaning up a timer or subscription in `useEffect`.
 
@@ -1538,11 +1538,11 @@ It seems like you want to continue the list from where we left off. Here's the c
 
 ---
 
-#### 54. React Hooks  - useEffect with Incorrect Dependency
+#### 54. React Hooks - useEffect with Incorrect Dependency
 
 - **Concepts Covered**:
-  - Common mistakes when using `useEffect` with dependencies.
-  - How missing or incorrectly added dependencies can lead to bugs, infinite loops, or stale data.
+ - Common mistakes when using `useEffect` with dependencies.
+ - How missing or incorrectly added dependencies can lead to bugs, infinite loops, or stale data.
 
 - **Example**: Debugging dependency arrays in `useEffect` by ensuring proper state and prop tracking.
 
@@ -1569,11 +1569,11 @@ const ExampleComponent = () => {
 
 ---
 
-#### 55. React Hooks  - Fetching Data with useEffect Part 1
+#### 55. React Hooks - Fetching Data with useEffect Part 1
 
 - **Concepts Covered**:
-  - Using `useEffect` to fetch data from an API when the component mounts.
-  - Handling API responses inside `useEffect`.
+ - Using `useEffect` to fetch data from an API when the component mounts.
+ - Handling API responses inside `useEffect`.
 
 - **Example**: Fetching data from an API and displaying the fetched data.
 
@@ -1593,10 +1593,10 @@ const DataFetcher = () => {
 
 ---
 
-#### 56. React Hooks  - Fetching Data with useEffect Part 2
+#### 56. React Hooks - Fetching Data with useEffect Part 2
 
 - **Concepts Covered**:
-  - Handling loading, success, and error states when fetching data with `useEffect`.
+ - Handling loading, success, and error states when fetching data with `useEffect`.
 
 - **Example**: Conditional rendering for loading and error handling.
 
@@ -1628,11 +1628,11 @@ const FetchDataWithState = () => {
 
 ---
 
-#### 57. React Hooks  - Fetching Data with useEffect Part 3
+#### 57. React Hooks - Fetching Data with useEffect Part 3
 
 - **Concepts Covered**:
-  - Optimizing multiple requests using `useEffect`.
-  - Handling sequential or parallel API calls in `useEffect`.
+ - Optimizing multiple requests using `useEffect`.
+ - Handling sequential or parallel API calls in `useEffect`.
 
 - **Example**: Making multiple API requests simultaneously or sequentially.
 
@@ -1669,11 +1669,11 @@ const FetchMultipleData = () => {
 
 ---
 
-#### 58. React Hooks  - useContext Hook Part 1
+#### 58. React Hooks - useContext Hook Part 1
 
 - **Concepts Covered**:
-  - Introduction to `useContext` for sharing global state across components.
-  - Managing shared data like user authentication or theme state.
+ - Introduction to `useContext` for sharing global state across components.
+ - Managing shared data like user authentication or theme state.
 
 - **Example**: Sharing state between components using React Context.
 
@@ -1710,10 +1710,10 @@ const App = () => (
 
 ---
 
-#### 59. React Hooks  - useContext Hook Part 2
+#### 59. React Hooks - useContext Hook Part 2
 
 - **Concepts Covered**:
-  - Updating context values dynamically and passing those values to components.
+ - Updating context values dynamically and passing those values to components.
 
 - **Example**: Changing theme (light/dark mode) across the app using context.
 
@@ -1751,10 +1751,10 @@ const App = () => (
 
 ---
 
-#### 60. React Hooks  - useContext Hook Part 3
+#### 60. React Hooks - useContext Hook Part 3
 
 - **Concepts Covered**:
-  - Combining `useContext` with other hooks like `useState` and `useEffect`.
+ - Combining `useContext` with other hooks like `useState` and `useEffect`.
 
 - **Example**: Managing user authentication with `useContext`.
 
@@ -1802,14 +1802,14 @@ It seems like you're looking for more of the tutorial list. Here's the continuat
 
 ---
 
-#### 61. React Hooks  - useReducer Hook
+#### 61. React Hooks - useReducer Hook
 
 - **Concepts Covered**:  
-  - Introduction to `useReducer` for handling complex state logic.
-  - When to use `useReducer` over `useState` for better control over state transitions.
+ - Introduction to `useReducer` for handling complex state logic.
+ - When to use `useReducer` over `useState` for better control over state transitions.
 
 - **Example**:  
-  - Using `useReducer` to manage multi-step form logic or any complex state structure.
+ - Using `useReducer` to manage multi-step form logic or any complex state structure.
 
 ```jsx
 const initialState = { step: 1, data: {} };
@@ -1846,13 +1846,13 @@ const FormComponent = () => {
 
 ---
 
-#### 62. React Hooks  - useReducer (Simple State & Action)
+#### 62. React Hooks - useReducer (Simple State & Action)
 
 - **Concepts Covered**:  
-  - Managing state transitions with `useReducer` for simple states and actions.
+ - Managing state transitions with `useReducer` for simple states and actions.
 
 - **Example**:  
-  - Implementing a simple counter with `useReducer`.
+ - Implementing a simple counter with `useReducer`.
 
 ```jsx
 const initialState = { count: 0 };
@@ -1883,13 +1883,13 @@ const CounterComponent = () => {
 
 ---
 
-#### 63. React Hooks  - useReducer (Complex State & Action)
+#### 63. React Hooks - useReducer (Complex State & Action)
 
 - **Concepts Covered**:  
-  - Managing more complex states and actions with `useReducer`.
+ - Managing more complex states and actions with `useReducer`.
 
 - **Example**:  
-  - Using `useReducer` to handle form states with multiple inputs.
+ - Using `useReducer` to handle form states with multiple inputs.
 
 ```jsx
 const initialState = { name: '', email: '' };
@@ -1929,13 +1929,13 @@ const FormComponent = () => {
 
 ---
 
-#### 64. React Hooks  - Multiple useReducers
+#### 64. React Hooks - Multiple useReducers
 
 - **Concepts Covered**:  
-  - Using multiple `useReducer` hooks within one component for separate pieces of state.
+ - Using multiple `useReducer` hooks within one component for separate pieces of state.
 
 - **Example**:  
-  - Combining two reducers for different pieces of state, such as managing a form and UI states.
+ - Combining two reducers for different pieces of state, such as managing a form and UI states.
 
 ```jsx
 const formReducer = (state, action) => {
@@ -1979,13 +1979,13 @@ const FormWithModal = () => {
 
 ---
 
-#### 65. React Hooks  - useReducer with useContext
+#### 65. React Hooks - useReducer with useContext
 
 - **Concepts Covered**:  
-  - Combining `useReducer` with `useContext` to manage application-wide state.
+ - Combining `useReducer` with `useContext` to manage application-wide state.
 
 - **Example**:  
-  - Sharing form and UI states across components using both hooks.
+ - Sharing form and UI states across components using both hooks.
 
 ```jsx
 const StateContext = createContext();
@@ -2044,13 +2044,13 @@ const App = () => (
 
 ---
 
-#### 66. React Hooks  - Fetching Data with useReducer Part 1
+#### 66. React Hooks - Fetching Data with useReducer Part 1
 
 - **Concepts Covered**:  
-  - Using `useReducer` to manage fetching data and the associated loading, error, and success states.
+ - Using `useReducer` to manage fetching data and the associated loading, error, and success states.
 
 - **Example**:  
-  - Fetching data with complex state transitions (loading, error, success).
+ - Fetching data with complex state transitions (loading, error, success).
 
 ```jsx
 const initialState = { loading: true, data: null, error: null };
@@ -2089,13 +2089,13 @@ It seems like you're still looking for more information from the list. I'll prov
 
 ---
 
-#### 67. React Hooks  - Fetching Data with useReducer Part 2
+#### 67. React Hooks - Fetching Data with useReducer Part 2
 
 - **Concepts Covered**:  
-  - Advanced error handling and optimization when using `useReducer` for fetching data.
+ - Advanced error handling and optimization when using `useReducer` for fetching data.
 
 - **Example**:  
-  - Handling retries for failed fetch requests and managing multiple states (loading, success, error).
+ - Handling retries for failed fetch requests and managing multiple states (loading, success, error).
 
 ```jsx
 const initialState = { loading: true, data: null, error: null, retryCount: 0 };
@@ -2143,13 +2143,13 @@ const FetchDataWithRetry = () => {
 
 ---
 
-#### 68. React Hooks  - useState vs useReducer
+#### 68. React Hooks - useState vs useReducer
 
 - **Concepts Covered**:  
-  - Comparing `useState` and `useReducer` for state management and when to use each.
+ - Comparing `useState` and `useReducer` for state management and when to use each.
 
 - **Example**:  
-  - Using `useState` for simple state management, and `useReducer` for complex state logic.
+ - Using `useState` for simple state management, and `useReducer` for complex state logic.
 
 ```jsx
 // Using useState for simple state
@@ -2193,14 +2193,14 @@ const CounterWithReducer = () => {
 
 ---
 
-#### 69. React Hooks  - useCallback Hook
+#### 69. React Hooks - useCallback Hook
 
 - **Concepts Covered**:  
-  - Using `useCallback` to memoize functions and prevent unnecessary re-renders.
-  - Optimizing performance by memoizing callbacks that are passed to child components.
+ - Using `useCallback` to memoize functions and prevent unnecessary re-renders.
+ - Optimizing performance by memoizing callbacks that are passed to child components.
 
 - **Example**:  
-  - Using `useCallback` to memoize a function for a button click handler.
+ - Using `useCallback` to memoize a function for a button click handler.
 
 ```jsx
 const ParentComponent = () => {
@@ -2221,13 +2221,13 @@ const ChildComponent = React.memo(({ increment }) => {
 
 ---
 
-#### 70. React Hooks  - useMemo Hook
+#### 70. React Hooks - useMemo Hook
 
 - **Concepts Covered**:  
-  - Using `useMemo` to memoize expensive computations and avoid re-calculating on every render.
+ - Using `useMemo` to memoize expensive computations and avoid re-calculating on every render.
 
 - **Example**:  
-  - Optimizing complex calculations using `useMemo`.
+ - Optimizing complex calculations using `useMemo`.
 
 ```jsx
 const ExpensiveComponent = ({ num }) => {
@@ -2244,13 +2244,13 @@ const ExpensiveComponent = ({ num }) => {
 
 ---
 
-#### 71. React Hooks  - useRef Hook Part 1
+#### 71. React Hooks - useRef Hook Part 1
 
 - **Concepts Covered**:  
-  - Introduction to `useRef` for accessing DOM elements and storing mutable values that persist across renders.
+ - Introduction to `useRef` for accessing DOM elements and storing mutable values that persist across renders.
 
 - **Example**:  
-  - Managing focus on an input element using `useRef`.
+ - Managing focus on an input element using `useRef`.
 
 ```jsx
 const FocusInput = () => {
@@ -2271,13 +2271,13 @@ const FocusInput = () => {
 
 ---
 
-#### 72. React Hooks  - useRef Hook Part 2
+#### 72. React Hooks - useRef Hook Part 2
 
 - **Concepts Covered**:  
-  - Advanced usage of `useRef`, such as storing mutable values that persist across renders.
+ - Advanced usage of `useRef`, such as storing mutable values that persist across renders.
 
 - **Example**:  
-  - Storing a previous state value using `useRef`.
+ - Storing a previous state value using `useRef`.
 
 ```jsx
 const PreviousState = () => {
@@ -2300,13 +2300,13 @@ const PreviousState = () => {
 
 ---
 
-#### 73. React Hooks  - Custom Hooks
+#### 73. React Hooks - Custom Hooks
 
 - **Concepts Covered**:  
-  - Introduction to creating custom hooks to encapsulate reusable logic.
+ - Introduction to creating custom hooks to encapsulate reusable logic.
 
 - **Example**:  
-  - Creating a custom hook to handle window resizing.
+ - Creating a custom hook to handle window resizing.
 
 ```jsx
 const useWindowSize = () => {
@@ -2342,13 +2342,13 @@ const WindowSizeComponent = () => {
 
 ---
 
-#### 74. React Hooks  - useDocumentTitle Custom Hook
+#### 74. React Hooks - useDocumentTitle Custom Hook
 
 - **Concepts Covered**:  
-  - Example of a custom hook to update the document title dynamically.
+ - Example of a custom hook to update the document title dynamically.
 
 - **Example**:  
-  - Creating a `useDocumentTitle` custom hook to change the page title.
+ - Creating a `useDocumentTitle` custom hook to change the page title.
 
 ```jsx
 const useDocumentTitle = (title) => {
@@ -2373,13 +2373,13 @@ const PageComponent = () => {
 
 ---
 
-#### 75. React Hooks  - useCounter Custom Hook
+#### 75. React Hooks - useCounter Custom Hook
 
 - **Concepts Covered**:  
-  - Using a custom hook to manage counter logic.
+ - Using a custom hook to manage counter logic.
 
 - **Example**:  
-  - Creating a reusable counter hook.
+ - Creating a reusable counter hook.
 
 ```jsx
 const useCounter = (initialValue = 0) => {
@@ -2406,15 +2406,15 @@ const CounterComponent = () => {
 
 ---
 
-#### 76. React Hooks  - useInput
+#### 76. React Hooks - useInput
 
  Custom Hook
 
 - **Concepts Covered**:  
-  - Creating a custom hook to manage form input logic.
+ - Creating a custom hook to manage form input logic.
 
 - **Example**:  
-  - Reusable `useInput` hook to handle form input values.
+ - Reusable `useInput` hook to handle form input values.
 
 ```jsx
 const useInput = (initialValue = '') => {
@@ -2447,22 +2447,22 @@ Here’s the continuation of your **React Render Series**:
 #### 77. React Render - Introduction
 
 - **Concepts Covered**:  
-  - Introduction to React rendering behavior.
-  - Understanding how React optimizes rendering and the concept of reconciliation.
+ - Introduction to React rendering behavior.
+ - Understanding how React optimizes rendering and the concept of reconciliation.
 
 - **Example**:  
-  - Explaining the basic lifecycle of rendering and re-rendering in React components.
+ - Explaining the basic lifecycle of rendering and re-rendering in React components.
 
 ---
 
 #### 78. React Render - Rendering
 
 - **Concepts Covered**:  
-  - How React renders UI and the process of creating a virtual DOM to optimize updates.
-  - Reconciliation: React’s algorithm for matching updates to the virtual DOM with the actual DOM.
+ - How React renders UI and the process of creating a virtual DOM to optimize updates.
+ - Reconciliation: React’s algorithm for matching updates to the virtual DOM with the actual DOM.
 
 - **Example**:  
-  - Rendering components in a React app and the process of state/prop change triggering a re-render.
+ - Rendering components in a React app and the process of state/prop change triggering a re-render.
 
 ```jsx
 const MyComponent = () => {
@@ -2482,11 +2482,11 @@ const MyComponent = () => {
 #### 79. React Render - useState
 
 - **Concepts Covered**:  
-  - Understanding how `useState` triggers re-renders when state is updated.
-  - The connection between state updates and component re-renders.
+ - Understanding how `useState` triggers re-renders when state is updated.
+ - The connection between state updates and component re-renders.
 
 - **Example**:  
-  - A counter app that demonstrates how `useState` causes the component to re-render on state change.
+ - A counter app that demonstrates how `useState` causes the component to re-render on state change.
 
 ```jsx
 const Counter = () => {
@@ -2505,14 +2505,14 @@ const Counter = () => {
 
 ---
 
-#### 80. React Render  - useReducer
+#### 80. React Render - useReducer
 
 - **Concepts Covered**:  
-  - Exploring `useReducer` for managing more complex state logic.
-  - Understanding how `useReducer` interacts with re-renders.
+ - Exploring `useReducer` for managing more complex state logic.
+ - Understanding how `useReducer` interacts with re-renders.
 
 - **Example**:  
-  - A simple counter with `useReducer`, showing how state updates lead to re-renders.
+ - A simple counter with `useReducer`, showing how state updates lead to re-renders.
 
 ```jsx
 const initialState = { count: 0 };
@@ -2540,14 +2540,14 @@ const CounterWithReducer = () => {
 
 ---
 
-#### 81. React Render  - State Immutability
+#### 81. React Render - State Immutability
 
 - **Concepts Covered**:  
-  - Why state in React must be treated as immutable to ensure proper rendering behavior.
-  - Best practices to ensure that React detects state changes.
+ - Why state in React must be treated as immutable to ensure proper rendering behavior.
+ - Best practices to ensure that React detects state changes.
 
 - **Example**:  
-  - Proper and improper ways to update state and how it affects re-renders.
+ - Proper and improper ways to update state and how it affects re-renders.
 
 ```jsx
 // Correct: using spread syntax to update an object
@@ -2560,14 +2560,14 @@ const incrementWrong = () => state.count++;
 
 ---
 
-#### 82. React Render  - Parent and Child
+#### 82. React Render - Parent and Child
 
 - **Concepts Covered**:  
-  - How re-renders in parent and child components work in React.
-  - Optimizing performance when parent or child components re-render unnecessarily.
+ - How re-renders in parent and child components work in React.
+ - Optimizing performance when parent or child components re-render unnecessarily.
 
 - **Example**:  
-  - Parent component rendering with child components and handling unnecessary re-renders.
+ - Parent component rendering with child components and handling unnecessary re-renders.
 
 ```jsx
 const ParentComponent = () => {
@@ -2589,14 +2589,14 @@ const ChildComponent = React.memo(() => {
 
 ---
 
-#### 83. React Render  - Same Element Reference
+#### 83. React Render - Same Element Reference
 
 - **Concepts Covered**:  
-  - When React recognizes the same element reference and prevents unnecessary re-renders.
-  - Understanding React's rendering optimizations.
+ - When React recognizes the same element reference and prevents unnecessary re-renders.
+ - Understanding React's rendering optimizations.
 
 - **Example**:  
-  - Comparing cases where React can avoid re-rendering the same component with the same element reference.
+ - Comparing cases where React can avoid re-rendering the same component with the same element reference.
 
 ```jsx
 const Component = () => {
@@ -2613,14 +2613,14 @@ const Component = () => {
 
 ---
 
-#### 84. React Render  - React memo
+#### 84. React Render - React memo
 
 - **Concepts Covered**:  
-  - Using `React.memo` to memoize a component and prevent unnecessary re-renders.
-  - How `React.memo` works and its effect on functional components.
+ - Using `React.memo` to memoize a component and prevent unnecessary re-renders.
+ - How `React.memo` works and its effect on functional components.
 
 - **Example**:  
-  - Memoizing a component to prevent re-render when props don’t change.
+ - Memoizing a component to prevent re-render when props don’t change.
 
 ```jsx
 const ChildComponent = React.memo(({ name }) => {
@@ -2642,13 +2642,13 @@ const ParentComponent = () => {
 
 ---
 
-#### 85. React Render  - Questions on Optimization
+#### 85. React Render - Questions on Optimization
 
 - **Concepts Covered**:  
-  - Common questions on React rendering optimizations, including unnecessary renders, memoization, and use of hooks.
+ - Common questions on React rendering optimizations, including unnecessary renders, memoization, and use of hooks.
 
 - **Example**:  
-  - Identifying when and where to optimize React components for performance.
+ - Identifying when and where to optimize React components for performance.
 
 ```jsx
 const MemoizedComponent = React.memo(({ value }) => {
@@ -2670,13 +2670,13 @@ const ParentComponent = () => {
 
 ---
 
-#### 86. React Render  - Incorrect memo with children
+#### 86. React Render - Incorrect memo with children
 
 - **Concepts Covered**:  
-  - Potential issues with `React.memo` when used with child components that receive dynamic props.
+ - Potential issues with `React.memo` when used with child components that receive dynamic props.
 
 - **Example**:  
-  - A demonstration of how `React.memo` might not be effective when children receive new props on each render.
+ - A demonstration of how `React.memo` might not be effective when children receive new props on each render.
 
 ```jsx
 const ChildComponent = React.memo(({ value }) => {
@@ -2699,13 +2699,13 @@ const ParentComponent = () => {
 
 ---
 
-#### 87. React Render  - Incorrect memo with Impure Component
+#### 87. React Render - Incorrect memo with Impure Component
 
 - **Concepts Covered**:  
-  - Why `React.memo` might not optimize performance for impure components that have side effects or rely on external states.
+ - Why `React.memo` might not optimize performance for impure components that have side effects or rely on external states.
 
 - **Example**:  
-  - Using `React.memo` incorrectly with impure components.
+ - Using `React.memo` incorrectly with impure components.
 
 ```jsx
 const ImpureComponent = ({ count }) => {
@@ -2729,13 +2729,13 @@ const ParentComponent = () => {
 
 ---
 
-#### 88. React Render  - Incorrect memo with props Reference
+#### 88. React Render - Incorrect memo with props Reference
 
 - **Concepts Covered**:  
-  - Issues with `React.memo` when props are passed by reference (e.g., objects, arrays).
+ - Issues with `React.memo` when props are passed by reference (e.g., objects, arrays).
 
 - **Example**:  
-  - Demonstrating when React.memo will not prevent re-renders due to reference equality checks.
+ - Demonstrating when React.memo will not prevent re-renders due to reference equality checks.
 
 ```jsx
 const ChildComponent = React.memo(({ data }) => {
@@ -2758,15 +2758,15 @@ const ParentComponent = () => {
 
 ---
 
-#### 89. React Render  - useMemo and useCallback
+#### 89. React Render - useMemo and useCallback
 
 - **Concepts Covered**:  
-  - Using `
+ - Using `
 
 useMemo` and `useCallback` to memoize values and functions to optimize rendering.
 
 - **Example**:  
-  - Memoizing a callback function using `useCallback` and an expensive calculation with `useMemo`.
+ - Memoizing a callback function using `useCallback` and an expensive calculation with `useMemo`.
 
 ```jsx
 const ParentComponent = () => {
@@ -2789,14 +2789,14 @@ const ParentComponent = () => {
 
 ---
 
-#### 90. React Render  - Context
+#### 90. React Render - Context
 
 - **Concepts Covered**:  
-  - Understanding how Context affects re-renders in React components.
-  - Avoiding unnecessary re-renders with Context.
+ - Understanding how Context affects re-renders in React components.
+ - Avoiding unnecessary re-renders with Context.
 
 - **Example**:  
-  - Using `useContext` to access global state without causing re-renders in unrelated components.
+ - Using `useContext` to access global state without causing re-renders in unrelated components.
 
 ```jsx
 const ThemeContext = React.createContext();
@@ -2820,13 +2820,13 @@ const ChildComponent = () => {
 
 ---
 
-#### 91. React Render  - Context and memo
+#### 91. React Render - Context and memo
 
 - **Concepts Covered**:  
-  - Using `React.memo` with Context to prevent unnecessary re-renders.
+ - Using `React.memo` with Context to prevent unnecessary re-renders.
 
 - **Example**:  
-  - Optimizing performance when combining `React.memo` and `useContext`.
+ - Optimizing performance when combining `React.memo` and `useContext`.
 
 ```jsx
 const MemoizedComponent = React.memo(() => {
@@ -2837,13 +2837,13 @@ const MemoizedComponent = React.memo(() => {
 
 ---
 
-#### 92. React Render  - Context and Same Element Reference
+#### 92. React Render - Context and Same Element Reference
 
 - **Concepts Covered**:  
-  - How React re-renders components when the element reference remains the same, even in Context-based applications.
+ - How React re-renders components when the element reference remains the same, even in Context-based applications.
 
 - **Example**:  
-  - Understanding how `React.memo` and Context work together to avoid re-renders with unchanged references.
+ - Understanding how `React.memo` and Context work together to avoid re-renders with unchanged references.
 
 ---
 
@@ -2854,12 +2854,12 @@ Here's the continuation of your **React TypeScript Series**:
 #### 93. React TypeScript - Introduction
 
 - **Concepts Covered**:  
-  - Introduction to React with TypeScript.
-  - Setting up TypeScript with a React project.
-  - Benefits of using TypeScript in React: type safety, autocompletion, and easier refactoring.
+ - Introduction to React with TypeScript.
+ - Setting up TypeScript with a React project.
+ - Benefits of using TypeScript in React: type safety, autocompletion, and easier refactoring.
 
 - **Example**:  
-  - Setting up a new React project with TypeScript using `create-react-app`.
+ - Setting up a new React project with TypeScript using `create-react-app`.
 
 ```bash
 npx create-react-app my-app --template typescript
@@ -2870,11 +2870,11 @@ npx create-react-app my-app --template typescript
 #### 94. React TypeScript - Getting Started
 
 - **Concepts Covered**:  
-  - Getting started with TypeScript in React, and understanding the basics of type safety within JSX.
-  - How TypeScript enhances React development by adding types to JSX components.
+ - Getting started with TypeScript in React, and understanding the basics of type safety within JSX.
+ - How TypeScript enhances React development by adding types to JSX components.
 
 - **Example**:  
-  - Writing a simple functional component in TypeScript.
+ - Writing a simple functional component in TypeScript.
 
 ```tsx
 import React from 'react';
@@ -2895,11 +2895,11 @@ export default Greeting;
 #### 95. React TypeScript - Typing Props
 
 - **Concepts Covered**:  
-  - How to define types for props in TypeScript for React components.
-  - Using interfaces to define the shape of props passed to functional components.
+ - How to define types for props in TypeScript for React components.
+ - Using interfaces to define the shape of props passed to functional components.
 
 - **Example**:  
-  - Typing props in a functional component using an interface.
+ - Typing props in a functional component using an interface.
 
 ```tsx
 interface ButtonProps {
@@ -2914,14 +2914,14 @@ const Button: React.FC<ButtonProps> = ({ label, onClick }) => {
 
 ---
 
-#### 96. React TypeScript  - Basic Props
+#### 96. React TypeScript - Basic Props
 
 - **Concepts Covered**:  
-  - Basic prop types in React with TypeScript such as `string`, `number`, `boolean`, and `ReactNode`.
-  - Understanding how to specify these basic types to ensure type safety.
+ - Basic prop types in React with TypeScript such as `string`, `number`, `boolean`, and `ReactNode`.
+ - Understanding how to specify these basic types to ensure type safety.
 
 - **Example**:  
-  - Typing props with simple types like `string`, `number`, and `boolean`.
+ - Typing props with simple types like `string`, `number`, and `boolean`.
 
 ```tsx
 interface CardProps {
@@ -2942,14 +2942,14 @@ const Card: React.FC<CardProps> = ({ title, count, isVisible }) => {
 
 ---
 
-#### 97. React TypeScript  - Advanced Props
+#### 97. React TypeScript - Advanced Props
 
 - **Concepts Covered**:  
-  - Advanced props such as optional props, default props, and function props.
-  - How to make props optional or provide default values using TypeScript.
+ - Advanced props such as optional props, default props, and function props.
+ - How to make props optional or provide default values using TypeScript.
 
 - **Example**:  
-  - Typing components that accept function props or optional props.
+ - Typing components that accept function props or optional props.
 
 ```tsx
 interface ButtonProps {
@@ -2964,14 +2964,14 @@ const Button: React.FC<ButtonProps> = ({ onClick, color = 'blue' }) => {
 
 ---
 
-#### 98. React TypeScript  - Event Props
+#### 98. React TypeScript - Event Props
 
 - **Concepts Covered**:  
-  - Typing event props such as `onClick`, `onChange`, `onSubmit`, and others in React components.
-  - Understanding how to type event handlers in TypeScript.
+ - Typing event props such as `onClick`, `onChange`, `onSubmit`, and others in React components.
+ - Understanding how to type event handlers in TypeScript.
 
 - **Example**:  
-  - Typing `onClick` and `onChange` event handlers in a React component.
+ - Typing `onClick` and `onChange` event handlers in a React component.
 
 ```tsx
 interface FormProps {
@@ -3001,14 +3001,14 @@ const Form: React.FC<FormProps> = ({ onSubmit }) => {
 
 ---
 
-#### 99. React TypeScript  - Style Props
+#### 99. React TypeScript - Style Props
 
 - **Concepts Covered**:  
-  - Typing inline style props in React components using TypeScript.
-  - Using the `CSSProperties` type from `react` for typing inline styles.
+ - Typing inline style props in React components using TypeScript.
+ - Using the `CSSProperties` type from `react` for typing inline styles.
 
 - **Example**:  
-  - Typing the `style` attribute when applying inline styles to a component.
+ - Typing the `style` attribute when applying inline styles to a component.
 
 ```tsx
 import React, { CSSProperties } from 'react';
@@ -3027,14 +3027,14 @@ const Box: React.FC<BoxProps> = ({ style }) => {
 
 ---
 
-#### 100. React TypeScript  - Prop Types and Tips
+#### 100. React TypeScript - Prop Types and Tips
 
 - **Concepts Covered**:  
-  - Using `PropTypes` in addition to TypeScript for runtime prop validation.
-  - Understanding the difference between static typing with TypeScript and runtime validation with PropTypes.
+ - Using `PropTypes` in addition to TypeScript for runtime prop validation.
+ - Understanding the difference between static typing with TypeScript and runtime validation with PropTypes.
 
 - **Example**:  
-  - Combining TypeScript and PropTypes for validation of component props.
+ - Combining TypeScript and PropTypes for validation of component props.
 
 ```tsx
 import PropTypes from 'prop-types';
@@ -3060,14 +3060,14 @@ Here is the continuation of your **React TypeScript Series**:
 
 ---
 
-#### 101. React TypeScript  - useState Hook
+#### 101. React TypeScript - useState Hook
 
 - **Concepts Covered**:
-  - Typing `useState` in TypeScript, handling different types of state, including primitive values, objects, and arrays.
-  - Ensuring type safety for state variables, and understanding how TypeScript enhances the use of `useState`.
+ - Typing `useState` in TypeScript, handling different types of state, including primitive values, objects, and arrays.
+ - Ensuring type safety for state variables, and understanding how TypeScript enhances the use of `useState`.
 
 - **Example**:  
-  - Defining types for state variables using `useState` with different types.
+ - Defining types for state variables using `useState` with different types.
 
 ```tsx
 import React, { useState } from 'react';
@@ -3088,14 +3088,14 @@ const Counter: React.FC = () => {
 
 ---
 
-#### 102. React TypeScript  - useState Future Value
+#### 102. React TypeScript - useState Future Value
 
 - **Concepts Covered**:
-  - Typing future state values and understanding asynchronous state updates.
-  - Handling async logic in `useState`, such as when state is updated based on previous state values.
+ - Typing future state values and understanding asynchronous state updates.
+ - Handling async logic in `useState`, such as when state is updated based on previous state values.
 
 - **Example**:  
-  - Handling async logic with `useState` in TypeScript.
+ - Handling async logic with `useState` in TypeScript.
 
 ```tsx
 const [count, setCount] = useState<number>(0);
@@ -3109,14 +3109,14 @@ const incrementAsync = () => {
 
 ---
 
-#### 103. React TypeScript  - useState Type Assertion
+#### 103. React TypeScript - useState Type Assertion
 
 - **Concepts Covered**:  
-  - Using type assertions with `useState` to ensure specific types when TypeScript is unable to infer the type.
-  - Casting state variables to a specific type to avoid errors or warnings.
+ - Using type assertions with `useState` to ensure specific types when TypeScript is unable to infer the type.
+ - Casting state variables to a specific type to avoid errors or warnings.
 
 - **Example**:  
-  - Using type assertions to specify the type of state.
+ - Using type assertions to specify the type of state.
 
 ```tsx
 const [value, setValue] = useState(''); // TypeScript infers value as string
@@ -3127,14 +3127,14 @@ setCount(5 as number); // Type assertion to tell TypeScript it's a number
 
 ---
 
-#### 104. React TypeScript  - useReducer Hook
+#### 104. React TypeScript - useReducer Hook
 
 - **Concepts Covered**:  
-  - Typing the `useReducer` hook for more complex state logic, especially with action creators and state updates.
-  - Using TypeScript with `useReducer` to ensure action and state types are strictly followed.
+ - Typing the `useReducer` hook for more complex state logic, especially with action creators and state updates.
+ - Using TypeScript with `useReducer` to ensure action and state types are strictly followed.
 
 - **Example**:  
-  - Managing state with `useReducer` and typing actions and state updates.
+ - Managing state with `useReducer` and typing actions and state updates.
 
 ```tsx
 interface State {
@@ -3169,13 +3169,13 @@ const Counter: React.FC = () => {
 
 ---
 
-#### 105. React TypeScript  - useReducer Strict Action Types
+#### 105. React TypeScript - useReducer Strict Action Types
 
 - **Concepts Covered**:  
-  - Ensuring strict action types in `useReducer` to avoid accidentally passing in wrong action types and to improve type safety.
+ - Ensuring strict action types in `useReducer` to avoid accidentally passing in wrong action types and to improve type safety.
 
 - **Example**:  
-  - Making sure actions are strictly typed when using `useReducer`.
+ - Making sure actions are strictly typed when using `useReducer`.
 
 ```tsx
 type Action = 
@@ -3196,13 +3196,13 @@ const reducer = (state: State, action: Action): State => {
 
 ---
 
-#### 106. React TypeScript  - useContext Hook
+#### 106. React TypeScript - useContext Hook
 
 - **Concepts Covered**:  
-  - Typing the `useContext` hook in TypeScript to ensure the context values are correctly typed and provide type safety for global state management.
+ - Typing the `useContext` hook in TypeScript to ensure the context values are correctly typed and provide type safety for global state management.
 
 - **Example**:  
-  - Typing `useContext` with `createContext` to manage global state.
+ - Typing `useContext` with `createContext` to manage global state.
 
 ```tsx
 interface ThemeContextProps {
@@ -3237,13 +3237,13 @@ const ThemedComponent: React.FC = () => {
 
 ---
 
-#### 107. React TypeScript  - useContext Future Value
+#### 107. React TypeScript - useContext Future Value
 
 - **Concepts Covered**:  
-  - Handling and typing async data inside `useContext` and managing dynamic values like API responses or future values.
+ - Handling and typing async data inside `useContext` and managing dynamic values like API responses or future values.
 
 - **Example**:  
-  - Using `useContext` with asynchronous data.
+ - Using `useContext` with asynchronous data.
 
 ```tsx
 const DataContext = React.createContext<string | undefined>(undefined);
@@ -3267,14 +3267,14 @@ const DataProvider: React.FC = ({ children }) => {
 
 ---
 
-#### 108. React TypeScript  - useRef Hook
+#### 108. React TypeScript - useRef Hook
 
 - **Concepts Covered**:  
-  - Typing the `useRef` hook in TypeScript to access DOM elements and manage mutable state.
-  - Using `useRef` for direct DOM manipulation, while ensuring type safety.
+ - Typing the `useRef` hook in TypeScript to access DOM elements and manage mutable state.
+ - Using `useRef` for direct DOM manipulation, while ensuring type safety.
 
 - **Example**:  
-  - Typing `useRef` to access DOM elements like input fields or divs.
+ - Typing `useRef` to access DOM elements like input fields or divs.
 
 ```tsx
 const InputFocus: React.FC = () => {
@@ -3297,14 +3297,14 @@ const InputFocus: React.FC = () => {
 
 ---
 
-#### 109. React TypeScript  - Class Component
+#### 109. React TypeScript - Class Component
 
 - **Concepts Covered**:  
-  - Typing class components in TypeScript, including the types for props, state, and methods.
-  - How to work with TypeScript to type class component lifecycle methods.
+ - Typing class components in TypeScript, including the types for props, state, and methods.
+ - How to work with TypeScript to type class component lifecycle methods.
 
 - **Example**:  
-  - A class-based component with typed props and state.
+ - A class-based component with typed props and state.
 
 ```tsx
 interface CounterProps {
@@ -3338,14 +3338,14 @@ class Counter extends React.Component<CounterProps, CounterState> {
 
 ---
 
-#### 110. React TypeScript  - Component Prop
+#### 110. React TypeScript - Component Prop
 
 - **Concepts Covered**:  
-  - Defining and typing props in class components with TypeScript.
-  - How to work with props in a typed class component.
+ - Defining and typing props in class components with TypeScript.
+ - How to work with props in a typed class component.
 
 - **Example**:  
-  - A class-based component that receives props.
+ - A class-based component that receives props.
 
 ```tsx
 interface ButtonProps {
@@ -3365,14 +3365,14 @@ Here’s the continuation of the **React TypeScript Series**:
 
 ---
 
-#### 111. React TypeScript  - Generic Props
+#### 111. React TypeScript - Generic Props
 
 - **Concepts Covered**:  
-  - Using TypeScript generics for props to create reusable components with dynamic prop types.
-  - How generics allow for flexibility and type safety when passing props to components.
+ - Using TypeScript generics for props to create reusable components with dynamic prop types.
+ - How generics allow for flexibility and type safety when passing props to components.
 
 - **Example**:  
-  - A generic component that can accept props of any type.
+ - A generic component that can accept props of any type.
 
 ```tsx
 interface BoxProps<T> {
@@ -3394,14 +3394,14 @@ const App = () => (
 
 ---
 
-#### 112. React TypeScript  - Restricting Props
+#### 112. React TypeScript - Restricting Props
 
 - **Concepts Covered**:  
-  - Restricting the type of props passed into a component using TypeScript.
-  - Using union types, enums, or literal types to limit which types are allowed.
+ - Restricting the type of props passed into a component using TypeScript.
+ - Using union types, enums, or literal types to limit which types are allowed.
 
 - **Example**:  
-  - Creating stricter prop types to limit the allowed types.
+ - Creating stricter prop types to limit the allowed types.
 
 ```tsx
 type ButtonProps = {
@@ -3418,14 +3418,14 @@ const Button: React.FC<ButtonProps> = ({ color, onClick }) => (
 
 ---
 
-#### 113. React TypeScript  - Template Literals and Exclude
+#### 113. React TypeScript - Template Literals and Exclude
 
 - **Concepts Covered**:  
-  - Using TypeScript’s `Exclude` utility type to manage types dynamically.
-  - Combining template literals with `Exclude` to create flexible type constraints for props.
+ - Using TypeScript’s `Exclude` utility type to manage types dynamically.
+ - Combining template literals with `Exclude` to create flexible type constraints for props.
 
 - **Example**:  
-  - Dynamically restricting prop types using `Exclude` with template literals.
+ - Dynamically restricting prop types using `Exclude` with template literals.
 
 ```tsx
 type ButtonProps = {
@@ -3444,14 +3444,14 @@ const Button: React.FC<ButtonProps> = ({ size, color }) => (
 
 ---
 
-#### 114. React TypeScript  - Wrapping HTML Elements
+#### 114. React TypeScript - Wrapping HTML Elements
 
 - **Concepts Covered**:  
-  - Creating custom components that wrap around standard HTML elements while ensuring proper typing.
-  - Using the `React.HTMLProps` interface to pass through standard props from a native HTML element.
+ - Creating custom components that wrap around standard HTML elements while ensuring proper typing.
+ - Using the `React.HTMLProps` interface to pass through standard props from a native HTML element.
 
 - **Example**:  
-  - Wrapping an HTML `div` element inside a custom component and typing the props.
+ - Wrapping an HTML `div` element inside a custom component and typing the props.
 
 ```tsx
 interface MyDivProps extends React.HTMLProps<HTMLDivElement> {
@@ -3470,14 +3470,14 @@ const MyDiv: React.FC<MyDivProps> = ({ customStyle, ...props }) => {
 
 ---
 
-#### 115. React TypeScript  - Extracting a Component's Prop Types
+#### 115. React TypeScript - Extracting a Component's Prop Types
 
 - **Concepts Covered**:  
-  - Extracting prop types from one component and reusing them in another component to ensure consistency.
-  - Using `React.ComponentProps` to extract the types of props from a component.
+ - Extracting prop types from one component and reusing them in another component to ensure consistency.
+ - Using `React.ComponentProps` to extract the types of props from a component.
 
 - **Example**:  
-  - Reusing prop types from another component using `React.ComponentProps`.
+ - Reusing prop types from another component using `React.ComponentProps`.
 
 ```tsx
 const Button: React.FC<{ label: string }> = ({ label }) => <button>{label}</button>;
@@ -3489,14 +3489,14 @@ const AnotherButton: React.FC<ButtonProps> = (props) => <button {...props} />;
 
 ---
 
-#### 116. React TypeScript  - Polymorphic Components
+#### 116. React TypeScript - Polymorphic Components
 
 - **Concepts Covered**:  
-  - Creating polymorphic components that can accept different types of HTML tags as children.
-  - Typing polymorphic components using generics and React’s `as` prop to define the underlying HTML element.
+ - Creating polymorphic components that can accept different types of HTML tags as children.
+ - Typing polymorphic components using generics and React’s `as` prop to define the underlying HTML element.
 
 - **Example**:  
-  - A polymorphic button component that accepts different HTML tags as children.
+ - A polymorphic button component that accepts different HTML tags as children.
 
 ```tsx
 type ButtonProps<T extends React.ElementType> = {
@@ -3521,14 +3521,14 @@ function Button<T extends React.ElementType = 'button'>({
 
 ---
 
-#### 117. React TypeScript  - Wrapping up
+#### 117. React TypeScript - Wrapping up
 
 - **Concepts Covered**:  
-  - Wrapping up the series with final thoughts on how to use TypeScript effectively with React.
-  - Best practices for combining React and TypeScript, improving developer experience, and maintaining type safety.
+ - Wrapping up the series with final thoughts on how to use TypeScript effectively with React.
+ - Best practices for combining React and TypeScript, improving developer experience, and maintaining type safety.
 
 - **Example**:  
-  - A summary of best practices and tips for React and TypeScript integration.
+ - A summary of best practices and tips for React and TypeScript integration.
 
 ---
 
