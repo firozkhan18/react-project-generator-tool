@@ -542,7 +542,408 @@ export default ButtonClick;
 
 ---
 
-It seems I still haven't covered everything from the ReactJS tutorial series! Let's continue from where we left off, providing more in-depth concepts and examples for the remaining tutorials:
+It seems like I missed some tutorials from the series! Let's continue with the remaining **ReactJS tutorials**, providing in-depth concepts and examples:
+
+---
+
+### **14. ReactJS Tutorial - 14 - Binding Event Handlers** (8:45)
+
+- **Concepts Covered**:
+  - Binding event handlers in class components.
+  - How to use `this` in event handler methods.
+
+- **Example**:
+  In class components, methods need to be explicitly bound to the component instance using `.bind()`. Here’s an example:
+
+```jsx
+import React, { Component } from 'react';
+
+class Counter extends Component {
+  constructor() {
+    super();
+    this.state = { count: 0 };
+    // Binding the method to the component instance
+    this.increment = this.increment.bind(this);
+  }
+
+  increment() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+
+Alternatively, binding can also be done using an arrow function:
+
+```jsx
+<button onClick={() => this.increment()}>Increment</button>
+```
+
+---
+
+### **15. ReactJS Tutorial - 15 - Methods as Props** (11:46)
+
+- **Concepts Covered**:
+  - Passing methods as props from parent to child components.
+
+- **Example**:
+  Here, we pass a method from the parent (`App`) to the child (`ChildComponent`):
+
+```jsx
+// Parent Component
+const App = () => {
+  const handleClick = () => {
+    alert("Button clicked!");
+  };
+
+  return <ChildComponent onClick={handleClick} />;
+};
+
+// Child Component
+const ChildComponent = ({ onClick }) => {
+  return <button onClick={onClick}>Click Me</button>;
+};
+
+export default App;
+```
+
+---
+
+### **16. ReactJS Tutorial - 16 - Conditional Rendering** (11:57)
+
+- **Concepts Covered**:
+  - Conditionally rendering components using JavaScript expressions.
+
+- **Example**:
+  Rendering content based on a condition, such as user authentication:
+
+```jsx
+import React, { useState } from 'react';
+
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  return (
+    <div>
+      {isAuthenticated ? (
+        <h1>Welcome back, User!</h1>
+      ) : (
+        <button onClick={() => setIsAuthenticated(true)}>Login</button>
+      )}
+    </div>
+  );
+};
+
+export default App;
+```
+
+---
+
+### **17. ReactJS Tutorial - 17 - List Rendering** (7:32)
+
+- **Concepts Covered**:
+  - Rendering lists in React using `.map()`.
+
+- **Example**:
+  Displaying a list of items dynamically:
+
+```jsx
+const items = ['Apple', 'Banana', 'Orange'];
+
+const List = () => {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  );
+};
+
+export default List;
+```
+
+---
+
+### **18. ReactJS Tutorial - 18 - Lists and Keys** (11:00)
+
+- **Concepts Covered**:
+  - Using `key` prop when rendering lists to optimize performance and ensure proper re-rendering.
+
+- **Example**:
+  When rendering dynamic lists, `key` helps React identify which items have changed, been added, or removed:
+
+```jsx
+const items = ['Apple', 'Banana', 'Orange'];
+
+const List = () => {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item}>{item}</li> // Using a unique value for 'key'
+      ))}
+    </ul>
+  );
+};
+
+export default List;
+```
+
+---
+
+### **19. ReactJS Tutorial - 19 - Index as Key Anti-pattern** (11:40)
+
+- **Concepts Covered**:
+  - Why using the index as the key can be problematic, especially with dynamic lists.
+
+- **Example**:
+  **Bad Practice:**
+
+```jsx
+const items = ['Apple', 'Banana', 'Orange'];
+
+const List = () => {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{item}</li> // Using index as key
+      ))}
+    </ul>
+  );
+};
+```
+
+Using `index` as a key might cause issues with reordering elements. A better approach is to use unique values as keys:
+
+```jsx
+const items = [
+  { id: 1, name: 'Apple' },
+  { id: 2, name: 'Banana' },
+  { id: 3, name: 'Orange' },
+];
+
+const List = () => {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item.id}>{item.name}</li> // Using unique 'id' as key
+      ))}
+    </ul>
+  );
+};
+```
+
+---
+
+### **20. ReactJS Tutorial - 20 - Styling and CSS Basics** (13:49)
+
+- **Concepts Covered**:
+  - Different ways to style React components (inline styles, external CSS, CSS modules).
+
+- **Example**:
+  - **Inline Styles**:
+
+```jsx
+const App = () => {
+  const divStyle = {
+    color: 'blue',
+    backgroundColor: 'lightgray',
+  };
+
+  return <div style={divStyle}>Styled Div</div>;
+};
+
+export default App;
+```
+
+  - **External CSS**:
+
+```jsx
+// App.css
+.App {
+  color: blue;
+  background-color: lightgray;
+}
+
+// App.js
+import './App.css';
+
+const App = () => {
+  return <div className="App">Styled Div</div>;
+};
+
+export default App;
+```
+
+  - **CSS Modules**:
+
+```jsx
+// App.module.css
+.container {
+  color: blue;
+  background-color: lightgray;
+}
+
+// App.js
+import styles from './App.module.css';
+
+const App = () => {
+  return <div className={styles.container}>Styled Div</div>;
+};
+
+export default App;
+```
+
+---
+
+### **21. ReactJS Tutorial - 21 - Basics of Form Handling** (2:39)
+
+- **Concepts Covered**:
+  - Handling forms in React with controlled components.
+
+- **Example**:
+  A simple controlled form:
+
+```jsx
+import React, { useState } from 'react';
+
+const Form = () => {
+  const [input, setInput] = useState('');
+
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  return (
+    <form>
+      <input type="text" value={input} onChange={handleChange} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default Form;
+```
+
+---
+
+### **22. ReactJS Tutorial - 22 - Component Lifecycle Methods** (10:37)
+
+- **Concepts Covered**:
+  - Lifecycle methods such as `componentDidMount` and `componentDidUpdate` in class components.
+
+- **Example**:
+  Using `componentDidMount()` to fetch data:
+
+```jsx
+import React, { Component } from 'react';
+
+class DataFetcher extends Component {
+  componentDidMount() {
+    fetch('https://api.example.com/data')
+      .then(response => response.json())
+      .then(data => this.setState({ data }));
+  }
+
+  render() {
+    return <div>{this.state ? this.state.data : 'Loading...'}</div>;
+  }
+}
+
+export default DataFetcher;
+```
+
+---
+
+### **23. ReactJS Tutorial - 23 - Component Mounting Lifecycle Methods** (10:35)
+
+- **Concepts Covered**:
+  - Mounting phase lifecycle methods: `constructor()`, `render()`, `componentDidMount()`.
+
+- **Example**:
+  Using `componentDidMount` to fetch data after the initial render:
+
+```jsx
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { data: null };
+  }
+
+  componentDidMount() {
+    fetch('https://api.example.com/data')
+      .then(response => response.json())
+      .then(data => this.setState({ data }));
+  }
+
+  render() {
+    return <div>{this.state.data ? this.state.data : 'Loading...'}</div>;
+  }
+}
+
+export default App;
+```
+
+---
+
+### **24. ReactJS Tutorial - 24 - Component Updating Lifecycle Methods** (9:43)
+
+- **Concepts Covered**:
+  - Lifecycle methods for handling updates: `shouldComponentUpdate`, `componentDidUpdate`.
+
+- **Example**:
+  Using `componentDidUpdate` to react to prop changes:
+
+```jsx
+import React, { Component } from 'react';
+
+class App extends Component {
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      console.log('Value updated:', this.props.value);
+    }
+  }
+
+  render() {
+    return <div>{this.props.value}</div>;
+  }
+}
+
+export default App;
+```
+
+---
+
+### **25. ReactJS Tutorial - 25 - Fragments** (12:45)
+
+- **Concepts Covered**:
+  - Using `React.Fragment` to group elements without adding extra DOM nodes.
+
+- **Example**:
+  Wrapping multiple elements without introducing an additional parent node:
+
+```jsx
+const FragmentExample = () => (
+  <React.Fragment>
+    <h1>Title</h1>
+    <p>Content</p>
+  </React.Fragment>
+);
+
+export default FragmentExample;
+``
+
+`
 
 ---
 
