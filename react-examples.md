@@ -16,15 +16,15 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#8-reactjs---jsx)                                        |
 | 9     | ReactJS - Props                                                         | [ReactJS - Props](#9-reactjs---props)                                    |
 | 10    | ReactJS - State                                                         | [ReactJS - State](#10-reactjs---state)                                    |
-| 11    | ReactJS - setState                                                      | [ReactJS - setState](#11reactjs---setstate)                              |
+| 11    | ReactJS - setState                                                      | [ReactJS - setState](#11-reactjs---setstate)                              |
 | 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#12-reactjs---destructuring-props-and-state) |
 | 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#13-reactjs---event-handling)                  |
-| 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs---binding-event-handlers)  |
-| 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#reactjs---methods-as-props)               |
-| 16    | ReactJS - Conditional Rendering                                         | [ReactJS - Conditional Rendering](#reactjs---conditional-rendering)    |
-| 17    | ReactJS - List Rendering                                                | [ReactJS - List Rendering](#reactjs---list-rendering)                  |
-| 18    | ReactJS - Lists and Keys                                                | [ReactJS - Lists and Keys](#reactjs---lists-and-keys)                  |
-| 19    | ReactJS - Index as Key Anti-pattern                                     | [ReactJS - Index as Key Anti-pattern](#reactjs---index-as-key-anti-pattern) |
+| 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#14-reactjs---binding-event-handlers)  |
+| 15    | ReactJS - Methods as props                                              | [ReactJS - Methods as props](#15-reactjs---methods-as-props)               |
+| 16    | ReactJS - Conditional Rendering                                         | [ReactJS - Conditional Rendering](#16-reactjs---conditional-rendering)    |
+| 17    | ReactJS - List Rendering                                                | [ReactJS - List Rendering](#17-reactjs---list-rendering)                  |
+| 18    | ReactJS - Lists and Keys                                                | [ReactJS - Lists and Keys](#18-reactjs---lists-and-keys)                  |
+| 19    | ReactJS - Index as Key Anti-pattern                                     | [ReactJS - Index as Key Anti-pattern](#19-reactjs---index-as-key-anti-pattern) |
 | 20    | ReactJS - Styling and CSS Basics                                        | [ReactJS - Styling and CSS Basics](#reactjs---styling-and-css-basics)  |
 | 21    | ReactJS - Basics of Form Handling                                       | [ReactJS - Basics of Form Handling](#reactjs---basics-of-form-handling) |
 | 22    | ReactJS - Component Lifecycle Methods                                   | [ReactJS - Component Lifecycle Methods](#reactjs---component-lifecycle-methods) |
