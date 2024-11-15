@@ -11,12 +11,12 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 3     | ReactJS - Folder Structure                                              | [ReactJS - Folder Structure](#3-reactjs---folder-structure)              |
 | 4     | ReactJS - Components                                                    | [ReactJS - Components](#4-reactjs---components)                          |
 | 5     | ReactJS - Functional Components                                         | [ReactJS - Functional Components](#5-reactjs---functional-components)    |
-| 6     | ReactJS - Class Components                                              | [ReactJS - Class Components](#reactjs---class-components)              |
-| 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#reactjs---hooks-update)                      |
-| 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#reactjs---jsx)                                        |
-| 9     | ReactJS - Props                                                         | [ReactJS - Props](#reactjs---props)                                    |
-| 10    | ReactJS - State                                                         | [ReactJS - State](#reactjs---state)                                    |
-| 11    | ReactJS - setState                                                      | [ReactJS - setState](#reactjs---setstate)                              |
+| 6     | ReactJS - Class Components                                              | [ReactJS - Class Components](#6-reactjs---class-components)              |
+| 7     | ReactJS - Hooks Update                                                  | [ReactJS - Hooks Update](#7-reactjs---hooks-update)                      |
+| 8     | ReactJS - JSX                                                          | [ReactJS - JSX](#8-reactjs---jsx)                                        |
+| 9     | ReactJS - Props                                                         | [ReactJS - Props](#9-reactjs---props)                                    |
+| 10    | ReactJS - State                                                         | [ReactJS - State](#1-0-reactjs---state)                                    |
+| 11    | ReactJS - setState                                                      | [ReactJS - setState](#1-1reactjs---setstate)                              |
 | 12    | ReactJS - Destructuring props and state                                  | [ReactJS - Destructuring props and state](#reactjs---destructuring-props-and-state) |
 | 13    | ReactJS - Event Handling                                                | [ReactJS - Event Handling](#13-reactjs---event-handling)                  |
 | 14    | ReactJS - Binding Event Handlers                                        | [ReactJS - Binding Event Handlers](#reactjs---binding-event-handlers)  |
