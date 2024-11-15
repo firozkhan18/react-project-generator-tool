@@ -546,7 +546,7 @@ It seems I still haven't covered everything from the ReactJS tutorial series! Le
 
 ---
 
-### **26. ReactJS  - Pure Components** 
+## **26. ReactJS  - Pure Components** 
 
 - **Concepts Covered**:
   - Using `React.PureComponent` to optimize performance by preventing unnecessary re-renders.
