@@ -1293,9 +1293,7 @@ This HOC catches errors in `SomeComponent` and displays an error message instead
 
 ---
 
-### 36. ReactJS Tutorial -
-
- 36 - Render Props (Part 1)
+### 36. ReactJS - Render Props (Part 1)
 
 - **Concepts Covered**:
  - Introduction to the Render Props pattern, where a component receives a function as a prop and calls it to render dynamic content.
