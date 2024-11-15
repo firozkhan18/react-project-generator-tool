@@ -151,7 +151,7 @@ Here's a detailed breakdown of the **ReactJS Series** from the **Codevolution Re
 
 ---
 
-### 1. ReactJS - Introduction
+### ReactJS - Introduction
 
 - **Concepts Covered**:
   - Introduction to React
@@ -642,7 +642,7 @@ Here, `useRef` is used to create a reference to the input element, which we can 
 
 ---
 
-### **29. ReactJS  - Refs with Class Components** 
+### ReactJS  - Refs with Class Components
 
 - **Concepts Covered**:
   - Handling `refs` in class components.
