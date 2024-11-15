@@ -247,7 +247,7 @@ export default App;
 
 ---
 
-### 4. ReactJS  - Components
+### 4. ReactJS - Components
 
 - **Concepts Covered**:
   - Functional vs. Class components in React.
