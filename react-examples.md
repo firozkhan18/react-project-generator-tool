@@ -1440,6 +1440,178 @@ export default Counter;
 `PureComponent` ensures the component only re-renders when `props` or `state` change.
 
 ---
+In React, both `Component` and `PureComponent` are used to create class components, but they have different behavior when it comes to rendering based on changes in **props** or **state**. Here's a detailed breakdown to help you understand the difference between **`Component`** and **`PureComponent`**.
+
+### 1. **`Component`**
+
+The **`Component`** class is the basic building block for class components in React. It is the default class from which most React components are derived. It has a method called **`render()`** that must return JSX or `null`.
+
+- **`Component`** does **not** optimize rendering behavior. By default, React will re-render the component every time its state or props change, regardless of whether the changes actually affect the output.
+
+#### Key Behavior:
+- React checks if **state or props have changed** and triggers a re-render. 
+- The component will re-render if any prop or state value changes, even if the new value is identical to the previous one.
+- **No built-in performance optimizations** are provided for unnecessary renders.
+
+#### Example:
+```jsx
+import React, { Component } from 'react';
+
+class MyComponent extends Component {
+  state = { count: 0 };
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    console.log('Rendered');
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default MyComponent;
+```
+
+### 2. **`PureComponent`**
+
+**`PureComponent`** is a **subclass** of **`Component`** that implements **a shallow comparison** of props and state. This means it automatically prevents re-renders if the props or state haven’t changed, reducing unnecessary rendering and improving performance.
+
+- **`PureComponent`** implements **`shouldComponentUpdate()`** with a **shallow comparison** of **state** and **props**.
+  - If both **props** and **state** are shallowly equal to their previous values, React skips the render, improving performance.
+  
+  A **shallow comparison** checks whether:
+  - For **primitive types** (e.g., numbers, strings), it checks if the value is the same.
+  - For **objects** or **arrays**, it checks if the reference to the object or array has changed (not the deep content of the object).
+
+#### Key Behavior:
+- React will skip the re-render if **props** and **state** are shallowly equal to their previous values.
+- **Performance optimization**: `PureComponent` is ideal for components that don’t require deep comparison of objects or arrays in their props and state.
+- **Drawback**: It can lead to issues if you pass complex objects or arrays as props or state and modify them in ways that React can’t detect with a shallow comparison (e.g., modifying an array without changing its reference).
+
+#### Example:
+```jsx
+import React, { PureComponent } from 'react';
+
+class MyComponent extends PureComponent {
+  state = { count: 0 };
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    console.log('Rendered');
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default MyComponent;
+```
+
+In this example, if `count` doesn't change, React will not re-render the component after the first render because `PureComponent` prevents unnecessary re-renders when the state hasn't changed.
+
+### Differences Between `Component` and `PureComponent`
+
+| Feature                | `Component`                                      | `PureComponent`                                   |
+|------------------------|--------------------------------------------------|---------------------------------------------------|
+| **Shallow Comparison**  | No. React re-renders the component on every state or prop change. | Yes. React performs a shallow comparison of props and state to avoid unnecessary re-renders. |
+| **Re-rendering**       | The component will always re-render if **state or props change**. | The component will only re-render if **state or props change** and the new values are not shallowly equal to the previous ones. |
+| **Optimization**        | No built-in optimization. Every state or prop change triggers a re-render. | Optimized for performance. It skips re-renders when props or state are shallowly equal to previous values. |
+| **Ideal Use Case**      | Suitable for components with **complex logic**, or when re-renders are necessary regardless of prop changes. | Ideal for components where **props and state** changes are simple and can be efficiently compared with shallow equality. |
+| **`shouldComponentUpdate`** | Not implemented. React re-renders the component by default. | `shouldComponentUpdate` is implemented automatically with shallow comparison for props and state. |
+
+### When to Use `PureComponent` vs `Component`:
+
+1. **Use `PureComponent` when:**
+   - Your component’s render output depends only on **simple types** (strings, numbers, booleans) or **immutable objects** (arrays, objects).
+   - You want **automatic performance optimization** with a shallow prop and state comparison.
+   - You expect the component to receive the same props frequently or if the state changes rarely, and you want to prevent unnecessary re-renders.
+
+2. **Use `Component` when:**
+   - You need more control over **when the component should re-render**. For example, if you need to perform deep comparison or have more complex state logic.
+   - The props or state include complex data structures, and you need to handle re-renders more precisely than what shallow comparison provides.
+
+---
+
+### Example: Shallow vs. Deep Comparison
+
+Let’s illustrate the difference with a simple example where we modify an array.
+
+#### With `Component`:
+```jsx
+import React, { Component } from 'react';
+
+class ExampleComponent extends Component {
+  state = { items: [1, 2, 3] };
+
+  addItem = () => {
+    const newItems = [...this.state.items, 4]; // New reference for items array
+    this.setState({ items: newItems });
+  };
+
+  render() {
+    console.log('Component rendered');
+    return (
+      <div>
+        <p>{this.state.items.join(', ')}</p>
+        <button onClick={this.addItem}>Add Item</button>
+      </div>
+    );
+  }
+}
+
+export default ExampleComponent;
+```
+
+In this case, `Component` will always re-render when `setState` is called, because React will detect a change in state (even though the array is shallowly modified).
+
+#### With `PureComponent`:
+
+```jsx
+import React, { PureComponent } from 'react';
+
+class ExampleComponent extends PureComponent {
+  state = { items: [1, 2, 3] };
+
+  addItem = () => {
+    const newItems = [...this.state.items, 4]; // New reference for items array
+    this.setState({ items: newItems });
+  };
+
+  render() {
+    console.log('PureComponent rendered');
+    return (
+      <div>
+        <p>{this.state.items.join(', ')}</p>
+        <button onClick={this.addItem}>Add Item</button>
+      </div>
+    );
+  }
+}
+
+export default ExampleComponent;
+```
+
+In this case, if `items` had been mutated directly (e.g., `this.state.items.push(4)` without creating a new reference), `PureComponent` would not re-render because the shallow comparison would return `false` (the references wouldn’t change). However, because we’re using the spread operator (`[...this.state.items]`), it creates a new reference, so React will detect the change and trigger a re-render.
+
+### Conclusion:
+- **`Component`**: No optimization, will always re-render when state or props change.
+- **`PureComponent`**: Optimized to prevent re-renders unless props or state have changed, with shallow comparison.
+
+If your component doesn’t need deep comparison or you don’t have complex data structures, using `PureComponent` can help optimize performance by preventing unnecessary re-renders.
+
+---
 
 ### 27. ReactJS - memo
 
