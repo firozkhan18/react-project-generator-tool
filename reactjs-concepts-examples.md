@@ -3106,10 +3106,6 @@ const FetchDataComponent = () => {
 
 ---
 
-It seems like you're still looking for more information from the list. I'll provide the continuation from where we left off:
-
----
-
 #### 67. React Hooks - Fetching Data with useReducer Part 2
 
 - **Concepts Covered**:  
