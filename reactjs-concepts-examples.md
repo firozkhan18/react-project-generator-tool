@@ -1,6 +1,6 @@
 ## **Table of Contents** 
 
-### **ReactJS Series**
+### **ReactJS**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
@@ -48,7 +48,7 @@
 | 42    | ReactJS - HTTP GET Request                                              | [ReactJS - HTTP GET Request](#42-reactjs---http-get-request)              |
 | 43    | ReactJS - HTTP Post Request                                             | [ReactJS - HTTP Post Request](#43reactjs---http-post-request)            |
 
-### **React Hooks Series**
+### **React Hooks**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
@@ -86,7 +86,7 @@
 | 75    | React Hooks - useCounter Custom Hook                                    | [React Hooks - useCounter Custom Hook](#75-react-hooks---usecounter-custom-hook) |
 | 76    | React Hooks - useInput Custom Hook                                      | [React Hooks - useInput Custom Hook](#76-react-hooks---useinput-custom-hook) |
 
-### **React Render Series**
+### **React Render**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
@@ -107,7 +107,7 @@
 | 91    | React Render - Context and memo                                         | [React Render - Context and memo](#91-react-render---context-and-memo)  |
 | 92    | React Render - Context and Same Element Reference                       | [React Render - Context and Same Element Reference](#92-react-render---context-and-same-element-reference) |
 
-### **React with TypeScript Series**
+### **React with TypeScript**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
 |---|----------------------------|---------------------------|
