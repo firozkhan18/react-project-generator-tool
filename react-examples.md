@@ -1,6 +1,4 @@
-Here's a **Table of Contents** with clear navigation for the ReactJS Series, React Hooks Series, React Render Series, and React with TypeScript Series.
-
----
+**Table of Contents** 
 
 ### **ReactJS Series**
 
@@ -50,8 +48,6 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 42    | ReactJS - HTTP GET Request                                              | [ReactJS - HTTP GET Request](#42-reactjs---http-get-request)              |
 | 43    | ReactJS - HTTP Post Request                                             | [ReactJS - HTTP Post Request](#43reactjs---http-post-request)            |
 
----
-
 ### **React Hooks Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
@@ -90,8 +86,6 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 75    | React Hooks - useCounter Custom Hook                                    | [React Hooks - useCounter Custom Hook](#75-react-hooks---usecounter-custom-hook) |
 | 76    | React Hooks - useInput Custom Hook                                      | [React Hooks - useInput Custom Hook](#76-react-hooks---useinput-custom-hook) |
 
----
-
 ### **React Render Series**
 
 | **#** | **Topic**                                                              | **Link**                                                            |
@@ -112,8 +106,6 @@ Here's a **Table of Contents** with clear navigation for the ReactJS Series, Rea
 | 90    | React Render - Context                                                  | [React Render - Context](#90-react-render---context)                     |
 | 91    | React Render - Context and memo                                         | [React Render - Context and memo](#91-react-render---context-and-memo)  |
 | 92    | React Render - Context and Same Element Reference                       | [React Render - Context and Same Element Reference](#92-react-render---context-and-same-element-reference) |
-
----
 
 ### **React with TypeScript Series**
 
