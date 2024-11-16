@@ -1767,7 +1767,195 @@ export default Modal;
 Here, the modal is rendered outside the main React component tree, allowing it to overlay on top of other content.
 
 ---
+The error messages you're encountering suggest that there's an issue with how your React application is trying to render a `Modal` component using `ReactDOM.createPortal`. The specific error `Uncaught Error: Target container is not a DOM element` indicates that the `createPortal` function is being called, but it's unable to find the DOM element where it is supposed to render the modal.
 
+### Understanding `createPortal`
+
+In React, `createPortal` is used to render children into a DOM node outside the parent component's hierarchy. It's commonly used for modals, tooltips, or dropdowns, which need to be rendered outside the normal DOM flow but still be controlled by React.
+
+The syntax for `createPortal` is:
+```jsx
+ReactDOM.createPortal(child, container)
+```
+- `child`: The content you want to render (like your modal content).
+- `container`: The DOM node that you want to render the `child` into. This must be a valid DOM element.
+
+### Diagnosing the Problem
+
+The specific error you're seeing suggests that the `container` passed to `createPortal` (likely a DOM element) is either:
+1. **Not available yet**: The element might not exist at the time `createPortal` is called (for example, the DOM node where you're trying to render the modal isn't present yet).
+2. **Incorrectly referenced**: The DOM element may be incorrectly referenced or not correctly passed into the `createPortal` call.
+
+### Potential Causes and Solutions
+
+#### 1. Ensure the target container exists
+Make sure the `container` element (where you want to render the modal) is available in the DOM when `createPortal` is called. You can ensure this by checking if the element is rendered correctly.
+
+**Example:**
+
+Ensure the target container exists in the HTML file:
+
+```html
+<div id="modal-root"></div>
+```
+
+And then in your modal component, make sure you're using the correct DOM element:
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+const Modal = ({ children }) => {
+  const modalRoot = document.getElementById('modal-root'); // Ensure the element is there
+
+  if (!modalRoot) {
+    console.error('Target container not found!');
+    return null;
+  }
+
+  return ReactDOM.createPortal(children, modalRoot); // Ensure modalRoot is correct
+};
+
+export default Modal;
+```
+
+Ensure that your `App` component renders the modal correctly:
+
+```jsx
+import React, { useState } from 'react';
+import Modal from './Modal';
+
+const App = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setShowModal(true)}>Show Modal</button>
+
+      {showModal && (
+        <Modal>
+          <div>
+            <h2>This is a Modal</h2>
+            <button onClick={() => setShowModal(false)}>Close Modal</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
+
+export default App;
+```
+
+#### 2. Delay modal rendering with a useEffect hook (if `modal-root` is rendered dynamically)
+
+If the target container (`#modal-root`) is not available immediately, you might want to render the modal only after the target container has been mounted to the DOM. You can use a `useEffect` hook to handle this.
+
+**Example:**
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+
+const Modal = ({ children }) => {
+  const [modalRoot, setModalRoot] = useState(null);
+
+  useEffect(() => {
+    const root = document.getElementById('modal-root');
+    if (root) {
+      setModalRoot(root);
+    }
+  }, []);
+
+  if (!modalRoot) {
+    return null; // Return nothing if modal-root is not available
+  }
+
+  return ReactDOM.createPortal(children, modalRoot);
+};
+
+export default Modal;
+```
+
+#### 3. Ensure correct component hierarchy
+Sometimes issues can arise if the components are being rendered outside of their expected context. Make sure that your modal is rendered inside the component that controls its visibility, and that the DOM node (`#modal-root`) is correctly referenced.
+
+#### 4. Verify that the modal is being rendered correctly after the root element (`modal-root`) is available in the DOM.
+
+Check if the root `div#modal-root` is available on the page, and ensure that it’s not removed or not present during the first render. For example, if you're dynamically adding the modal target container in JavaScript, ensure it’s done before attempting to render the portal.
+
+### Final Example
+
+Here's a full example that makes sure the modal root exists and renders the modal properly:
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+
+// Modal component using createPortal
+const Modal = ({ children }) => {
+  const [modalRoot, setModalRoot] = useState(null);
+
+  useEffect(() => {
+    const root = document.getElementById('modal-root');
+    if (root) {
+      setModalRoot(root);
+    }
+  }, []);
+
+  if (!modalRoot) {
+    return null; // Return null if modal root is not available
+  }
+
+  return ReactDOM.createPortal(children, modalRoot);
+};
+
+// App component where modal is triggered
+const App = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setShowModal(true)}>Show Modal</button>
+
+      {showModal && (
+        <Modal>
+          <div style={{ background: 'white', padding: '20px', border: '1px solid black' }}>
+            <h2>This is a Modal</h2>
+            <button onClick={() => setShowModal(false)}>Close Modal</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
+
+export default App;
+```
+
+### HTML:
+Ensure that your HTML file has the modal root element:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Modal</title>
+</head>
+<body>
+  <div id="root"></div>
+  <div id="modal-root"></div> <!-- This is where the modal will be rendered -->
+</body>
+</html>
+```
+
+### Conclusion:
+- **Target container not found**: Ensure the DOM element you're trying to use (`#modal-root`) exists in the HTML and is available when `createPortal` is called.
+- **Dynamic rendering**: If the modal root might be rendered dynamically, use `useEffect` or `useLayoutEffect` to ensure the container is available before rendering.
+
+---
 ### 32. ReactJS - Error Boundary
 
 - **Concepts Covered**:
