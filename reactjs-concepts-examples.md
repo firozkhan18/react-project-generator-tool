@@ -1958,10 +1958,6 @@ Here, `MouseTracker` uses the `render` prop to dynamically display the mouse pos
 
 ---
 
-It looks like I still haven’t completed the full series! Let's continue from where we left off and finish up with the rest of the ReactJS tutorial topics.
-
----
-
 ### 37. ReactJS - Render Props (Part 2)
 
 - **Concepts Covered**:
@@ -2258,7 +2254,6 @@ This example sends a POST request with form data to an API using `axios`.
 
 ### **React Hooks Series**
 
----
 
 #### 44. React Hooks - Introduction
 
@@ -3457,10 +3452,6 @@ const FormComponent = () => {
 
 ---
 
-Here’s the continuation of your **React Render Series**:
-
----
-
 #### 77. React Render - Introduction
 
 - **Concepts Covered**:  
@@ -3864,10 +3855,6 @@ const MemoizedComponent = React.memo(() => {
 
 ---
 
-Here's the continuation of your **React TypeScript Series**:
-
----
-
 #### 93. React TypeScript - Introduction
 
 - **Concepts Covered**:  
@@ -4073,9 +4060,7 @@ export default Greeting;
 
 ---
 
-Here is the continuation of your **React TypeScript Series**:
-
----
+## React TypeScript 
 
 #### 101. React TypeScript - useState Hook
 
@@ -4375,10 +4360,6 @@ class Button extends React.Component<ButtonProps> {
   }
 }
 ```
-
----
-
-Here’s the continuation of the **React TypeScript Series**:
 
 ---
 
