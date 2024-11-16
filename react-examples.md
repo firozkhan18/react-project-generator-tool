@@ -1225,6 +1225,163 @@ class App extends Component {
 export default App;
 ```
 
+In React, the **component update lifecycle** refers to the sequence of methods that React calls when a component’s state or props change. Understanding these methods is key for managing side effects, performance optimizations, and updating the UI efficiently.
+
+Here’s a breakdown of the main lifecycle methods that occur during the **update phase** (when a component’s state or props change) in a **class component**:
+
+---
+
+### 1. **`static getDerivedStateFromProps(nextProps, nextState)`**
+   - **Purpose**: This method is called before every render, both when the component is created and when it is updated. It allows you to update the state based on changes to props.
+   - **Signature**:
+     ```js
+     static getDerivedStateFromProps(nextProps, nextState)
+     ```
+   - **Parameters**:
+     - `nextProps`: The next set of props that the component will receive.
+     - `nextState`: The current state at the time of the update.
+   - **Return value**: You should return an object that will be merged into the state, or `null` if no state updates are necessary.
+   - **When it's called**: Called before every render, triggered by changes to state or props.
+   
+   **Example**:
+   ```js
+   static getDerivedStateFromProps(nextProps, nextState) {
+     if (nextProps.someValue !== nextState.someValue) {
+       return {
+         someValue: nextProps.someValue
+       };
+     }
+     return null;  // No state change
+   }
+   ```
+
+### 2. **`shouldComponentUpdate(nextProps, nextState)`**
+   - **Purpose**: This method allows you to optimize performance by preventing unnecessary re-renders. If it returns `false`, React will skip the render.
+   - **Signature**:
+     ```js
+     shouldComponentUpdate(nextProps, nextState)
+     ```
+   - **Parameters**:
+     - `nextProps`: The next props that will be passed to the component.
+     - `nextState`: The next state that the component will have after the update.
+   - **Return value**: Boolean (`true` or `false`). Return `true` to allow the render to proceed, `false` to skip it.
+   - **When it's called**: Called before `render` when props or state change.
+   
+   **Example**:
+   ```js
+   shouldComponentUpdate(nextProps, nextState) {
+     // Only re-render if the prop "count" has changed
+     return nextProps.count !== this.props.count;
+   }
+   ```
+
+### 3. **`render()`**
+   - **Purpose**: This is the core method that React calls to render the component to the DOM. It should return JSX or `null` if nothing should be rendered.
+   - **Signature**:
+     ```js
+     render()
+     ```
+   - **Return value**: JSX (or `null`).
+   - **When it's called**: Called during every update (whenever `shouldComponentUpdate` returns `true` or is not implemented).
+
+   **Example**:
+   ```js
+   render() {
+     return <div>{this.props.someValue}</div>;
+   }
+   ```
+
+### 4. **`getSnapshotBeforeUpdate(prevProps, prevState)`**
+   - **Purpose**: This method allows you to capture some information (like scroll position) from the DOM before it is potentially changed by the update. The value returned by this method will be passed as the third argument to `componentDidUpdate`.
+   - **Signature**:
+     ```js
+     getSnapshotBeforeUpdate(prevProps, prevState)
+     ```
+   - **Parameters**:
+     - `prevProps`: The previous props of the component.
+     - `prevState`: The previous state of the component.
+   - **Return value**: Any value (such as scroll position) you want to capture before the DOM is updated. This value is passed to `componentDidUpdate`.
+   - **When it's called**: Called right before the DOM is updated, after `render()` but before `componentDidUpdate`.
+
+   **Example**:
+   ```js
+   getSnapshotBeforeUpdate(prevProps, prevState) {
+     if (prevState.scrollPosition !== this.state.scrollPosition) {
+       return this.refs.scrollContainer.scrollTop;
+     }
+     return null;
+   }
+   ```
+
+### 5. **`componentDidUpdate(prevProps, prevState, snapshot)`**
+   - **Purpose**: This method is called after the component has been re-rendered and the updates have been flushed to the DOM. It's useful for performing side effects or interacting with the DOM.
+   - **Signature**:
+     ```js
+     componentDidUpdate(prevProps, prevState, snapshot)
+     ```
+   - **Parameters**:
+     - `prevProps`: The previous props of the component.
+     - `prevState`: The previous state of the component.
+     - `snapshot`: The value returned by `getSnapshotBeforeUpdate`.
+   - **When it's called**: Called after the render, when the DOM has been updated, and it is useful for handling any post-update operations (e.g., data fetching, animations, etc.).
+   
+   **Example**:
+   ```js
+   componentDidUpdate(prevProps, prevState, snapshot) {
+     if (prevState.someValue !== this.state.someValue) {
+       console.log('State changed, do something');
+     }
+   }
+   ```
+
+---
+
+### 6. **`componentWillUnmount()`**
+   - **Purpose**: This method is called just before the component is removed from the DOM. It’s used for cleanup tasks such as cancelling network requests, clearing timers, or removing event listeners.
+   - **Signature**:
+     ```js
+     componentWillUnmount()
+     ```
+   - **When it's called**: Called when the component is about to be unmounted and destroyed.
+
+   **Example**:
+   ```js
+   componentWillUnmount() {
+     clearInterval(this.timer);
+   }
+   ```
+
+---
+
+### Summary of Component Update Lifecycle:
+1. **`getDerivedStateFromProps`** (before render) — updates state based on props.
+2. **`shouldComponentUpdate`** (before render) — decides whether to re-render.
+3. **`render`** (during the update) — renders JSX.
+4. **`getSnapshotBeforeUpdate`** (before DOM changes) — captures DOM state before updates.
+5. **`componentDidUpdate`** (after render) — performs side effects after the update.
+6. **`componentWillUnmount`** (before unmount) — cleans up before the component is removed.
+
+### Functional Components (Hooks):
+In modern React with **functional components**, lifecycle methods are replaced with **Hooks** (e.g., `useEffect` for managing side effects). For example, `componentDidUpdate` can be replaced by `useEffect`, and `shouldComponentUpdate` can be optimized with `React.memo`.
+
+#### Example (Functional Component using `useEffect`):
+```js
+import React, { useState, useEffect } from 'react';
+
+function MyComponent(props) {
+  const [someValue, setSomeValue] = useState(props.someValue);
+
+  useEffect(() => {
+    // Similar to componentDidUpdate
+    console.log('Component updated');
+  }, [someValue]); // Runs when `someValue` changes
+
+  return <div>{someValue}</div>;
+}
+```
+
+If you’re working with **class components**, the methods above are crucial for understanding how React updates and manages your components. If you're using **functional components** with hooks, the approach is a bit different, but the core concepts are still applicable!
+
 ---
 
 ### 25. ReactJS - Fragments
