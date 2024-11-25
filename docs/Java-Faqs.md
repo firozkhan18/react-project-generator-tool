@@ -1,3 +1,95 @@
+
+To generate all permutations of a string (e.g., "ABC") using Java's Stream API, you can utilize the `Stream` and `Collectors` to create a more functional approach. While Java's Stream API does not have a direct method to generate permutations, we can create a recursive solution that generates permutations and then use the Stream API to process them.
+
+Here's how you can generate all permutations of a string like "ABC" using Java Stream API:
+
+### Steps:
+1. **Create a function** to generate all permutations of a string.
+2. Use **Streams** to collect the permutations.
+3. You can use `flatMap` to flatten the list of permutations and generate the results.
+
+### Solution
+
+```java
+import java.util.*;
+import java.util.stream.*;
+
+public class StringPermutations {
+
+    // Method to generate permutations of a string
+    public static List<String> getPermutations(String str) {
+        if (str == null || str.length() == 0) {
+            return Collections.emptyList();  // No permutations for empty string
+        }
+        
+        return generatePermutations("", str);
+    }
+
+    // Recursive method to generate permutations
+    private static List<String> generatePermutations(String prefix, String remaining) {
+        if (remaining.length() == 0) {
+            return Collections.singletonList(prefix);  // Return a single-element list
+        }
+        
+        return IntStream.range(0, remaining.length())
+                .mapToObj(i -> generatePermutations(prefix + remaining.charAt(i),
+                        remaining.substring(0, i) + remaining.substring(i + 1)))
+                .flatMap(List::stream)  // Flatten the stream of lists
+                .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        String input = "ABC";
+        
+        // Get all permutations using the Stream API
+        List<String> permutations = getPermutations(input);
+        
+        // Print the permutations
+        permutations.forEach(System.out::println);
+    }
+}
+```
+
+### Explanation of the Code:
+1. **`getPermutations(String str)`**:
+   - This method starts the process and calls a helper method `generatePermutations`.
+   - If the input string is empty or `null`, it returns an empty list.
+
+2. **`generatePermutations(String prefix, String remaining)`**:
+   - This is a recursive method that generates permutations.
+   - It concatenates each character of the string (from the `remaining` string) with the `prefix` string, recursively generating permutations.
+   - Once the `remaining` string is empty, it returns a list containing the current `prefix`.
+
+3. **Using `IntStream.range(0, remaining.length())`**:
+   - This creates an index stream from `0` to the length of the `remaining` string.
+   - For each index, a recursive call is made with the updated `prefix` and the shortened `remaining` string.
+   
+4. **`flatMap(List::stream)`**:
+   - This flattens the stream of lists of permutations into a single stream.
+
+5. **Collecting the results**:
+   - The stream of permutations is collected into a list using `Collectors.toList()`.
+
+### Output:
+For the input `"ABC"`, the output will be:
+```
+ABC
+ACB
+BAC
+BCA
+CAB
+CBA
+```
+
+### Notes:
+- The recursive approach explores all possible positions for each character and generates permutations by swapping characters.
+- The use of **Streams** here is for functional style processing and to handle the recursive list of permutations.
+
+### Performance Considerations:
+- This approach is efficient in terms of generating permutations but could still become computationally expensive for large strings due to the factorial complexity (`O(n!)`) involved in generating permutations.
+---
+## in-memory cache using a `ConcurrentHashMap` 
+
 An in-memory cache using a `ConcurrentHashMap` can be a simple and effective way to store data that can be shared across threads in a multithreaded environment. The `ConcurrentHashMap` ensures thread-safety when performing operations such as inserting, updating, and retrieving data concurrently.
 
 Here’s an example of how to implement a basic in-memory cache using `ConcurrentHashMap` in Java:
@@ -187,6 +279,8 @@ public class ExpiringCache<K, V> {
 
 This gives a basic structure to build a more robust, thread-safe, and efficient in-memory cache in Java using `ConcurrentHashMap`.
 
+## Immutable class in Java
+
 In Java, an **immutable class** is a class whose objects cannot be modified after they are created. Once an object is instantiated, its state (i.e., its fields) cannot be changed. Immutable classes are often used in situations where thread-safety and security are important, because they can be safely shared between multiple threads without synchronization.
 
 ### Key Characteristics of an Immutable Class:
@@ -308,6 +402,8 @@ public class ImmutableReflectionExample {
 An **immutable class** is one whose state cannot be modified once it is created. This is useful for thread safety, security, and maintaining consistency. While reflection can modify immutable objects, it's discouraged because it goes against the intent and benefits of immutability. If you need to mutate objects, it's better to use a mutable class instead of trying to modify immutable ones using reflection.
 
 ---
+
+## Singleton class in Java
 
 A **Singleton** class in Java is a class that allows only one instance of itself to be created and provides a global point of access to that instance. The Singleton design pattern ensures that a class has only one instance and provides a way to access that instance.
 
