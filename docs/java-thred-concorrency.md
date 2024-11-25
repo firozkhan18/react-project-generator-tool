@@ -1,10 +1,10 @@
 
-[Abstraction and Encapsulation in Java](#abstraction-and-encapsulation-in-java)
-[Interfaces in Java](#interfaces-in-java)
-[Final Keyword in Java](#final-keyword-in-java)
-[Thread in Java](#interfaces-in-java)
-[volatile Keyword in Java](#volatile-keyword-in-java)
-[Java Concurrency Framework](#java-concurrency-framework)
+- [Abstraction and Encapsulation in Java](#abstraction-and-encapsulation-in-java)
+- [Interfaces in Java](#interfaces-in-java)
+- [Final Keyword in Java](#final-keyword-in-java)
+- [Thread in Java](#interfaces-in-java)
+- [volatile Keyword in Java](#volatile-keyword-in-java)
+- [Java Concurrency Framework](#java-concurrency-framework)
 
 ## Difference Between Abstraction and Encapsulation in Java
 
