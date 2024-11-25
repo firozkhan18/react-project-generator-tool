@@ -1,4 +1,4 @@
-I see! Here's an improved **Table of Contents** with **navigation links** for each section, and a "Back to Top" link included, so you can easily jump between sections. Below is a structure you would typically use in an HTML document or a markdown file, as it supports the necessary functionality.
+## Java Servlet
 
 ---
 
