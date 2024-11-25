@@ -460,6 +460,152 @@ By using the `final` keyword appropriately, you can make your code more predicta
 
 ---
 
+### Implementing Threads in Java
+
+In Java, **multithreading** allows for the concurrent execution of two or more threads. It is widely used for tasks like handling multiple user requests, running background processes, etc. There are two common ways to implement threads in Java:
+
+1. **By extending the `Thread` class.**
+2. **By implementing the `Runnable` interface.**
+
+### 1. Implementing Threads by Extending the `Thread` Class
+
+When you extend the `Thread` class, you must override its `run()` method to define the code that the thread will execute. After that, you can create a thread object and start it using the `start()` method.
+
+#### Example: Extending the `Thread` Class
+
+```java
+// Implementing Thread by extending the Thread class
+public class MyThread extends Thread {
+
+    // Overriding the run() method
+    public void run() {
+        System.out.println("Thread Running: " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        // Creating an instance of MyThread
+        MyThread thread1 = new MyThread();
+        
+        // Starting the thread
+        thread1.start();
+    }
+}
+```
+
+In this example:
+- The `MyThread` class extends `Thread` and overrides the `run()` method.
+- `start()` initiates the execution of `run()`, which prints the thread's name.
+
+### 2. Implementing Threads by Implementing the `Runnable` Interface
+
+You can also implement a thread by creating a class that implements the `Runnable` interface. The `run()` method is overridden in this case as well. This approach is often preferred because it allows a class to extend another class while still implementing threading functionality.
+
+#### Example: Implementing `Runnable` Interface
+
+```java
+// Implementing Thread by implementing the Runnable interface
+public class MyRunnable implements Runnable {
+
+    // Overriding the run() method
+    public void run() {
+        System.out.println("Thread Running: " + Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        // Creating a Runnable object
+        MyRunnable runnable = new MyRunnable();
+        
+        // Creating a Thread object by passing the Runnable object to the constructor
+        Thread thread1 = new Thread(runnable);
+        
+        // Starting the thread
+        thread1.start();
+    }
+}
+```
+
+In this example:
+- The `MyRunnable` class implements `Runnable` and overrides the `run()` method.
+- A `Thread` object is created by passing the `MyRunnable` object to the `Thread` constructor, and the thread is started using the `start()` method.
+
+### Key Differences Between Extending `Thread` and Implementing `Runnable`
+
+- **Inheritance:** When you extend the `Thread` class, your class can no longer extend another class, because Java allows single inheritance. In contrast, implementing `Runnable` lets you extend another class, preserving flexibility.
+- **Separation of Concerns:** The `Runnable` interface is often preferred in cases where you want to separate the thread execution logic from the class itself, maintaining better design and modularity.
+
+### Thread Lifecycle
+
+A thread in Java can exist in various states:
+1. **New**: The thread is created but not yet started.
+2. **Runnable**: The thread is ready for execution and waiting for CPU time.
+3. **Blocked**: The thread is blocked, waiting to acquire a resource.
+4. **Waiting**: The thread is waiting indefinitely for some other thread to perform a particular action.
+5. **Timed Waiting**: The thread is waiting for a specific amount of time (e.g., `Thread.sleep()`).
+6. **Terminated**: The thread has finished its execution.
+
+### Thread Synchronization and Concurrency
+
+Java provides synchronization tools to avoid issues like **race conditions**, **deadlocks**, and **livelocks** when multiple threads share resources. You can use the `synchronized` keyword to ensure that only one thread can access a critical section of code at a time.
+
+#### Example of Synchronization
+
+```java
+class Counter {
+    private int count = 0;
+
+    // Synchronizing the method to prevent race condition
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+
+public class MyRunnable implements Runnable {
+    private Counter counter;
+
+    public MyRunnable(Counter counter) {
+        this.counter = counter;
+    }
+
+    public void run() {
+        for (int i = 0; i < 1000; i++) {
+            counter.increment();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        Thread t1 = new Thread(new MyRunnable(counter));
+        Thread t2 = new Thread(new MyRunnable(counter));
+
+        // Starting both threads
+        t1.start();
+        t2.start();
+
+        // Waiting for both threads to finish
+        t1.join();
+        t2.join();
+
+        System.out.println("Final Count: " + counter.getCount());
+    }
+}
+```
+
+In this example:
+- The `Counter` class is used to safely increment a shared counter from multiple threads.
+- The `increment()` method is synchronized to prevent race conditions, ensuring that only one thread modifies the `count` at a time.
+
+### Conclusion
+
+- **Extending `Thread`:** Useful if you need to add specific behavior to the thread class, but limits you to single inheritance.
+- **Implementing `Runnable`:** More flexible and preferred in most cases, especially when your class needs to extend another class.
+
+Understanding Java threading is essential for building efficient, scalable, and high-performance applications. Concurrency control techniques, such as synchronization and using thread pools, are also crucial for creating thread-safe applications.
+
+---
 ## Volatile
 
 ### What is a Volatile Variable in Java?
@@ -617,3 +763,4 @@ Thread2:      +--------------------+
 - **Memory Synchronization:** The change made by **Thread2** to `flag` in **main memory** is not cached locally by **Thread1**, ensuring both threads are reading from the same memory space.
 
 This diagram helps in visualizing the flow of control and memory updates with a `volatile` variable. It illustrates how one thread can make a variable's value immediately visible to other threads, avoiding issues of local thread caches or optimizations that might otherwise delay the update.
+
