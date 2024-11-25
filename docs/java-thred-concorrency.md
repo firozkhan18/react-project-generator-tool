@@ -1,3 +1,80 @@
+# Table of Contents
+
+## Part I: Java Fundamentals
+1. [Introduction to Java](#introduction-to-java)
+2. [An Overview of Java](#an-overview-of-java)
+3. [Data Types, Variables, and Arrays](#data-types-variables-and-arrays)
+4. [Operators](#operators)
+5. [Control Statements](#control-statements)
+6. [Introducing Classes](#introducing-classes)
+7. [Methods and Method Overloading](#methods-and-method-overloading)
+8. [Constructors and the `this` Keyword](#constructors-and-the-this-keyword)
+9. [Inheritance](#inheritance)
+10. [Access Control, Polymorphism, and Abstraction](#access-control-polymorphism-and-abstraction)
+11. [Packages and Interfaces](#packages-and-interfaces)
+12. [Exception Handling](#exception-handling)
+13. [File Handling](#file-handling)
+
+## Part II: Object-Oriented Programming
+1. [Object-Oriented Concepts](#object-oriented-concepts)
+2. [Encapsulation, Inheritance, and Polymorphism](#encapsulation-inheritance-and-polymorphism)
+3. [Abstract Classes and Interfaces](#abstract-classes-and-interfaces)
+4. [Inner Classes](#inner-classes)
+5. [The `Object` Class and Cloning](#the-object-class-and-cloning)
+6. [String Handling](#string-handling)
+
+## Part III: Advanced Java Features
+1. [Generics](#generics)
+2. [Collections Framework](#collections-framework)
+3. [Lambda Expressions and Functional Programming](#lambda-expressions-and-functional-programming)
+4. [Java Streams API](#java-streams-api)
+5. [Reflection](#reflection)
+6. [Annotations](#annotations)
+
+## Part IV: Multithreading and Concurrency
+1. [Introduction to Multithreading](#introduction-to-multithreading)
+2. [Creating Threads](#creating-threads)
+   - [Using the `Thread` Class](#using-the-thread-class)
+   - [Using the `Runnable` Interface](#using-the-runnable-interface)
+3. [Thread Lifecycle](#thread-lifecycle)
+4. [Thread Synchronization](#thread-synchronization)
+   - [Synchronized Methods and Blocks](#synchronized-methods-and-blocks)
+   - [Deadlock](#deadlock)
+5. [Thread Communication](#thread-communication)
+6. [Executor Framework](#executor-framework)
+7. [Concurrency Utilities](#concurrency-utilities)
+8. [Advanced Threading Concepts](#advanced-threading-concepts)
+
+## Part V: Input/Output (I/O)
+1. [The Java I/O System](#the-java-io-system)
+2. [Reading and Writing Files](#reading-and-writing-files)
+3. [Streams and File I/O](#streams-and-file-io)
+4. [Serialization](#serialization)
+5. [NIO (New I/O)](#nio-new-io)
+
+## Part VI: Networking and Web Programming
+1. [Introduction to Networking](#introduction-to-networking)
+2. [Using Sockets](#using-sockets)
+3. [Building a Simple Client-Server Application](#building-a-simple-client-server-application)
+4. [Introduction to Web Programming with Servlets and JSP](#introduction-to-web-programming-with-servlets-and-jsp)
+
+## Part VII: Databases and Java
+1. [Introduction to JDBC](#introduction-to-jdbc)
+2. [Accessing Databases with JDBC](#accessing-databases-with-jdbc)
+3. [SQL and Java](#sql-and-java)
+
+## Part VIII: Java Platform and Tools
+1. [Java Development Tools](#java-development-tools)
+   - [JDK, JRE, IDEs](#jdk-jre-ides)
+2. [JVM Internals and Performance](#jvm-internals-and-performance)
+3. [Java Memory Management and Garbage Collection](#java-memory-management-and-garbage-collection)
+
+## Part IX: Miscellaneous Topics
+1. [JavaFX (GUI programming)](#javafx-gui-programming)
+2. [Java and Native Methods](#java-and-native-methods)
+3. [Security in Java](#security-in-java)
+4. [Internationalization and Localization](#internationalization-and-localization)
+
 
 - [Abstraction and Encapsulation in Java](#abstraction-and-encapsulation-in-java)
 - [Interfaces in Java](#interfaces-in-java)
