@@ -107,3 +107,49 @@ public class VolatileExample {
 
 ### Conclusion
 The `volatile` keyword is a useful tool for ensuring **visibility** and **ordering** between threads in Java. It provides an efficient alternative to synchronization when dealing with simple read/write operations that don't require complex atomicity. However, it has limitations, particularly when working with compound actions or complex synchronization scenarios.
+
+---
+Let me explain the concept of volatile variables in Java with a simple textual representation that can help clarify the behavior.
+
+### Diagram: Concept of Volatile Variable in Java
+
+```
++----------------------------+
+|         Main Memory         |
+|----------------------------|
+|     volatile flag (false)   |  <-- Shared variable
++----------------------------+
+
+Thread1:      +--------------------+
+              | While(flag == false)|
+              |  - Keep Checking    |
+              |  - Prints Waiting   |
+              +--------------------+
+
+Thread2:      +--------------------+
+              | Sleeps for 2 seconds|
+              | Updates flag = true |
+              | - Flag updated      |
+              +--------------------+
+              
+```
+
+### Step-by-Step Flow:
+
+1. **Thread1 (Checking flag):**
+   - Initially, `flag` is set to `false` in the **main memory**.
+   - **Thread1** enters a loop, continuously checking the value of `flag`. Since `flag` is `false`, it keeps printing "Waiting..." and doesn't exit the loop.
+
+2. **Thread2 (Updating flag):**
+   - **Thread2** sleeps for 2 seconds and then updates the `flag` variable to `true`.
+   - Since `flag` is declared as `volatile`, this change is immediately visible to **Thread1**. The update is reflected in **main memory**.
+
+3. **Thread1 sees the change:**
+   - As soon as **Thread2** sets the `flag` to `true`, **Thread1** sees the change because of the **visibility guarantee** of the `volatile` keyword.
+   - **Thread1** now exits the loop and prints "Flag is true. Proceeding...".
+
+### Key Concepts:
+- **Visibility:** The change made by **Thread2** to the `flag` is instantly visible to **Thread1** because of the `volatile` keyword.
+- **Memory Synchronization:** The change made by **Thread2** to `flag` in **main memory** is not cached locally by **Thread1**, ensuring both threads are reading from the same memory space.
+
+This diagram helps in visualizing the flow of control and memory updates with a `volatile` variable. It illustrates how one thread can make a variable's value immediately visible to other threads, avoiding issues of local thread caches or optimizations that might otherwise delay the update.
