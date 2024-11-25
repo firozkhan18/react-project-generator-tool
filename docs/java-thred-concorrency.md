@@ -89,16 +89,16 @@
 
 | **Topic**                                                            | **Subtopic**                                                              |
 |----------------------------------------------------------------------|---------------------------------------------------------------------------|
-| **1. Introduction to Multithreading**                                | Definition of Multithreading](#definition-of-multithreading) |
-|                                                                      | Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading) |
-|                                                                      | Processes vs. Threads](#processes-vs-threads) |
-|                                                                      | Multithreading in Java](#multithreading-in-java) |
-| **2. Java Memory Model of Process and Thread**                       | Java Memory Model Overview](#java-memory-model) |
-| **3. Basics of Threads - Part 1**                                    | Creating Threads](#creating-threads) |
-|                                                                      | Extending the Thread Class](#extending-the-thread-class) |
-|                                                                      | Implementing the Runnable Interface](#implementing-the-runnable-interface) |
-|                                                                      | Thread Lifecycle](#thread-lifecycle) |
-|                                                                      | Thread States (New, Runnable, Blocked, Waiting, Timed Waiting, Terminated)](#thread-states) |
+| **1. Introduction to Multithreading**                                | [Definition of Multithreading](#definition-of-multithreading) |
+|                                                                      | [Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading) |
+|                                                                      | [Processes vs. Threads](#processes-vs-threads) |
+|                                                                      | [Multithreading in Java](#multithreading-in-java) |
+| **2. Java Memory Model of Process and Thread**                       | [Java Memory Model Overview](#java-memory-model) |
+| **3. Basics of Threads - Part 1**                                    | [Creating Threads](#creating-threads) |
+|                                                                      | [Extending the Thread Class](#extending-the-thread-class) |
+|                                                                      | [Implementing the Runnable Interface](#implementing-the-runnable-interface) |
+|                                                                      | [Thread Lifecycle](#thread-lifecycle) |
+|                                                                      | [Thread States (New, Runnable, Blocked, Waiting, Timed Waiting, Terminated)](#thread-states) |
 | **4. Basics of Threads - Part 2: Inter-Thread Communication & Synchronization** | [Synchronization and Thread Safety](#synchronization-and-thread-safety) |
 |                                                                      | [Synchronized Methods and Blocks](#synchronized-methods-and-blocks) |
 |                                                                      | [Inter-Thread Communication (wait(), notify(), and notifyAll())](#inter-thread-communication) |
@@ -129,7 +129,7 @@
 |                                                                      | [AtomicReference and AtomicReferenceArray](#atomic-reference) |
 |                                                                      | [Compare-and-Swap Operations](#compare-and-swap) |
 | **10. Locks and Semaphores**                                         | [ReentrantLock](#reentrantlock) |
-|                                                                      | [ReadWriteLock(#readwritelock) |
+|                                                                      | [ReadWriteLock](#readwritelock) |
 |                                                                      | [StampedLock](#stampedlock) |
 |                                                                      | [Semaphores](#semaphores) |
 |                                                                      | [Lock and Condition Interface](#lock-and-condition) |
@@ -137,7 +137,7 @@
 | **12. Best Practices and Patterns**                                  | [Thread Safety Best Practices](#thread-safety-best-practices) |
 |                                                                      | [Immutable Objects](#immutable-objects) |
 |                                                                      | [ThreadLocal Usage](#threadlocal-usage) |
-|                                                                      | [Double-Checked Locking and its Issues(#double-checked-locking) |
+|                                                                      | [Double-Checked Locking and its Issues](#double-checked-locking) |
 |                                                                      | [Concurrency Design Patterns](#concurrency-design-patterns) |
 | **13. Common Concurrency Issues and Solutions**                      | [Deadlocks](#deadlocks) |
 |                                                                      | [Starvation](#starvation) |
