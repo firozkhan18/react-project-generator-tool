@@ -838,6 +838,159 @@ The terms **process** and **thread** refer to distinct concepts in computing, pa
 
 Both processes and threads are fundamental to modern operating systems, allowing efficient multitasking and parallelism.
 
+### Why `wait()` and `notify()` Must Be Called in a Synchronized Context
+
+In Java, the `wait()` and `notify()` methods are essential for inter-thread communication. These methods must be called from a **synchronized block or method** because they work with an object's **monitor lock**, which controls access to the shared resources.
+
+#### Key Points:
+1. **Synchronization Context**: 
+   - The `wait()`, `notify()`, and `notifyAll()` methods are part of the `Object` class, as every Java object has a monitor (lock) associated with it.
+   - To ensure thread safety and avoid race conditions, these methods must be invoked from a synchronized context. This means that the thread must hold the **lock** of the object (i.e., `synchronized` block) before calling `wait()` or `notify()`.
+
+2. **Why synchronization?**
+   - The purpose of synchronization is to prevent thread interference while accessing shared resources. When one thread is executing a synchronized block, no other thread can enter that block unless the lock is released. This ensures mutual exclusion.
+   - `wait()` makes the current thread release the lock on the object and enter a waiting state, so other threads can acquire the lock and perform their work.
+   - `notify()` or `notifyAll()` is used to wake up one or more waiting threads, allowing them to compete for the lock again.
+
+#### Example:
+
+```java
+public class WaitNotifyExample {
+    private static final Object lock = new Object();
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread producer = new Thread(() -> {
+            synchronized (lock) {
+                System.out.println("Producer is waiting...");
+                try {
+                    lock.wait();  // Must be in synchronized context
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Producer resumed.");
+            }
+        });
+
+        Thread consumer = new Thread(() -> {
+            synchronized (lock) {
+                System.out.println("Consumer is notifying...");
+                lock.notify();  // Must be in synchronized context
+            }
+        });
+
+        producer.start();
+        Thread.sleep(1000); // Simulate delay
+        consumer.start();
+    }
+}
+```
+
+In the above code, both `wait()` and `notify()` are called within a synchronized block, ensuring that the thread has acquired the monitor of the `lock` object before invoking these methods.
+
+---
+
+### How Synchronization Works in Java?
+
+Synchronization in Java ensures that only one thread can execute a particular section of code at a time. This is crucial for preventing **race conditions** when multiple threads access shared resources concurrently.
+
+#### Key Concepts:
+1. **Monitor Locks**: Every object in Java has a monitor lock, and synchronization allows threads to acquire and release these locks.
+   
+2. **`synchronized` Keyword**: You can synchronize a method or a block of code to ensure that only one thread can execute it at a time.
+   - **Method Synchronization**: Synchronizing an entire method using the `synchronized` keyword locks the object, preventing other threads from executing the synchronized method concurrently.
+
+     ```java
+     public synchronized void syncMethod() {
+         // Code to be synchronized
+     }
+     ```
+
+   - **Block Synchronization**: You can synchronize a specific block of code inside a method.
+
+     ```java
+     public void syncBlock() {
+         synchronized (this) {
+             // Code to be synchronized
+         }
+     }
+     ```
+
+3. **Locking**: When a thread enters a synchronized method/block, it acquires the lock for the object (or class, if static). Other threads cannot enter any synchronized block or method on the same object until the lock is released.
+
+4. **Deadlock**: Deadlock can occur when two or more threads are waiting indefinitely for resources that are held by each other.
+
+5. **Reentrant Locking**: A thread that already holds a lock can re-enter a synchronized block that requires the same lock. This avoids deadlock when a thread calls a synchronized method within another synchronized method.
+
+---
+
+### How to Write a Thread-Safe Class in Java?
+
+A **thread-safe** class ensures that its instances can be safely used by multiple threads concurrently without causing inconsistencies or corrupting shared data.
+
+#### Approaches to Make a Class Thread-Safe:
+1. **Use Synchronization**: Mark critical methods with `synchronized` to ensure that only one thread can execute the method at a time.
+   
+   ```java
+   public synchronized void increment() {
+       count++;
+   }
+   ```
+
+2. **Use Locks**: Use `ReentrantLock` or other lock classes to control access to shared resources in a more flexible and explicit manner than `synchronized`.
+
+   ```java
+   private final ReentrantLock lock = new ReentrantLock();
+   public void increment() {
+       lock.lock();
+       try {
+           count++;
+       } finally {
+           lock.unlock();
+       }
+   }
+   ```
+
+3. **Use Concurrent Collections**: Use thread-safe collections from the `java.util.concurrent` package, such as `ConcurrentHashMap`, `CopyOnWriteArrayList`, etc., instead of traditional collections like `HashMap` and `ArrayList`.
+
+4. **Immutable Objects**: Design immutable objects where the state cannot change after construction. Since immutable objects cannot be modified, they are inherently thread-safe.
+
+---
+
+### Key Interview Topics:
+
+- **How to Stop a Thread in Java?**
+   - Using `Thread.interrupt()` to signal a thread to stop, or using flags to check for termination conditions inside the `run()` method.
+   - Avoid using `Thread.stop()` as it is unsafe and deprecated.
+
+- **Inter-thread Communication in Java**:
+   - Threads can communicate using `wait()`, `notify()`, and `notifyAll()` methods.
+   - One thread can notify others to wake up from a waiting state after certain conditions are met.
+
+- **Daemon and User Threads**:
+   - **Daemon Thread**: A background thread that runs as long as the JVM is running but does not prevent the JVM from exiting when all user threads finish.
+   - **User Thread**: A regular thread that prevents the JVM from terminating until it finishes execution.
+
+- **Thread Pool in Java**:
+   - Thread pools allow you to manage a pool of worker threads efficiently using classes like `ExecutorService`.
+   - Example:
+     ```java
+     ExecutorService executor = Executors.newFixedThreadPool(10);
+     executor.submit(() -> System.out.println("Task executed"));
+     ```
+
+- **ThreadLocal Variables**:
+   - Thread-local variables allow each thread to have its own independent copy of a variable.
+   - Example:
+     ```java
+     private static ThreadLocal<Integer> threadLocalVar = ThreadLocal.withInitial(() -> 0);
+     ```
+
+---
+
+### Conclusion
+
+Java's **synchronization** mechanisms, such as `wait()`, `notify()`, and the `synchronized` keyword, allow for **safe inter-thread communication** and **mutual exclusion**, making it essential for writing thread-safe applications. Proper understanding of these concepts helps in writing efficient, thread-safe code and avoiding common pitfalls such as **deadlocks** and **race conditions**.
+
 ---
 ## Volatile Keyword in Java
 
