@@ -4525,6 +4525,176 @@ public class ForkJoinExample {
 }
 ```
 
+The `ForkJoinPool` in Java is a specialized implementation of the `ExecutorService` designed for parallelism, particularly when tasks can be divided into smaller subtasks and executed concurrently. It is part of the `java.util.concurrent` package and is ideal for "divide and conquer" algorithms, where large tasks are split into smaller tasks that can be processed in parallel.
+
+### Key Methods of `ForkJoinPool`
+
+1. **`invoke(RecursiveTask<T> task)`**
+   - Executes a `RecursiveTask` and waits for the result. This method blocks until the task completes.
+   - **Return type**: The result of the task (of type `T`).
+
+   ```java
+   T result = forkJoinPool.invoke(task);
+   ```
+
+2. **`submit(RecursiveTask<T> task)`**
+   - Submits a `RecursiveTask` for execution, but does not block. It returns a `Future<T>` that allows you to track the result of the task asynchronously.
+   - **Return type**: `Future<T>`.
+
+   ```java
+   Future<T> future = forkJoinPool.submit(task);
+   ```
+
+3. **`fork()`**
+   - This method is used to fork a subtask for asynchronous execution in a `RecursiveTask` or `RecursiveAction`. It splits the task and allows parallel execution.
+   - It is typically used inside a task's `compute()` method.
+
+   ```java
+   task.fork();
+   ```
+
+4. **`join()`**
+   - This method waits for the completion of a forked task. It is used in conjunction with `fork()`.
+   - **Return type**: The result of the task (of type `T` for `RecursiveTask`, `Void` for `RecursiveAction`).
+
+   ```java
+   T result = task.join();
+   ```
+
+5. **`awaitQuiescence(long timeout, TimeUnit unit)`**
+   - Blocks until all tasks in the pool have finished executing or until the specified timeout occurs. This is useful for waiting until all tasks are completed before shutting down the pool.
+   - **Return type**: `boolean` (returns `true` if all tasks finished, `false` if timed out).
+
+   ```java
+   boolean isCompleted = forkJoinPool.awaitQuiescence(10, TimeUnit.SECONDS);
+   ```
+
+6. **`getParallelism()`**
+   - Returns the number of worker threads available for the pool. It is often used to tune the pool size.
+   - **Return type**: `int`.
+
+   ```java
+   int parallelism = forkJoinPool.getParallelism();
+   ```
+
+7. **`getPoolSize()`**
+   - Returns the number of threads currently in the pool.
+   - **Return type**: `int`.
+
+   ```java
+   int poolSize = forkJoinPool.getPoolSize();
+   ```
+
+8. **`isQuiescent()`**
+   - Returns `true` if the pool has completed all tasks and is idle, otherwise returns `false`.
+   - **Return type**: `boolean`.
+
+   ```java
+   boolean isQuiescent = forkJoinPool.isQuiescent();
+   ```
+
+9. **`shutdown()`**
+   - Initiates an orderly shutdown of the pool. Tasks that have been submitted will be executed, but no new tasks will be accepted.
+   - **Return type**: `void`.
+
+   ```java
+   forkJoinPool.shutdown();
+   ```
+
+---
+
+### Example Using `ForkJoinPool`
+
+Here is a basic example demonstrating how to use `ForkJoinPool` with a `RecursiveTask` to perform parallel computations:
+
+#### Example: Parallel Sum of an Array
+
+In this example, we will calculate the sum of an array of integers in parallel by dividing the task into smaller subtasks.
+
+```java
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.ForkJoinPool;
+
+public class ForkJoinPoolExample {
+
+    public static void main(String[] args) {
+        // Array of integers to sum
+        int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        // Create ForkJoinPool with default parallelism
+        ForkJoinPool pool = new ForkJoinPool();
+
+        // Create a task to calculate sum
+        SumTask task = new SumTask(array, 0, array.length);
+
+        // Invoke the task and get the result
+        int result = pool.invoke(task);
+
+        System.out.println("Total sum: " + result);
+
+        // Shutdown the pool
+        pool.shutdown();
+    }
+
+    static class SumTask extends RecursiveTask<Integer> {
+        private static final int THRESHOLD = 3;  // Threshold for dividing the task
+        private int[] array;
+        private int start;
+        private int end;
+
+        public SumTask(int[] array, int start, int end) {
+            this.array = array;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected Integer compute() {
+            // If the task is small enough, compute directly
+            if (end - start <= THRESHOLD) {
+                int sum = 0;
+                for (int i = start; i < end; i++) {
+                    sum += array[i];
+                }
+                return sum;
+            } else {
+                // Otherwise, split the task
+                int mid = (start + end) / 2;
+                SumTask leftTask = new SumTask(array, start, mid);
+                SumTask rightTask = new SumTask(array, mid, end);
+
+                // Fork the subtasks
+                leftTask.fork();
+                rightTask.fork();
+
+                // Wait for the results and combine them
+                int leftResult = leftTask.join();
+                int rightResult = rightTask.join();
+
+                return leftResult + rightResult;
+            }
+        }
+    }
+}
+```
+
+### Explanation:
+
+- **`SumTask`**: This is a subclass of `RecursiveTask<Integer>`, which is a task that returns a result. It represents the task of summing elements in a portion of the array.
+  - If the size of the subtask is small enough (i.e., `end - start <= THRESHOLD`), it directly computes the sum.
+  - Otherwise, it divides the task into two subtasks (left and right) and forks them using `fork()`.
+  - Once the subtasks are forked, it waits for their completion using `join()` and combines the results.
+
+- **ForkJoinPool**: We create an instance of `ForkJoinPool` to execute the task. The `invoke()` method is used to start and wait for the result.
+
+### Advantages of `ForkJoinPool`:
+- **Efficient Parallelism**: It is specifically designed for tasks that can be recursively split into smaller subtasks (e.g., divide-and-conquer problems).
+- **Work Stealing**: Threads in the pool can "steal" work from other threads if they are idle, leading to better load balancing.
+- **Scalability**: `ForkJoinPool` adjusts the number of active threads based on the available processors and the workload.
+
+### Conclusion:
+`ForkJoinPool` is an excellent choice for parallel tasks that involve recursively dividing the problem into smaller subtasks. By using methods like `fork()`, `join()`, and `invoke()`, developers can efficiently implement parallel algorithms. It is highly optimized for problems that can be divided into independent, parallelizable tasks, offering great performance improvements in such scenarios.
+
 ---
 
 ### **ThreadLocal in Multithreading**
