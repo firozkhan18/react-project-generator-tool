@@ -85,88 +85,6 @@
 - [Singleton](#singleton)
 
 
-### **Table of Contents for Multithreading and Concurrency in Java**
-
-| **Topic**                                                            | **Subtopic**                                                              |
-|----------------------------------------------------------------------|---------------------------------------------------------------------------|
-| **1. Introduction to Multithreading**                                | [Definition of Multithreading](#definition-of-multithreading) |
-|                                                                      | [Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading) |
-|                                                                      | [Processes vs. Threads](#processes-vs-threads) |
-|                                                                      | [Multithreading in Java](#multithreading-in-java) |
-| **2. Java Memory Model of Process and Thread**                       | [Java Memory Model Overview](#java-memory-model) |
-| **3. Basics of Threads - Part 1**                                    | [Creating Threads](#creating-threads) |
-|                                                                      | [Extending the Thread Class](#extending-the-thread-class) |
-|                                                                      | [Implementing the Runnable Interface](#implementing-the-runnable-interface) |
-|                                                                      | [Thread Lifecycle](#thread-lifecycle) |
-|                                                                      | [Thread States (New, Runnable, Blocked, Waiting, Timed Waiting, Terminated)](#thread-states) |
-| **4. Basics of Threads - Part 2: Inter-Thread Communication & Synchronization** | [Synchronization and Thread Safety](#synchronization-and-thread-safety) |
-|                                                                      | [Synchronized Methods and Blocks](#synchronized-methods-and-blocks) |
-|                                                                      | [Inter-Thread Communication (wait(), notify(), and notifyAll())](#inter-thread-communication) |
-|                                                                      | [Producer-Consumer Problem Assignment](#producer-consumer-assignment) |
-| **5. Basics of Threads - Part 3**                                    | [Producer-Consumer Problem Solution](#producer-consumer-solution) |
-|                                                                      | [Stop, Resume, Suspended Methods (Deprecated)](#deprecated-methods) |
-|                                                                      | [Thread Joining](#thread-joining) |
-|                                                                      | [Volatile Keyword](#volatile-keyword) |
-|                                                                      | [Thread Priority and Daemon Threads](#thread-priority-daemon-threads) |
-| **6. Advanced Topics**                                               | [Thread Pools](#thread-pools) |
-|                                                                      | [Executor Framework](#executor-framework) |
-|                                                                      | [ThreadPoolExecutor](#threadpoolexecutor) |
-|                                                                      | [Callable and Future](#callable-and-future) |
-|                                                                      | [Fork/Join Framework](#fork-join-framework) |
-|                                                                      | [ThreadLocal in Multithreading](#threadlocal) |
-| **7. Concurrency Utilities**                                         | [java.util.concurrent Package](#java-util-concurrent) |
-|                                                                      | [Executors and ExecutorService](#executors-and-executorservice) |
-|                                                                      | [Callable and Future](#callable-and-future-concurrency) |
-|                                                                      | [CompletableFuture](#completablefuture) |
-|                                                                      | [ScheduledExecutorService](#scheduledexecutorservice) |
-|                                                                      | [CountDownLatch, CyclicBarrier, Phaser, Exchanger](#concurrency-synchronizers) |
-| **8. Concurrent Collections**                                        | [ConcurrentHashMap](#concurrenthashmap) |
-|                                                                      | [ConcurrentLinkedQueue & ConcurrentLinkedDeque](#concurrent-linked-collections) |
-|                                                                      | [CopyOnWriteArrayList](#copyonwritearraylist) |
-|                                                                      | [BlockingQueue Interface](#blockingqueue-interface) |
-|                                                                      | [ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue](#blockingqueues) |
-| **9. Atomic Variables**                                              | [AtomicInteger, AtomicLong, AtomicBoolean](#atomic-variables) |
-|                                                                      | [AtomicReference and AtomicReferenceArray](#atomic-reference) |
-|                                                                      | [Compare-and-Swap Operations](#compare-and-swap) |
-| **10. Locks and Semaphores**                                         | [ReentrantLock](#reentrantlock) |
-|                                                                      | [ReadWriteLock](#readwritelock) |
-|                                                                      | [StampedLock](#stampedlock) |
-|                                                                      | [Semaphores](#semaphores) |
-|                                                                      | [Lock and Condition Interface](#lock-and-condition) |
-| **11. Parallel Streams**                                             | [Parallel Streams (Working Example)](#parallel-streams) |
-| **12. Best Practices and Patterns**                                  | [Thread Safety Best Practices](#thread-safety-best-practices) |
-|                                                                      | [Immutable Objects](#immutable-objects) |
-|                                                                      | [ThreadLocal Usage](#threadlocal-usage) |
-|                                                                      | [Double-Checked Locking and its Issues](#double-checked-locking) |
-|                                                                      | [Concurrency Design Patterns](#concurrency-design-patterns) |
-| **13. Common Concurrency Issues and Solutions**                      | [Deadlocks](#deadlocks) |
-|                                                                      | [Starvation](#starvation) |
-|                                                                      | [Livelocks](#livelocks) |
-|                                                                      | [Race Conditions](#race-conditions) |
-|                                                                      | [Strategies for Avoiding Concurrency Issues](#avoiding-concurrency-issues) |
-| **14. Java 9+ Features**                                              | [Reactive Programming with Flow API](#reactive-programming) |
-|                                                                      | [CompletableFuture Enhancements](#completablefuture-enhancements) |
-|                                                                      | [Process API Updates](#process-api-updates) |
-| **15. Java 11+ Features**                                             | [Local-Variable Type Inference (var keyword)](#local-variable-type-inference) |
-|                                                                      | [Enhancements in Optional class](#optional-enhancements) |
-|                                                                      | [New Methods in the String class relevant to concurrency](#new-string-methods) |
-
----
-
-### **Detailed Section Breakdown**:
-
-#### **[Definition of Multithreading](#definition-of-multithreading)**  
-Definition, benefits, challenges, and key differences between processes and threads.
-
-#### **[Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading)**  
-Exploring advantages and potential issues that arise in multithreading.
-
-#### **[Processes vs. Threads](#processes-vs-threads)**  
-A comparison of processes and threads with regard to memory usage, isolation, and execution.
-
-#### **[Multithreading in Java](#multithreading-in-java)**  
-How multithreading is implemented in Java, including the `Thread` class and `Runnable` interface.
-
 ---
 
 ## Difference Between Abstraction and Encapsulation in Java
@@ -4139,3 +4057,86 @@ Java 21 introduces enhancements to the `Thread` and `ForkJoinPool` classes, impr
 
 ---
 
+### **Table of Contents for Multithreading and Concurrency in Java**
+
+| **Topic**                                                            | **Subtopic**                                                              |
+|----------------------------------------------------------------------|---------------------------------------------------------------------------|
+| **1. Introduction to Multithreading**                                | [Definition of Multithreading](#definition-of-multithreading) |
+|                                                                      | [Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading) |
+|                                                                      | [Processes vs. Threads](#processes-vs-threads) |
+|                                                                      | [Multithreading in Java](#multithreading-in-java) |
+| **2. Java Memory Model of Process and Thread**                       | [Java Memory Model Overview](#java-memory-model) |
+| **3. Basics of Threads - Part 1**                                    | [Creating Threads](#creating-threads) |
+|                                                                      | [Extending the Thread Class](#extending-the-thread-class) |
+|                                                                      | [Implementing the Runnable Interface](#implementing-the-runnable-interface) |
+|                                                                      | [Thread Lifecycle](#thread-lifecycle) |
+|                                                                      | [Thread States (New, Runnable, Blocked, Waiting, Timed Waiting, Terminated)](#thread-states) |
+| **4. Basics of Threads - Part 2: Inter-Thread Communication & Synchronization** | [Synchronization and Thread Safety](#synchronization-and-thread-safety) |
+|                                                                      | [Synchronized Methods and Blocks](#synchronized-methods-and-blocks) |
+|                                                                      | [Inter-Thread Communication (wait(), notify(), and notifyAll())](#inter-thread-communication) |
+|                                                                      | [Producer-Consumer Problem Assignment](#producer-consumer-assignment) |
+| **5. Basics of Threads - Part 3**                                    | [Producer-Consumer Problem Solution](#producer-consumer-solution) |
+|                                                                      | [Stop, Resume, Suspended Methods (Deprecated)](#deprecated-methods) |
+|                                                                      | [Thread Joining](#thread-joining) |
+|                                                                      | [Volatile Keyword](#volatile-keyword) |
+|                                                                      | [Thread Priority and Daemon Threads](#thread-priority-daemon-threads) |
+| **6. Advanced Topics**                                               | [Thread Pools](#thread-pools) |
+|                                                                      | [Executor Framework](#executor-framework) |
+|                                                                      | [ThreadPoolExecutor](#threadpoolexecutor) |
+|                                                                      | [Callable and Future](#callable-and-future) |
+|                                                                      | [Fork/Join Framework](#fork-join-framework) |
+|                                                                      | [ThreadLocal in Multithreading](#threadlocal) |
+| **7. Concurrency Utilities**                                         | [java.util.concurrent Package](#java-util-concurrent) |
+|                                                                      | [Executors and ExecutorService](#executors-and-executorservice) |
+|                                                                      | [Callable and Future](#callable-and-future-concurrency) |
+|                                                                      | [CompletableFuture](#completablefuture) |
+|                                                                      | [ScheduledExecutorService](#scheduledexecutorservice) |
+|                                                                      | [CountDownLatch, CyclicBarrier, Phaser, Exchanger](#concurrency-synchronizers) |
+| **8. Concurrent Collections**                                        | [ConcurrentHashMap](#concurrenthashmap) |
+|                                                                      | [ConcurrentLinkedQueue & ConcurrentLinkedDeque](#concurrent-linked-collections) |
+|                                                                      | [CopyOnWriteArrayList](#copyonwritearraylist) |
+|                                                                      | [BlockingQueue Interface](#blockingqueue-interface) |
+|                                                                      | [ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue](#blockingqueues) |
+| **9. Atomic Variables**                                              | [AtomicInteger, AtomicLong, AtomicBoolean](#atomic-variables) |
+|                                                                      | [AtomicReference and AtomicReferenceArray](#atomic-reference) |
+|                                                                      | [Compare-and-Swap Operations](#compare-and-swap) |
+| **10. Locks and Semaphores**                                         | [ReentrantLock](#reentrantlock) |
+|                                                                      | [ReadWriteLock](#readwritelock) |
+|                                                                      | [StampedLock](#stampedlock) |
+|                                                                      | [Semaphores](#semaphores) |
+|                                                                      | [Lock and Condition Interface](#lock-and-condition) |
+| **11. Parallel Streams**                                             | [Parallel Streams (Working Example)](#parallel-streams) |
+| **12. Best Practices and Patterns**                                  | [Thread Safety Best Practices](#thread-safety-best-practices) |
+|                                                                      | [Immutable Objects](#immutable-objects) |
+|                                                                      | [ThreadLocal Usage](#threadlocal-usage) |
+|                                                                      | [Double-Checked Locking and its Issues](#double-checked-locking) |
+|                                                                      | [Concurrency Design Patterns](#concurrency-design-patterns) |
+| **13. Common Concurrency Issues and Solutions**                      | [Deadlocks](#deadlocks) |
+|                                                                      | [Starvation](#starvation) |
+|                                                                      | [Livelocks](#livelocks) |
+|                                                                      | [Race Conditions](#race-conditions) |
+|                                                                      | [Strategies for Avoiding Concurrency Issues](#avoiding-concurrency-issues) |
+| **14. Java 9+ Features**                                              | [Reactive Programming with Flow API](#reactive-programming) |
+|                                                                      | [CompletableFuture Enhancements](#completablefuture-enhancements) |
+|                                                                      | [Process API Updates](#process-api-updates) |
+| **15. Java 11+ Features**                                             | [Local-Variable Type Inference (var keyword)](#local-variable-type-inference) |
+|                                                                      | [Enhancements in Optional class](#optional-enhancements) |
+|                                                                      | [New Methods in the String class relevant to concurrency](#new-string-methods) |
+
+---
+
+### **Detailed Section Breakdown**:
+
+#### **[Definition of Multithreading](#definition-of-multithreading)**  
+Definition, benefits, challenges, and key differences between processes and threads.
+
+#### **[Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading)**  
+Exploring advantages and potential issues that arise in multithreading.
+
+#### **[Processes vs. Threads](#processes-vs-threads)**  
+A comparison of processes and threads with regard to memory usage, isolation, and execution.
+
+#### **[Multithreading in Java](#multithreading-in-java)**  
+How multithreading is implemented in Java, including the `Thread` class and `Runnable` interface.
+
+---
