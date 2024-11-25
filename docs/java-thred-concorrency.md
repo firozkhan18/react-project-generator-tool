@@ -2810,3 +2810,333 @@ In this example, the `tryLock()` method attempts to acquire the lock with a time
 - **Starvation** occurs when a thread is perpetually unable to acquire resources or CPU time due to other threads continuously getting preference.
 - **Starvation** can happen due to improper thread scheduling, poor thread priority management, and improper synchronization.
 - To prevent starvation, you can use **fair locks**, **thread pools**, **timeouts**, and **thread priority management** strategies.
+
+---
+
+## Executor Framework
+
+The **Executor Framework** in Java provides a higher-level replacement for manually managing threads. It simplifies the creation, scheduling, and management of tasks executed by threads. This framework is part of the `java.util.concurrent` package and was introduced in **Java 5** to provide a more efficient and flexible way to manage concurrent tasks compared to manually creating and managing threads.
+
+The **Executor Framework** decouples the task submission from the details of how each task will be executed (e.g., which thread will execute it). It also helps manage a pool of worker threads, which can be reused for multiple tasks, improving performance and resource management.
+
+### **Key Components of the Executor Framework**
+
+The **Executor Framework** consists of the following key components:
+
+1. **Executor Interface**
+2. **ExecutorService Interface**
+3. **Executors Utility Class**
+4. **Thread Pools**
+5. **Callable and Future**
+6. **ScheduledExecutorService**
+
+---
+
+### **1. Executor Interface**
+
+The `Executor` interface is the simplest and most general interface in the Executor Framework. It provides the basic contract for executing tasks. It defines the method:
+
+- **`execute(Runnable command)`**:  
+  This method accepts a `Runnable` object and executes it asynchronously. The `execute()` method does not return a result, and it is generally used for fire-and-forget tasks.
+
+**Example:**
+```java
+Executor executor = Executors.newFixedThreadPool(2);
+executor.execute(() -> {
+    System.out.println("Task executed in thread: " + Thread.currentThread().getName());
+});
+```
+
+---
+
+### **2. ExecutorService Interface**
+
+`ExecutorService` extends the `Executor` interface and provides more features, such as task management, lifecycle management, and the ability to return results. It defines additional methods like:
+
+- **`submit(Callable<T> task)`**: Accepts a `Callable` task that returns a result and returns a `Future<T>` object, which can be used to retrieve the result of the computation.
+- **`submit(Runnable task)`**: Accepts a `Runnable` task and returns a `Future<?>` object.
+- **`invokeAll(Collection<? extends Callable<T>> tasks)`**: Executes a collection of tasks and returns a list of `Future` objects, one for each task.
+- **`invokeAny(Collection<? extends Callable<T>> tasks)`**: Executes a collection of tasks and returns the result of the first successfully completed task.
+
+Other methods include `shutdown()` and `shutdownNow()` to manage the lifecycle of the executor.
+
+**Example:**
+```java
+ExecutorService executorService = Executors.newFixedThreadPool(3);
+Future<Integer> future = executorService.submit(() -> {
+    return 123;
+});
+try {
+    Integer result = future.get();  // Blocking call to get the result
+    System.out.println("Task result: " + result);
+} catch (InterruptedException | ExecutionException e) {
+    e.printStackTrace();
+}
+executorService.shutdown();
+```
+
+---
+
+### **3. Executors Utility Class**
+
+The `Executors` class is a utility class that provides factory methods to create common types of thread pools and executors. Some of the most commonly used methods include:
+
+- **`newFixedThreadPool(int nThreads)`**: Returns an `ExecutorService` that uses a fixed number of threads. The threads are reused to execute submitted tasks.
+- **`newCachedThreadPool()`**: Returns an `ExecutorService` that creates new threads as needed but reuses previously constructed threads when they are available.
+- **`newSingleThreadExecutor()`**: Returns an `ExecutorService` that uses a single worker thread to execute submitted tasks. Tasks are executed sequentially.
+- **`newScheduledThreadPool(int corePoolSize)`**: Returns a `ScheduledExecutorService` for tasks that need to be scheduled with a fixed-rate or fixed-delay execution.
+
+**Example:**
+```java
+ExecutorService executorService = Executors.newFixedThreadPool(3);
+executorService.submit(() -> {
+    System.out.println("Task executed by thread: " + Thread.currentThread().getName());
+});
+```
+
+---
+
+### **4. Thread Pools**
+
+A **Thread Pool** is a collection of worker threads that are used to execute tasks. By reusing threads rather than creating new ones for each task, a thread pool can significantly reduce the overhead of thread creation, improve application performance, and prevent resource exhaustion.
+
+- **Fixed-Size Thread Pool (`newFixedThreadPool`)**:  
+  The number of threads is fixed, and any excess tasks will be queued until a thread becomes available.
+  
+- **Cached Thread Pool (`newCachedThreadPool`)**:  
+  This type of pool creates new threads as needed but reuses idle threads when available. This is useful for applications that execute many short-lived asynchronous tasks.
+  
+- **Single-Threaded Pool (`newSingleThreadExecutor`)**:  
+  This pool uses a single worker thread to process tasks sequentially. If multiple tasks are submitted, they will be processed one at a time, in the order they were submitted.
+
+**Example:**
+```java
+ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
+for (int i = 0; i < 10; i++) {
+    fixedThreadPool.submit(() -> {
+        System.out.println(Thread.currentThread().getName() + " is executing task.");
+    });
+}
+fixedThreadPool.shutdown();
+```
+
+---
+
+### **5. Callable and Future**
+
+- **`Callable<T>`**:  
+  Similar to `Runnable`, but it can return a result or throw an exception. `Callable` tasks can be submitted to an `ExecutorService`, which allows for the retrieval of the result via a `Future` object.
+
+- **`Future<T>`**:  
+  Represents the result of an asynchronous computation. It provides methods to:
+  - **`get()`**: Blocks until the task completes and retrieves the result.
+  - **`cancel(boolean mayInterruptIfRunning)`**: Attempts to cancel the execution of the task.
+  - **`isDone()`**: Returns `true` if the task is completed.
+
+**Example:**
+```java
+ExecutorService executor = Executors.newFixedThreadPool(2);
+Callable<Integer> task = () -> {
+    return 100 + 200;
+};
+Future<Integer> result = executor.submit(task);
+try {
+    Integer sum = result.get();  // Blocks until result is available
+    System.out.println("Sum: " + sum);
+} catch (InterruptedException | ExecutionException e) {
+    e.printStackTrace();
+}
+executor.shutdown();
+```
+
+---
+
+### **6. ScheduledExecutorService**
+
+`ScheduledExecutorService` is a specialized `ExecutorService` that can schedule tasks with a fixed-rate or fixed-delay execution.
+
+- **Fixed-Rate Execution**: Executes a task periodically with a fixed interval between executions.
+- **Fixed-Delay Execution**: Executes a task after a fixed delay from the completion of the previous execution.
+
+Common methods include:
+- **`schedule(Runnable command, long delay, TimeUnit unit)`**: Schedules a one-time task after a specified delay.
+- **`scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)`**: Schedules a task with a fixed-rate execution.
+- **`scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)`**: Schedules a task with a fixed-delay execution.
+
+**Example:**
+```java
+ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+Runnable task = () -> System.out.println("Scheduled Task Executed at: " + System.currentTimeMillis());
+scheduler.scheduleAtFixedRate(task, 0, 2, TimeUnit.SECONDS);  // Executes every 2 seconds
+```
+
+---
+
+### **Conclusion**
+
+The **Executor Framework** is a powerful tool for managing concurrency in Java applications. By abstracting away the details of thread creation, management, and scheduling, it simplifies the process of concurrent programming. It allows for more efficient resource management by using thread pools, handles asynchronous task execution through `Future` and `Callable`, and supports scheduled execution through `ScheduledExecutorService`.
+
+Using the **Executor Framework** instead of manually managing threads can lead to cleaner, more maintainable, and efficient code, especially when dealing with large numbers of tasks or high concurrency requirements.
+
+---
+## Concurrency Utilities
+
+Java provides a powerful set of **Concurrency Utilities** under the `java.util.concurrent` package, which simplifies multithreaded programming and makes it easier to handle common concurrency tasks, such as synchronization, managing thread pools, and coordinating threads. These utilities are especially useful in modern Java applications where concurrency is essential for performance and scalability.
+
+Below is a summary of the key **Concurrency Utilities** in Java, as typically covered in books like *Java: The Complete Reference (10th Edition)*:
+
+---
+
+### **1. Locks: `ReentrantLock` vs. `synchronized`**
+
+- **`synchronized` (keyword)**:  
+  The `synchronized` keyword is a simple and effective way to control access to shared resources. It is used to ensure that only one thread at a time can access a method or block of code that is marked as synchronized.  
+  However, `synchronized` comes with some limitations:
+  - It is **blocking** and can cause performance bottlenecks if not used carefully.
+  - It can lead to **deadlocks** if two or more threads lock resources in a circular fashion.
+
+- **`ReentrantLock` (class)**:  
+  `ReentrantLock` is a more powerful alternative to the `synchronized` keyword. It provides additional features like:
+  - **Locking and unlocking explicitly**.
+  - **Try-locking**: `tryLock()` allows a thread to attempt to acquire a lock without blocking indefinitely.
+  - **Interruptible lock acquisition**: Locks can be acquired in an interruptible fashion with `lockInterruptibly()`.
+  - **Fairness**: A fairness parameter in the constructor allows for fairer access to the lock (i.e., threads are granted access in the order they requested it).
+
+**Example:**
+```java
+ReentrantLock lock = new ReentrantLock();
+lock.lock();  // acquire lock
+try {
+    // critical section code
+} finally {
+    lock.unlock();  // release lock
+}
+```
+
+---
+
+### **2. Atomic Variables: `AtomicInteger`, `AtomicLong`, etc.**
+
+Atomic variables provide a way to perform thread-safe operations on variables without using locks. These variables are designed to handle common operations like increments or updates in a way that avoids race conditions.
+
+- **`AtomicInteger`**: A thread-safe integer that supports atomic operations like increment, decrement, and addition.
+- **`AtomicLong`**, **`AtomicBoolean`**, and **`AtomicReference`**: Other atomic classes that provide similar atomic operations for long, boolean, and reference types.
+
+**Example:**
+```java
+AtomicInteger counter = new AtomicInteger(0);
+counter.incrementAndGet();  // increment by 1 and return the new value
+```
+
+These classes ensure **atomicity** of operations, meaning the operation is completed in one step without interruption.
+
+---
+
+### **3. CountDownLatch**
+
+`CountDownLatch` is a concurrency utility that allows one or more threads to wait until a set of operations being performed by other threads completes. It is typically used to implement **"waiting for multiple threads to finish before proceeding"**.
+
+- The **count** is initialized with the number of threads or events to wait for. Each time an event is completed (e.g., a thread finishes its task), the count is decremented. Once the count reaches zero, all waiting threads are released.
+
+**Example:**
+```java
+CountDownLatch latch = new CountDownLatch(3);  // Wait for 3 threads
+// Threads count down the latch after completing their tasks
+latch.countDown();  
+latch.await();  // Block until count reaches zero
+```
+
+---
+
+### **4. CyclicBarrier**
+
+`CyclicBarrier` is similar to `CountDownLatch`, but it allows threads to **re-use** the barrier after the specified number of threads have reached the barrier. It is useful when you have groups of threads that must work together in phases or cycles.
+
+- A **CyclicBarrier** is initialized with the number of threads that must reach the barrier before they can continue.
+- Once all threads have reached the barrier, they are released, and the barrier is reset for the next cycle.
+
+**Example:**
+```java
+CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All threads are ready"));
+barrier.await();  // Each thread waits for others
+// Proceed after all threads reach the barrier
+```
+
+---
+
+### **5. Semaphore**
+
+`Semaphore` is a counting semaphore that allows a limited number of threads to access a resource concurrently. It is useful for managing a pool of resources, such as a connection pool or a fixed number of database connections.
+
+- **Acquire**: A thread acquires a permit (decrements the count).
+- **Release**: A thread releases a permit (increments the count).
+- **Available Permits**: The number of permits that can still be acquired.
+
+**Example:**
+```java
+Semaphore semaphore = new Semaphore(3);  // Allow 3 threads at a time
+semaphore.acquire();  // Block if no permits available
+// Critical section
+semaphore.release();  // Release a permit
+```
+
+---
+
+### **6. Phaser**
+
+`Phaser` is a more flexible version of `CountDownLatch` and `CyclicBarrier`. It allows for **dynamic participation**, meaning that threads can join and leave the phaser at runtime. It is useful in situations where the number of participating threads can vary.
+
+**Example:**
+```java
+Phaser phaser = new Phaser(3);  // Register 3 parties (threads)
+phaser.arriveAndAwaitAdvance();  // Wait for other threads to reach the phase
+```
+
+---
+
+### **7. `ExecutorService` and Thread Pools**
+
+The **Executor Framework** (particularly `ExecutorService` and `Executors`) provides a higher-level replacement for manually managing threads. The framework simplifies thread management, allowing threads to be reused and reducing the overhead of repeatedly creating new threads.
+
+- **Thread Pool**: The `ExecutorService` allows you to manage a pool of worker threads to which tasks are submitted.
+- **Fixed Thread Pool**, **Cached Thread Pool**, **Scheduled Thread Pool**: Different types of thread pools that control how threads are managed.
+
+**Example:**
+```java
+ExecutorService executor = Executors.newFixedThreadPool(10);
+executor.submit(() -> {
+    // Task code
+});
+executor.shutdown();
+```
+
+The `ExecutorService` framework handles thread lifecycle management, such as the creation, execution, and termination of threads.
+
+---
+
+### **8. Future and CompletableFuture**
+
+- **`Future`**: Represents a result of an asynchronous computation. You can use it to check if a task is complete and retrieve the result when it is ready.
+- **`CompletableFuture`**: Extends `Future` with the ability to manually complete the computation and allows you to combine multiple asynchronous tasks into a pipeline.
+
+**Example:**
+```java
+CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+    return 123;
+});
+future.thenAccept(result -> System.out.println("Result: " + result));
+```
+
+---
+
+### **Summary of Key Concurrency Utilities**  
+1. **`ReentrantLock`**: More flexible locking mechanism compared to `synchronized`.
+2. **Atomic variables**: Simple, lock-free thread-safe variable operations.
+3. **CountDownLatch**: Wait for a set of operations to complete.
+4. **CyclicBarrier**: Synchronize threads at a common barrier point, useful for phases.
+5. **Semaphore**: Control access to a limited number of resources.
+6. **Phaser**: Advanced synchronization utility that allows for dynamic participation.
+7. **ExecutorService**: Simplifies thread management using thread pools.
+8. **CompletableFuture**: For combining multiple asynchronous tasks in a more flexible way.
+
+These utilities enable safe and efficient handling of concurrency in Java applications and are especially useful for complex multi-threaded programs. They allow developers to avoid common pitfalls such as deadlocks, race conditions, and inefficient thread management.
