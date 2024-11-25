@@ -85,6 +85,90 @@
 - [Singleton](#singleton)
 
 
+### **Table of Contents for Multithreading and Concurrency in Java**
+
+| **Topic**                                                            | **Subtopic**                                                              |
+|----------------------------------------------------------------------|---------------------------------------------------------------------------|
+| **1. Introduction to Multithreading**                                | Definition of Multithreading](#definition-of-multithreading) |
+|                                                                      | Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading) |
+|                                                                      | Processes vs. Threads](#processes-vs-threads) |
+|                                                                      | Multithreading in Java](#multithreading-in-java) |
+| **2. Java Memory Model of Process and Thread**                       | Java Memory Model Overview](#java-memory-model) |
+| **3. Basics of Threads - Part 1**                                    | Creating Threads](#creating-threads) |
+|                                                                      | Extending the Thread Class](#extending-the-thread-class) |
+|                                                                      | Implementing the Runnable Interface](#implementing-the-runnable-interface) |
+|                                                                      | Thread Lifecycle](#thread-lifecycle) |
+|                                                                      | Thread States (New, Runnable, Blocked, Waiting, Timed Waiting, Terminated)](#thread-states) |
+| **4. Basics of Threads - Part 2: Inter-Thread Communication & Synchronization** | [Synchronization and Thread Safety](#synchronization-and-thread-safety) |
+|                                                                      | [Synchronized Methods and Blocks](#synchronized-methods-and-blocks) |
+|                                                                      | [Inter-Thread Communication (wait(), notify(), and notifyAll())](#inter-thread-communication) |
+|                                                                      | [Producer-Consumer Problem Assignment](#producer-consumer-assignment) |
+| **5. Basics of Threads - Part 3**                                    | [Producer-Consumer Problem Solution](#producer-consumer-solution) |
+|                                                                      | [Stop, Resume, Suspended Methods (Deprecated)](#deprecated-methods) |
+|                                                                      | [Thread Joining](#thread-joining) |
+|                                                                      | [Volatile Keyword](#volatile-keyword) |
+|                                                                      | [Thread Priority and Daemon Threads](#thread-priority-daemon-threads) |
+| **6. Advanced Topics**                                               | [Thread Pools](#thread-pools) |
+|                                                                      | [Executor Framework](#executor-framework) |
+|                                                                      | [ThreadPoolExecutor](#threadpoolexecutor) |
+|                                                                      | [Callable and Future](#callable-and-future) |
+|                                                                      | [Fork/Join Framework](#fork-join-framework) |
+|                                                                      | [ThreadLocal in Multithreading](#threadlocal) |
+| **7. Concurrency Utilities**                                         | [java.util.concurrent Package](#java-util-concurrent) |
+|                                                                      | [Executors and ExecutorService](#executors-and-executorservice) |
+|                                                                      | [Callable and Future](#callable-and-future-concurrency) |
+|                                                                      | [CompletableFuture](#completablefuture) |
+|                                                                      | [ScheduledExecutorService](#scheduledexecutorservice) |
+|                                                                      | [CountDownLatch, CyclicBarrier, Phaser, Exchanger](#concurrency-synchronizers) |
+| **8. Concurrent Collections**                                        | [ConcurrentHashMap](#concurrenthashmap) |
+|                                                                      | [ConcurrentLinkedQueue & ConcurrentLinkedDeque](#concurrent-linked-collections) |
+|                                                                      | [CopyOnWriteArrayList](#copyonwritearraylist) |
+|                                                                      | [BlockingQueue Interface](#blockingqueue-interface) |
+|                                                                      | [ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue](#blockingqueues) |
+| **9. Atomic Variables**                                              | [AtomicInteger, AtomicLong, AtomicBoolean](#atomic-variables) |
+|                                                                      | [AtomicReference and AtomicReferenceArray](#atomic-reference) |
+|                                                                      | [Compare-and-Swap Operations](#compare-and-swap) |
+| **10. Locks and Semaphores**                                         | [ReentrantLock](#reentrantlock) |
+|                                                                      | [ReadWriteLock(#readwritelock) |
+|                                                                      | [StampedLock](#stampedlock) |
+|                                                                      | [Semaphores](#semaphores) |
+|                                                                      | [Lock and Condition Interface](#lock-and-condition) |
+| **11. Parallel Streams**                                             | [Parallel Streams (Working Example)](#parallel-streams) |
+| **12. Best Practices and Patterns**                                  | [Thread Safety Best Practices](#thread-safety-best-practices) |
+|                                                                      | [Immutable Objects](#immutable-objects) |
+|                                                                      | [ThreadLocal Usage](#threadlocal-usage) |
+|                                                                      | [Double-Checked Locking and its Issues(#double-checked-locking) |
+|                                                                      | [Concurrency Design Patterns](#concurrency-design-patterns) |
+| **13. Common Concurrency Issues and Solutions**                      | [Deadlocks](#deadlocks) |
+|                                                                      | [Starvation](#starvation) |
+|                                                                      | [Livelocks](#livelocks) |
+|                                                                      | [Race Conditions](#race-conditions) |
+|                                                                      | [Strategies for Avoiding Concurrency Issues](#avoiding-concurrency-issues) |
+| **14. Java 9+ Features**                                              | [Reactive Programming with Flow API](#reactive-programming) |
+|                                                                      | [CompletableFuture Enhancements](#completablefuture-enhancements) |
+|                                                                      | [Process API Updates](#process-api-updates) |
+| **15. Java 11+ Features**                                             | [Local-Variable Type Inference (var keyword)](#local-variable-type-inference) |
+|                                                                      | [Enhancements in Optional class](#optional-enhancements) |
+|                                                                      | [New Methods in the String class relevant to concurrency](#new-string-methods) |
+
+---
+
+### **Detailed Section Breakdown**:
+
+#### **[Definition of Multithreading](#definition-of-multithreading)**  
+Definition, benefits, challenges, and key differences between processes and threads.
+
+#### **[Benefits and Challenges of Multithreading](#benefits-and-challenges-of-multithreading)**  
+Exploring advantages and potential issues that arise in multithreading.
+
+#### **[Processes vs. Threads](#processes-vs-threads)**  
+A comparison of processes and threads with regard to memory usage, isolation, and execution.
+
+#### **[Multithreading in Java](#multithreading-in-java)**  
+How multithreading is implemented in Java, including the `Thread` class and `Runnable` interface.
+
+---
+
 ## Difference Between Abstraction and Encapsulation in Java
 
 In Object-Oriented Programming (OOP), **Abstraction** and **Encapsulation** are two key concepts, both used to hide implementation details, but they serve different purposes and are implemented differently. Here's a breakdown of their differences and use cases:
@@ -3681,3 +3765,377 @@ Multithreading is a fundamental concept in Java that allows a program to execute
    - **New Methods in String**: Methods like `isBlank()`, `lines()`, and `strip()` enhance string manipulation.
 
 ---
+
+## Multithreading and Concurrency Interview Notes
+
+This document covers key concepts related to **multithreading** and **concurrency** in Java, providing detailed explanations and notes on essential topics. These notes are designed to help you prepare for technical interviews on Java multithreading and concurrency.
+
+---
+
+### 1. **Introduction to Multithreading**
+
+#### **Definition of Multithreading**
+- **Multithreading** is the concurrent execution of more than one sequential set of instructions, or thread. It is a way to perform multiple operations at once within a single process.
+  
+#### **Benefits and Challenges of Multithreading**
+- **Benefits**:
+  - **Efficiency**: Threads can share the same memory space, making communication and data sharing faster.
+  - **Better CPU utilization**: While one thread is blocked, others can continue executing, increasing CPU utilization.
+  - **Improved performance**: Tasks can run in parallel, especially on multi-core processors.
+  
+- **Challenges**:
+  - **Concurrency issues**: Problems like deadlocks, race conditions, and thread interference arise when multiple threads access shared resources.
+  - **Complexity**: Managing multiple threads, synchronization, and inter-thread communication is complex.
+  - **Overhead**: Creating and managing threads can have significant performance overhead.
+
+#### **Processes vs Threads**
+- **Processes**: Independent programs that have their own memory space.
+- **Threads**: Lightweight, smaller units of a process. Multiple threads share the same memory and resources of the parent process.
+
+#### **Multithreading in Java**
+- Java provides built-in support for multithreading via the `Thread` class and `Runnable` interface.
+
+---
+
+### 2. **Java Memory Model of Process and Thread**
+
+- The **Java Memory Model (JMM)** defines how threads interact through memory and how changes made by one thread to shared data are visible to other threads.
+- The JMM ensures **visibility**, **ordering**, and **atomicity** of variables accessed by multiple threads.
+
+---
+
+### 3. **Basics of Threads - Part 1**
+
+#### **Creating Threads**
+- **Extending the Thread Class**:
+  ```java
+  class MyThread extends Thread {
+      @Override
+      public void run() {
+          System.out.println("Thread is running");
+      }
+  }
+  MyThread thread = new MyThread();
+  thread.start();  // Starts the thread
+  ```
+  
+- **Implementing the Runnable Interface**:
+  ```java
+  class MyRunnable implements Runnable {
+      @Override
+      public void run() {
+          System.out.println("Thread is running");
+      }
+  }
+  MyRunnable myRunnable = new MyRunnable();
+  Thread thread = new Thread(myRunnable);
+  thread.start();  // Starts the thread
+  ```
+
+#### **Thread Lifecycle**
+- **New**: Thread is created but not yet started.
+- **Runnable**: Thread is ready to run but waiting for CPU time.
+- **Blocked**: Thread is waiting for a resource (like I/O or synchronized block).
+- **Waiting**: Thread is waiting indefinitely for another thread to perform a particular action.
+- **Timed Waiting**: Thread is waiting for a specific amount of time.
+- **Terminated**: Thread has completed execution.
+
+---
+
+### 4. **Basics of Threads - Part 2**
+
+#### **Synchronization and Thread Safety**
+- **Synchronization** is used to ensure that only one thread can access a resource at a time, preventing data inconsistency and race conditions.
+  
+- **Synchronized Methods**:
+  ```java
+  synchronized void method() {
+      // Thread-safe code
+  }
+  ```
+
+- **Synchronized Blocks**:
+  ```java
+  synchronized (lock) {
+      // Thread-safe code
+  }
+  ```
+
+#### **Inter-Thread Communication**
+- **wait()**: Causes the current thread to release the lock and wait until notified.
+- **notify()**: Wakes up a single thread that is waiting on the lock.
+- **notifyAll()**: Wakes up all threads waiting on the lock.
+
+#### **Producer-Consumer Problem**
+- A classic example where one thread (producer) generates data and another thread (consumer) consumes the data.
+  
+- **Solution**: Use a shared buffer, synchronized blocks, and inter-thread communication to ensure the producer doesn’t overwrite data and the consumer doesn’t try to consume empty data.
+
+---
+
+### 5. **Basics of Threads - Part 3**
+
+#### **Stop, Resume, Suspended Methods** (Deprecated)
+- These methods are deprecated because they can cause unsafe states or deadlocks. Alternatives like `volatile` variables, `join()`, and proper synchronization should be used instead.
+
+#### **Thread Joining**
+- `join()` allows one thread to wait for another thread to finish execution before continuing.
+  ```java
+  thread.join();  // Waits for thread to finish
+  ```
+
+#### **Volatile Keyword**
+- Used to ensure that the value of a variable is always read from and written to the main memory, ensuring visibility across threads.
+
+#### **Thread Priority and Daemon Threads**
+- **Thread Priority**: Control the priority of a thread using `setPriority()`.
+- **Daemon Threads**: Background threads that do not prevent the JVM from exiting when all non-daemon threads finish.
+
+---
+
+### 6. **Advanced Topics**
+
+#### **Thread Pools**
+- A **Thread Pool** is a collection of pre-created threads that can be reused to execute tasks. This reduces the overhead of thread creation and destruction.
+  
+- **Executor Framework**: Provides high-level APIs to manage thread pools.
+  - **ThreadPoolExecutor**: A core implementation for managing thread pools.
+
+#### **Callable and Future**
+- `Callable` is similar to `Runnable`, but it can return a result.
+- `Future` represents the result of an asynchronous computation.
+
+#### **Fork/Join Framework**
+- A framework for parallel programming that divides tasks into smaller tasks and combines their results.
+
+#### **ThreadLocal in Multithreading**
+- A `ThreadLocal` provides thread-local variables, ensuring that each thread has its own independent copy of a variable.
+
+---
+
+### 7. **Concurrency Utilities**
+
+#### **`java.util.concurrent` Package**
+- Provides classes and interfaces for concurrent programming.
+
+#### **Executors and ExecutorService**
+- **Executor** framework decouples task submission from the details of how each task will be executed.
+
+- **Callable and Future**: Enables asynchronous task execution with results.
+  
+#### **CompletableFuture**
+- A powerful tool for asynchronous programming. It allows non-blocking execution of tasks and can combine results from multiple threads.
+
+#### **ScheduledExecutorService**
+- Allows scheduling of tasks with fixed-rate or fixed-delay executions.
+
+#### **CountDownLatch, CyclicBarrier, Phaser, Exchanger**
+- Synchronization utilities to handle different thread coordination problems.
+
+---
+
+### 8. **Concurrent Collections**
+
+#### **ConcurrentHashMap**
+- A thread-safe hash map where multiple threads can access different segments simultaneously.
+
+#### **ConcurrentLinkedQueue and ConcurrentLinkedDeque**
+- Thread-safe, non-blocking queues for concurrent data processing.
+
+#### **CopyOnWriteArrayList**
+- A thread-safe version of `ArrayList` that copies the entire array whenever it’s modified.
+
+#### **BlockingQueue Interface**
+- Useful for handling the producer-consumer problem with various implementations like `ArrayBlockingQueue`, `LinkedBlockingQueue`, and `PriorityBlockingQueue`.
+
+---
+
+### 9. **Atomic Variables**
+
+#### **AtomicInteger, AtomicLong, AtomicBoolean**
+- These classes provide atomic operations on primitive types, ensuring thread safety without synchronization.
+
+#### **Compare-and-Swap (CAS)**
+- A low-level atomic operation that compares the value in memory with a given value and updates it if they match.
+
+---
+
+### 10. **Locks and Semaphores**
+
+#### **ReentrantLock**
+- A lock that allows the thread that holds the lock to enter the lock again without deadlock.
+
+#### **ReadWriteLock**
+- Provides separate locks for read and write operations, improving performance when multiple threads read and few threads write.
+
+#### **StampedLock**
+- A lock designed for high concurrency scenarios, where a read lock can be acquired optimistically.
+
+#### **Semaphores**
+- A semaphore controls access to shared resources by limiting the number of threads that can access a resource at any given time.
+
+---
+
+### 11. **Best Practices and Patterns**
+
+#### **Thread Safety Best Practices**
+- Avoid sharing mutable state between threads.
+- Use thread-safe collections like `ConcurrentHashMap`.
+- Minimize the use of synchronization to avoid contention.
+
+#### **Immutable Objects**
+- Immutable objects are naturally thread-safe because their state cannot be changed after construction.
+
+#### **Concurrency Design Patterns**
+- **Producer-Consumer**, **Fork/Join**, **Thread Pool** patterns.
+
+---
+
+### 12. **Common Concurrency Issues and Solutions**
+
+#### **Deadlocks**
+- Occur when two or more threads are blocked forever, each waiting for the other to release a resource. Use **timeout mechanisms** or avoid nested locks.
+
+#### **Starvation**
+- When a thread is perpetually blocked, never getting a chance to execute. This can be prevented by giving each thread a fair chance using fair locks.
+
+#### **Race Conditions**
+- Occurs when two or more threads concurrently modify shared data, leading to inconsistent results. Use synchronization to prevent this.
+
+#### **Livelocks**
+- Similar to deadlock, but threads are not blocked and keep executing without making progress. Ensure threads are not caught in retry loops.
+
+---
+
+### 13. **Java 9+ Features**
+
+#### **Reactive Programming with Flow API**
+- Introduces the `Flow` API to support reactive programming, making it easier to deal with streams of data asynchronously.
+
+#### **CompletableFuture Enhancements**
+- Introduced methods like `orTimeout()` and `completeExceptionally()` to improve error handling and timeout management.
+
+#### **Process API Updates**
+- Java 9 introduced a new **Process API** for handling and managing operating system processes.
+
+---
+
+
+
+### 14. **Java 11+ Features**
+
+#### **Local-Variable Type Inference (var keyword)**
+- Allows local variables to be declared without explicitly specifying the type, improving code readability.
+
+#### **Enhancements in Optional class**
+- Additional utility methods in `Optional` to simplify null handling.
+
+#### **New Methods in String Class**
+- Methods like `isBlank()`, `lines()`, and `strip()` were introduced in Java 11, enhancing string manipulation capabilities.
+
+---
+
+In **Java 19** and **Java 21**, several new features, improvements, and enhancements were introduced, particularly around **multithreading**, **concurrency**, and overall language performance. Below are the **Java 19+** and **Java 21+** features relevant to **multithreading and concurrency**:
+
+---
+
+## **Java 19 and 21 Features**
+
+### **Java 19 Features**
+Java 19, released in September 2022, introduced several **preview features** that impacted **multithreading** and **concurrency**. Some of the key additions are:
+
+#### **1. Virtual Threads (Project Loom) - Preview Feature**  
+Java 19 introduced **Virtual Threads** as part of **Project Loom** (still in preview as of Java 19). Virtual threads are lightweight threads that aim to drastically reduce the overhead of traditional platform threads, enabling the development of highly concurrent applications with significantly lower resource consumption.
+
+- **Key Features of Virtual Threads**:
+  - **Low overhead**: Virtual threads are much cheaper to create and manage compared to traditional threads.
+  - **Easier concurrency**: Developers can now work with thousands or millions of threads efficiently.
+  - **Integration with existing APIs**: Virtual threads can work seamlessly with existing APIs like `ExecutorService`, `Thread`, and `ForkJoinPool`.
+
+- **Example**:  
+  ```java
+  var executor = Executors.newVirtualThreadPerTaskExecutor();
+  executor.submit(() -> System.out.println("Hello from Virtual Thread!"));
+  ```
+
+#### **2. Structured Concurrency - Incubator Feature**  
+Structured concurrency aims to simplify working with multiple threads by managing thread lifecycles in a more structured and predictable way. It introduces new APIs that make thread management easier, especially for long-running or complex tasks.
+
+- **Key Features**:
+  - Simplifies thread management by grouping tasks under a common framework.
+  - Better exception handling across threads.
+  - Easier to manage lifecycle and cancellation of multiple threads.
+
+- **Example**:  
+  ```java
+  try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+      var task1 = scope.fork(() -> longRunningTask1());
+      var task2 = scope.fork(() -> longRunningTask2());
+      scope.join();  // Wait for all tasks to finish
+      scope.throwIfFailed();  // Propagate any exceptions
+  }
+  ```
+
+#### **3. Foreign Function & Memory API (Incubator)**  
+Java 19 enhanced the **Foreign Function & Memory API** that allows Java programs to interact with native code and memory in a safer and more efficient way. This can be used for implementing high-performance, low-latency, or multithreaded applications that require direct access to off-heap memory.
+
+- **Key Features**:
+  - Allows better control over memory allocation and access.
+  - Reduces the need for JNI (Java Native Interface).
+  - Provides safer alternatives to direct memory manipulation.
+
+---
+
+### **Java 21 Features**
+Java 21, released in September 2023, continues to improve on the multithreading and concurrency models introduced in previous versions. Some notable features related to **multithreading** and **concurrency** in **Java 21** include:
+
+#### **1. Virtual Threads - Stable Release**  
+Java 21 marked **Virtual Threads** as **stable** and fully integrated into the JVM. This allows developers to use **virtual threads** in production environments for building scalable and highly concurrent applications.
+
+- **Key Enhancements**:
+  - **Simpler concurrency model**: Virtual threads are designed to be used like regular threads but with much lower overhead, allowing systems to scale better.
+  - **Better integration with existing concurrency models**: APIs such as `ExecutorService`, `CompletableFuture`, and `Future` now work seamlessly with virtual threads.
+  - **Automatic scaling**: Virtual threads scale based on the number of CPU cores and workloads without the need for manual tuning.
+
+- **Example**:
+  ```java
+  var executor = Executors.newVirtualThreadPerTaskExecutor();
+  executor.submit(() -> {
+      // Virtual thread-specific logic
+      System.out.println("Running in a Virtual Thread!");
+  });
+  ```
+
+#### **2. Project Loom: Continuations (Preview)**  
+Java 21 includes **continuations** as part of Project Loom, which are a more flexible, lower-level construct for controlling the execution flow of a program. They enable developers to pause and resume execution in a more controlled manner, making it easier to write concurrent code without blocking threads.
+
+- **Key Features**:
+  - Provides a way to manage **control flow** in a non-blocking manner.
+  - Can be used to implement **suspending functions** or **coroutines**, allowing more efficient concurrency models without locking.
+
+#### **3. Foreign Function & Memory API - Second Incubator**  
+The **Foreign Function & Memory API** continues to evolve in Java 21, focusing on improved performance and safety for native memory management. It's essential for applications that require high concurrency with native integrations.
+
+- **Key Features**:
+  - **Better native integration**: Enables faster interaction with native libraries and memory buffers.
+  - Supports **off-heap memory** for building low-latency, high-concurrency applications.
+
+#### **4. Improved `Thread` and `ForkJoinPool` Integration**  
+Java 21 introduces enhancements to the `Thread` and `ForkJoinPool` classes, improving the integration between virtual threads and the existing thread management frameworks. This provides more efficient management of thread pools and task scheduling.
+
+- **Key Features**:
+  - **Adaptive thread pools**: More efficient use of available resources by adapting to different workloads.
+  - Improved performance for workloads that require a lot of short-lived tasks or high concurrency.
+
+---
+
+### **Summary of Key Java 19 and Java 21 Features Relevant to Multithreading & Concurrency**:
+
+1. **Virtual Threads**: Low-overhead threads introduced as part of Project Loom in Java 19 (preview) and stabilized in Java 21. These threads allow efficient, scalable, and lightweight concurrency models.
+2. **Structured Concurrency**: Makes it easier to manage multiple threads and their lifecycles by introducing a new task-scoping model.
+3. **Foreign Function & Memory API**: Offers safe access to native memory and better integration with native code, essential for building high-performance concurrent applications.
+4. **Project Loom - Continuations**: Introduces a low-level, flexible concurrency construct that improves asynchronous programming by allowing easy suspension and resumption of execution.
+5. **Improvements to Thread & ForkJoinPool**: Enhancements for better integration with virtual threads and more efficient thread pool management.
+
+---
+
