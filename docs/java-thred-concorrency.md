@@ -1012,3 +1012,1347 @@ The **Java Concurrency Framework** provides a rich set of tools for working with
 - **Concurrent collections** such as `ConcurrentHashMap` and `CopyOnWriteArrayList` for thread-safe data structures.
 - **Atomic classes** for performing atomic operations without synchronization.
 - **Synchronization utilities** like `CountDownLatch` and `CyclicBarrier` for coordinating threads.
+
+
+### Java Concurrency Framework
+
+The **Java Concurrency Framework** is a set of classes and interfaces provided by the Java API that helps you develop multithreaded and parallel applications. It is part of the `java.util.concurrent` package introduced in Java 5, which offers a more advanced and flexible way to handle concurrent programming compared to using low-level synchronization mechanisms like `synchronized` blocks and `Thread` class alone.
+
+The framework includes various tools for managing thread execution, synchronization, coordination, and resource management, as well as utility classes for handling common concurrency tasks such as queues, executors, and thread pooling.
+
+### Key Classes and Interfaces in the Java Concurrency Framework
+
+Here’s a list of important classes and interfaces in the `java.util.concurrent` package, along with their uses:
+
+---
+
+### 1. **Executor Framework**
+
+The **Executor Framework** simplifies the task of managing and controlling thread execution. Instead of manually managing thread creation and scheduling, you can use the framework to offload this responsibility to predefined components.
+
+#### Key Classes and Interfaces in Executor Framework:
+   
+1. **Executor Interface**
+   - **Description**: This is the simplest interface that defines a single method, `execute(Runnable command)`, for executing tasks asynchronously.
+   - **Use**: It is the base interface for task execution. It provides a way to decouple task submission from the mechanics of how each task will be executed.
+
+   ```java
+   public interface Executor {
+       void execute(Runnable command);
+   }
+   ```
+
+2. **ExecutorService Interface**
+   - **Description**: Extends `Executor` and adds methods for managing the lifecycle of the executor and submitting callable tasks that return results.
+   - **Methods**:
+     - `submit(Callable<T> task)`: Submits a task for execution and returns a `Future` representing the result.
+     - `shutdown()`: Initiates an orderly shutdown of the executor.
+     - `invokeAll(Collection<? extends Callable<T>> tasks)`: Executes a list of tasks and returns their results.
+
+   ```java
+   public interface ExecutorService extends Executor {
+       <T> Future<T> submit(Callable<T> task);
+       void shutdown();
+   }
+   ```
+
+3. **ThreadPoolExecutor Class**
+   - **Description**: A powerful class implementing the `ExecutorService` interface that provides a pool of worker threads to execute submitted tasks.
+   - **Use**: You can configure the thread pool size, maximum pool size, and task queue.
+   - **Methods**:
+     - `execute(Runnable command)`: Executes a task asynchronously.
+     - `shutdown()`: Gracefully shuts down the executor.
+     - `getPoolSize()`: Returns the current size of the thread pool.
+
+   ```java
+   ExecutorService executor = new ThreadPoolExecutor(10, 50, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+   ```
+
+4. **ScheduledExecutorService Interface**
+   - **Description**: Extends `ExecutorService` and adds methods to schedule tasks with fixed-rate or fixed-delay executions.
+   - **Methods**:
+     - `scheduleAtFixedRate()`: Executes a task periodically with a fixed rate.
+     - `scheduleWithFixedDelay()`: Executes a task with a fixed delay between executions.
+
+   ```java
+   ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+   scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
+   ```
+
+5. **Executors Class**
+   - **Description**: This is a utility class that provides factory methods for creating different types of executors (e.g., cached thread pools, fixed thread pools, and scheduled thread pools).
+   - **Methods**:
+     - `newFixedThreadPool()`: Creates a thread pool with a fixed number of threads.
+     - `newSingleThreadExecutor()`: Creates an executor that uses a single worker thread.
+     - `newScheduledThreadPool()`: Creates a pool of threads for scheduled tasks.
+
+   ```java
+   ExecutorService executor = Executors.newFixedThreadPool(10);
+   ```
+
+---
+
+### 2. **Callable and Future**
+
+#### **Callable Interface**
+   - **Description**: Similar to `Runnable`, but it can return a result or throw an exception. This makes it useful for tasks that need to compute and return a result asynchronously.
+   - **Use**: `Callable` is typically used with `ExecutorService` to submit tasks that return a result.
+   
+   ```java
+   public interface Callable<V> {
+       V call() throws Exception;
+   }
+   ```
+
+#### **Future Interface**
+   - **Description**: Represents the result of an asynchronous computation. A `Future` object can be used to retrieve the result of a computation once it has completed.
+   - **Methods**:
+     - `get()`: Blocks until the result is available.
+     - `cancel()`: Attempts to cancel the task.
+     - `isDone()`: Checks if the task is completed.
+
+   ```java
+   Future<Integer> future = executor.submit(() -> {
+       return 10;
+   });
+   Integer result = future.get();
+   ```
+
+---
+
+### 3. **Synchronization Utilities**
+
+Java's concurrency framework also includes classes to handle synchronization and resource management.
+
+1. **ReentrantLock**
+   - **Description**: A lock that allows a thread to acquire a lock multiple times without causing a deadlock. It provides more control compared to `synchronized` blocks.
+   - **Methods**:
+     - `lock()`: Acquires the lock.
+     - `unlock()`: Releases the lock.
+     - `tryLock()`: Attempts to acquire the lock without blocking.
+   - **Use**: You can use it to synchronize access to shared resources, and it provides features like try-locking and timed locking.
+
+   ```java
+   Lock lock = new ReentrantLock();
+   lock.lock();
+   try {
+       // Critical section
+   } finally {
+       lock.unlock();
+   }
+   ```
+
+2. **ReadWriteLock**
+   - **Description**: A special type of lock that allows multiple readers to access the resource concurrently, but only one writer can access the resource at a time.
+   - **Methods**:
+     - `readLock()`: Acquires a lock for reading.
+     - `writeLock()`: Acquires a lock for writing.
+   - **Use**: This is useful when reads happen more often than writes, and you want to allow concurrency for reads.
+
+   ```java
+   ReadWriteLock rwLock = new ReentrantReadWriteLock();
+   rwLock.readLock().lock();
+   try {
+       // Reading operation
+   } finally {
+       rwLock.readLock().unlock();
+   }
+   ```
+
+---
+
+### 4. **Concurrent Collections**
+
+Java provides a set of thread-safe collections that are particularly useful for multi-threaded applications.
+
+1. **ConcurrentHashMap**
+   - **Description**: A thread-safe map that allows concurrent reads and writes. It is optimized for concurrency by dividing the map into segments.
+   - **Use**: It's commonly used when multiple threads need to access a map concurrently without the need for explicit synchronization.
+
+   ```java
+   ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+   map.put("key1", 1);
+   map.put("key2", 2);
+   ```
+
+2. **CopyOnWriteArrayList**
+   - **Description**: A thread-safe list where modifications (add/remove) result in a new copy of the underlying array.
+   - **Use**: This is useful when you have frequent read operations but rare writes (e.g., event listeners).
+
+   ```java
+   List<String> list = new CopyOnWriteArrayList<>();
+   list.add("Element");
+   ```
+
+3. **BlockingQueue**
+   - **Description**: A queue that supports operations that block when the queue is empty (for consumption) or full (for production).
+   - **Use**: This is particularly useful for producer-consumer problems where threads wait for the availability of resources.
+
+   ```java
+   BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+   queue.put(1); // Will block if the queue is full
+   ```
+
+---
+
+### 5. **Atomic Variables**
+
+The `java.util.concurrent.atomic` package provides classes for atomic operations on single variables. These are useful when you need to update a variable atomically without using explicit synchronization.
+
+1. **AtomicInteger**
+   - **Description**: Provides atomic operations for integers. Methods include `incrementAndGet()`, `decrementAndGet()`, and `getAndSet()`.
+   - **Use**: It's used when multiple threads need to safely update integer values without using synchronization.
+
+   ```java
+   AtomicInteger atomicInt = new AtomicInteger(0);
+   atomicInt.incrementAndGet();
+   ```
+
+2. **AtomicReference**
+   - **Description**: Provides atomic operations for object references. Similar to `AtomicInteger` but for objects.
+   - **Use**: This can be used when you need to atomically update object references (e.g., for thread-safe state changes).
+
+   ```java
+   AtomicReference<MyObject> atomicRef = new AtomicReference<>();
+   atomicRef.set(new MyObject());
+   ```
+
+---
+
+### 6. **Other Important Classes**
+
+1. **CountDownLatch**
+   - **Description**: A synchronization aid that allows one or more threads to wait until a set of operations in other threads are completed.
+   - **Use**: Useful when you want one thread to wait for multiple threads to finish before continuing.
+
+   ```java
+   CountDownLatch latch = new CountDownLatch(3);
+   latch.countDown(); // Decreases count
+   latch.await();     // Waits until count reaches zero
+   ```
+
+2. **CyclicBarrier**
+   - **Description**: A synchronization aid that allows a set of threads to all wait for each other to reach a
+
+ common barrier point.
+   - **Use**: Used in situations where multiple threads need to wait until all threads reach a certain point of execution.
+
+   ```java
+   CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All threads reached barrier"));
+   ```
+
+---
+
+### Conclusion
+
+The **Java Concurrency Framework** provides a rich set of tools for working with multithreading and concurrency. Key features include:
+
+- **Executors** for managing thread pools and asynchronous tasks.
+- **Locks** like `ReentrantLock` and `ReadWriteLock` for managing thread synchronization.
+- **Concurrent collections** such as `ConcurrentHashMap` and `CopyOnWriteArrayList` for thread-safe data structures.
+- **Atomic classes** for performing atomic operations without synchronization.
+- **Synchronization utilities** like `CountDownLatch` and `CyclicBarrier` for coordinating threads.
+
+By using these tools, you can write more efficient, maintainable, and scalable concurrent applications in Java.
+
+---
+
+Working with multiple threads in Java can lead to complex issues related to **concurrency**, such as **deadlock**, **livelock**, **race conditions**, and other synchronization problems. These issues occur when multiple threads interact in unpredictable ways, which can lead to bugs that are difficult to reproduce and fix. Let's go over some of these common concurrency issues and how they can be managed in Java.
+
+### 1. **Race Conditions**
+A **race condition** occurs when two or more threads access shared data or resources simultaneously, and the final result depends on the order in which the threads are executed. This can lead to inconsistent or incorrect results if proper synchronization is not implemented.
+
+#### Example of a Race Condition:
+```java
+class Counter {
+    private int count = 0;
+
+    // Method to increment count
+    public void increment() {
+        count++; // Not thread-safe, may lead to race condition
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        
+        // Create two threads that will increment the counter
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // The expected output is 2000, but due to race conditions, the result will be inconsistent
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+#### Solution:
+To prevent race conditions, you can **synchronize** the access to shared resources. Here's the corrected version using the `synchronized` keyword:
+
+```java
+class Counter {
+    private int count = 0;
+
+    // Synchronized method to prevent race condition
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+```
+
+### Race Condition in Java
+
+A **race condition** occurs when two or more threads attempt to access and modify shared data concurrently, and the outcome depends on the non-deterministic order in which the threads are scheduled. This can lead to unpredictable results, as the final state of the shared data may vary depending on the sequence of execution of the threads.
+
+In simpler terms, a race condition happens when multiple threads race to access a resource, and the outcome of their execution depends on the timing of their access.
+
+### Example of Race Condition in Java
+
+Let's look at an example where two threads are trying to update a shared variable, and the result is unpredictable because both threads are not synchronized:
+
+#### Example Code Demonstrating Race Condition:
+
+```java
+class Counter {
+    private int count = 0;
+
+    // Method to increment the counter
+    public void increment() {
+        count++;
+    }
+
+    // Method to get the current count
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // Thread 1 increments the counter 1000 times
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2 increments the counter 1000 times
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // Print the final value of count
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+### Explanation of the Problem:
+
+- In this example, we have a shared object `Counter`, and two threads (`t1` and `t2`) are both calling the `increment()` method 1000 times.
+- The `increment()` method simply increments the `count` variable by 1.
+- However, **since both threads are modifying the same shared variable `count` without synchronization**, there is a **race condition**.
+- The `count++` operation is not atomic; it involves three steps:
+  1. Read the value of `count`.
+  2. Increment the value.
+  3. Write the updated value back to `count`.
+
+If both threads read the same value of `count` at the same time, they both increment it and write the same new value back, effectively missing one increment.
+
+This results in a **final count** that is less than 2000 (the expected value), and this behavior can vary each time the program is run due to the unpredictable execution order of the threads.
+
+### How to Fix a Race Condition
+
+To prevent race conditions, you need to ensure that only one thread can access and modify the shared resource at a time. In Java, this can be achieved using synchronization mechanisms.
+
+#### 1. **Using `synchronized` Keyword**
+
+You can synchronize the `increment()` method so that only one thread can execute it at a time.
+
+##### Solution 1: Synchronizing the Method
+
+```java
+class Counter {
+    private int count = 0;
+
+    // Synchronized method to increment the counter
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionFixedExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // Thread 1 increments the counter 1000 times
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2 increments the counter 1000 times
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // Print the final value of count
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+##### Explanation:
+- The `synchronized` keyword ensures that only one thread can execute the `increment()` method at a time.
+- This guarantees that the value of `count` is updated atomically, preventing the race condition.
+- Now, the final count will always be 2000 as expected.
+
+#### 2. **Using `ReentrantLock` for More Control**
+
+Instead of using the `synchronized` keyword, you can use the `ReentrantLock` class to explicitly lock and unlock the shared resource. This provides more fine-grained control, such as the ability to try locking with a timeout.
+
+```java
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class Counter {
+    private int count = 0;
+    private final Lock lock = new ReentrantLock();
+
+    public void increment() {
+        lock.lock();  // Acquire the lock
+        try {
+            count++;
+        } finally {
+            lock.unlock();  // Ensure the lock is released
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionFixedWithLock {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // Thread 1 increments the counter 1000 times
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2 increments the counter 1000 times
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // Print the final value of count
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+##### Explanation:
+- The `ReentrantLock` is used to explicitly acquire and release the lock around the critical section (the `increment()` method).
+- The `lock.lock()` method ensures that only one thread can enter the critical section at a time.
+- The `finally` block ensures that the lock is always released, even if an exception occurs inside the critical section.
+
+#### 3. **Using `AtomicInteger` for Atomic Operations**
+
+If you are dealing with simple integer operations, you can use the `AtomicInteger` class, which provides atomic operations (operations that are guaranteed to be completed in a single step without interference from other threads) without needing to explicitly synchronize the method.
+
+```java
+import java.util.concurrent.atomic.AtomicInteger;
+
+class Counter {
+    private AtomicInteger count = new AtomicInteger(0);
+
+    // Method to increment the counter atomically
+    public void increment() {
+        count.incrementAndGet();
+    }
+
+    public int getCount() {
+        return count.get();
+    }
+}
+
+public class RaceConditionFixedWithAtomic {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+
+        // Thread 1 increments the counter 1000 times
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2 increments the counter 1000 times
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // Print the final value of count
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+##### Explanation:
+- `AtomicInteger` is a class from `java.util.concurrent.atomic` that provides atomic methods for integer values. The `incrementAndGet()` method is an atomic operation that increments the value and returns the updated value.
+- Since `AtomicInteger` handles the synchronization internally, you don't need to manually synchronize the method or use explicit locks.
+
+### Conclusion
+
+- **Race conditions** occur when multiple threads concurrently access and modify shared data in an unpredictable way, leading to inconsistent or incorrect results.
+- You can **prevent race conditions** by:
+  1. **Synchronizing critical sections** using `synchronized` or `ReentrantLock`.
+  2. Using **atomic operations** with classes like `AtomicInteger`.
+- Always ensure that shared resources are accessed in a thread-safe manner to avoid **race conditions** and other concurrency problems.
+
+---
+
+### 2. **Deadlock**
+A **deadlock** occurs when two or more threads are blocked forever, waiting for each other to release resources that they have locked. Deadlocks are typically caused by multiple threads acquiring locks in different orders.
+
+#### Example of Deadlock:
+```java
+class A {
+    public synchronized void methodA(B b) {
+        System.out.println("Thread 1: Holding lock on A...");
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        System.out.println("Thread 1: Waiting for lock on B...");
+        b.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside A's last method.");
+    }
+}
+
+class B {
+    public synchronized void methodB(A a) {
+        System.out.println("Thread 2: Holding lock on B...");
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        System.out.println("Thread 2: Waiting for lock on A...");
+        a.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside B's last method.");
+    }
+}
+
+public class DeadlockExample {
+    public static void main(String[] args) {
+        final A a = new A();
+        final B b = new B();
+
+        // Thread 1 attempts to lock A, then B
+        Thread t1 = new Thread(() -> a.methodA(b));
+
+        // Thread 2 attempts to lock B, then A
+        Thread t2 = new Thread(() -> b.methodB(a));
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+In this example, `Thread 1` locks `A` and tries to lock `B`, while `Thread 2` locks `B` and tries to lock `A`, creating a deadlock.
+
+#### Solution:
+To avoid deadlock:
+- **Locking order:** Always acquire locks in a consistent, predefined order.
+- **Timeouts:** Implement timeouts when trying to acquire locks, allowing a thread to abort if it cannot acquire all necessary locks.
+- **TryLock:** Using `ReentrantLock` with `tryLock()` allows threads to avoid waiting indefinitely for a lock.
+
+### Deadlock in Java
+
+**Deadlock** is one of the most critical issues in multithreaded programming. It occurs when two or more threads are blocked forever, each waiting for a resource that the other thread holds, causing all involved threads to remain stuck indefinitely. This situation can halt the progress of an application, leading to severe performance issues.
+
+In simpler terms, **deadlock** happens when:
+- Thread A holds **lock A** and waits for **lock B**.
+- Thread B holds **lock B** and waits for **lock A**.
+
+Because neither thread can release the lock it's holding until it acquires the other lock, they remain stuck, and the program cannot proceed.
+
+### Conditions for Deadlock
+
+Deadlock occurs if all of the following **four necessary conditions** are met:
+1. **Mutual Exclusion**: At least one resource must be held in a non-shareable mode (i.e., only one thread can access it at a time).
+2. **Hold and Wait**: A thread must be holding at least one resource and waiting to acquire additional resources that are currently being held by other threads.
+3. **No Preemption**: A resource cannot be forcibly taken from a thread holding it; it must be released voluntarily.
+4. **Circular Wait**: A set of threads exist such that each thread is waiting for a resource that the next thread in the set holds.
+
+### Example of Deadlock in Java
+
+Below is an example where two threads cause a deadlock by acquiring locks on two resources in a conflicting order.
+
+#### Example Code Demonstrating Deadlock:
+
+```java
+class ResourceA {
+    public synchronized void methodA(ResourceB b) {
+        System.out.println(Thread.currentThread().getName() + " holding lock on ResourceA...");
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        System.out.println(Thread.currentThread().getName() + " waiting for lock on ResourceB...");
+        b.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside ResourceA's last method.");
+    }
+}
+
+class ResourceB {
+    public synchronized void methodB(ResourceA a) {
+        System.out.println(Thread.currentThread().getName() + " holding lock on ResourceB...");
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        System.out.println(Thread.currentThread().getName() + " waiting for lock on ResourceA...");
+        a.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside ResourceB's last method.");
+    }
+}
+
+public class DeadlockExample {
+    public static void main(String[] args) {
+        final ResourceA resourceA = new ResourceA();
+        final ResourceB resourceB = new ResourceB();
+
+        // Thread 1 attempts to lock ResourceA and then ResourceB
+        Thread t1 = new Thread(() -> resourceA.methodA(resourceB), "Thread 1");
+
+        // Thread 2 attempts to lock ResourceB and then ResourceA
+        Thread t2 = new Thread(() -> resourceB.methodB(resourceA), "Thread 2");
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+#### Explanation:
+1. **Thread 1** locks `ResourceA` and then tries to lock `ResourceB`.
+2. **Thread 2** locks `ResourceB` and then tries to lock `ResourceA`.
+3. Since **Thread 1** holds `ResourceA` and is waiting for `ResourceB`, and **Thread 2** holds `ResourceB` and is waiting for `ResourceA`, neither can proceed, resulting in a **deadlock**.
+
+### How to Prevent Deadlock?
+
+Here are some strategies for **avoiding deadlock**:
+
+#### 1. **Lock Ordering**
+One of the simplest and most effective ways to avoid deadlock is to ensure that all threads acquire locks in the same **predefined order**. This way, circular waiting is avoided.
+
+For example, if we ensure that threads always acquire `ResourceA` first and `ResourceB` second, deadlock won't occur.
+
+```java
+class ResourceA {
+    public synchronized void methodA(ResourceB b) {
+        System.out.println(Thread.currentThread().getName() + " holding lock on ResourceA...");
+        b.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside ResourceA's last method.");
+    }
+}
+
+class ResourceB {
+    public synchronized void methodB(ResourceA a) {
+        System.out.println(Thread.currentThread().getName() + " holding lock on ResourceB...");
+        a.last();
+    }
+
+    public synchronized void last() {
+        System.out.println("Inside ResourceB's last method.");
+    }
+}
+```
+
+In this revised version, both threads will always lock `ResourceA` first and then `ResourceB`, preventing a circular wait condition.
+
+#### 2. **Timeouts (Using `tryLock()` in ReentrantLock)**
+Using **timeouts** for lock acquisition allows threads to back out and try again if they can't acquire a lock within a given time, thereby reducing the chances of deadlock.
+
+You can use the `ReentrantLock` class with `tryLock()` to set timeouts:
+
+```java
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class ResourceA {
+    private final Lock lockA = new ReentrantLock();
+    private final Lock lockB = new ReentrantLock();
+
+    public void methodA(ResourceB b) {
+        try {
+            if (lockA.tryLock() && b.lockB.tryLock()) {
+                System.out.println(Thread.currentThread().getName() + " holding lock on ResourceA and ResourceB...");
+                b.last();
+            } else {
+                System.out.println(Thread.currentThread().getName() + " could not acquire locks, retrying...");
+            }
+        } finally {
+            if (lockA.isHeldByCurrentThread()) lockA.unlock();
+            if (lockB.isHeldByCurrentThread()) lockB.unlock();
+        }
+    }
+
+    public void last() {
+        System.out.println("Inside ResourceA's last method.");
+    }
+}
+
+class ResourceB {
+    private final Lock lockB = new ReentrantLock();
+    private final Lock lockA = new ReentrantLock();
+
+    public void methodB(ResourceA a) {
+        try {
+            if (lockB.tryLock() && a.lockA.tryLock()) {
+                System.out.println(Thread.currentThread().getName() + " holding lock on ResourceB and ResourceA...");
+                a.last();
+            } else {
+                System.out.println(Thread.currentThread().getName() + " could not acquire locks, retrying...");
+            }
+        } finally {
+            if (lockB.isHeldByCurrentThread()) lockB.unlock();
+            if (lockA.isHeldByCurrentThread()) lockA.unlock();
+        }
+    }
+
+    public void last() {
+        System.out.println("Inside ResourceB's last method.");
+    }
+}
+```
+
+In this example, `tryLock()` is used to attempt acquiring the locks with a **timeout**, so the threads will not block indefinitely if they can’t get the required locks.
+
+#### 3. **Using Deadlock Detection Algorithms**
+In systems that require multiple threads to interact, deadlock detection algorithms can be used. These algorithms can monitor the state of the system, track which threads are waiting for which resources, and then break the deadlock when it’s detected (e.g., by aborting one of the involved threads).
+
+This approach is more complex and typically not used in most Java applications, but it's possible in systems with more sophisticated concurrency requirements.
+
+#### 4. **Using Thread Pools**
+Thread pools manage a set of worker threads, which can be reused. By using a thread pool, you can limit the number of threads competing for resources, reducing the likelihood of deadlock due to thread exhaustion.
+
+```java
+import java.util.concurrent.*;
+
+public class ThreadPoolDeadlockExample {
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        // Resource objects
+        ResourceA resourceA = new ResourceA();
+        ResourceB resourceB = new ResourceB();
+
+        // Submit tasks to the pool
+        pool.submit(() -> resourceA.methodA(resourceB));
+        pool.submit(() -> resourceB.methodB(resourceA));
+
+        pool.shutdown();
+    }
+}
+```
+
+By using an `ExecutorService`, you can control the number of threads and how they are scheduled, reducing the potential for deadlock.
+
+### How to Detect Deadlock in Java
+
+Java provides the `ThreadMXBean` interface to detect deadlock situations. You can query the **Thread Monitor** using `ManagementFactory` to check if any thread is in a deadlocked state:
+
+```java
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+
+public class DeadlockDetectionExample {
+    public static void main(String[] args) {
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+
+        // Get the thread IDs of any deadlocked threads
+        long[] deadlockedThreads = threadMXBean.findDeadlockedThreads();
+
+        if (deadlockedThreads != null) {
+            System.out.println("Deadlock detected!");
+            for (long threadId : deadlockedThreads) {
+                System.out.println("Thread ID: " + threadId);
+            }
+        } else {
+            System.out.println("No deadlocks detected.");
+        }
+    }
+}
+```
+
+This method is useful for identifying deadlocks in running Java applications, especially in multi-threaded environments.
+
+### Conclusion
+
+- **Deadlock** occurs when threads are waiting indefinitely for resources that are held by each other.
+- To **prevent deadlock**, use **lock ordering**, **timeouts**, and **deadlock detection** mechanisms.
+- **Thread pools** and **fair locking** can also help mitigate deadlock.
+- Deadlock detection in Java is possible using `ThreadMXBean` to track and identify deadlocked threads.
+
+Deadlock can be tricky to handle, but by designing your program with thread safety and resource management in mind, you can prevent it from becoming a significant problem.
+
+ ---
+### 3. **Livelock**
+A **livelock** occurs when two or more threads are active but continually change states in response to each other, preventing each other from completing their tasks. It’s similar to a deadlock but the threads are still running, which makes it harder to detect.
+
+#### Example of Livelock:
+```java
+class A {
+    private boolean flag = true;
+
+    public synchronized void methodA(B b) {
+        while (!b.flag) {
+            flag = false;
+            b.methodB(this);
+        }
+        System.out.println("A has finished");
+    }
+}
+
+class B {
+    boolean flag = false;
+
+    public synchronized void methodB(A a) {
+        while (a.flag) {
+            flag = true;
+            a.methodA(this);
+        }
+        System.out.println("B has finished");
+    }
+}
+
+public class LivelockExample {
+    public static void main(String[] args) {
+        final A a = new A();
+        final B b = new B();
+        
+        Thread t1 = new Thread(() -> a.methodA(b));
+        Thread t2 = new Thread(() -> b.methodB(a));
+        
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+In this example, `Thread 1` and `Thread 2` continually swap control between each other, both trying to avoid the other. The program gets stuck in an infinite loop without making progress.
+
+#### Solution:
+To prevent livelocks, threads should use an **exit condition** or **back off strategies** to ensure they don’t endlessly retry actions. Additionally, **exponential back-off** can help to reduce the chances of livelock in certain types of algorithms.
+
+### 4. **Thread Interruption**
+Java provides mechanisms to safely stop threads. Sometimes threads need to be interrupted to stop execution, but using the `Thread.stop()` method is deprecated and unsafe. The recommended approach is using the `interrupt()` method and checking the interrupt status.
+
+#### Example:
+```java
+class MyRunnable implements Runnable {
+    public void run() {
+        for (int i = 0; i < 1000; i++) {
+            if (Thread.interrupted()) {
+                System.out.println("Thread was interrupted!");
+                return;
+            }
+            // Do some work
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        MyRunnable runnable = new MyRunnable();
+        Thread thread = new Thread(runnable);
+        thread.start();
+
+        // Interrupt the thread after 1 second
+        Thread.sleep(1000);
+        thread.interrupt();
+    }
+}
+```
+
+In this example, the thread checks if it has been interrupted by calling `Thread.interrupted()`. If interrupted, it terminates the `run()` method safely.
+
+### Conclusion
+
+Handling concurrency in Java requires careful attention to several critical issues:
+- **Race conditions** can be prevented by proper synchronization mechanisms like `synchronized` or using explicit locks (e.g., `ReentrantLock`).
+- **Deadlocks** can be avoided by acquiring locks in a consistent order or using try-lock mechanisms.
+- **Livelocks** require well-designed backoff strategies to ensure threads don't get caught in infinite loops.
+- **Interrupting threads** can be done safely by checking for interruptions within the thread’s execution flow.
+
+While Java provides powerful concurrency tools, managing multithreading effectively takes careful design and an understanding of how to avoid common pitfalls like the ones described above.
+
+### What is Livelock in Java?
+
+A **livelock** is a situation in concurrent programming where two or more threads are actively trying to avoid a conflict or deadlock by continuously changing their state, but in doing so, they prevent each other from making any progress. Unlike **deadlock**, where threads are stuck waiting for each other indefinitely, in **livelock**, threads are not blocked; they keep changing their states or yielding, but they cannot proceed with their tasks because they are caught in a loop of continuous state changes.
+
+In simple terms, in a **livelock**, threads are alive and running, but they are not making any progress. They keep retrying or yielding, but the condition that would allow them to proceed never happens.
+
+### Example of Livelock in Java
+
+Let's take a look at an example of **livelock** where two threads are trying to acquire resources but keep yielding to avoid conflicts, thus causing no progress.
+
+#### Example Code Demonstrating Livelock:
+
+```java
+class Car {
+    private final String name;
+
+    public Car(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class Road {
+    private boolean isOccupied = false;
+
+    // Method to check if the road is free
+    public synchronized boolean isFree() {
+        return !isOccupied;
+    }
+
+    // Method to occupy the road
+    public synchronized void occupy() {
+        isOccupied = true;
+    }
+
+    // Method to release the road
+    public synchronized void release() {
+        isOccupied = false;
+    }
+}
+
+public class LivelockExample {
+    public static void main(String[] args) {
+        Road road = new Road();
+        Car car1 = new Car("Car 1");
+        Car car2 = new Car("Car 2");
+
+        // Thread 1 trying to drive Car 1
+        Thread t1 = new Thread(() -> {
+            while (true) {
+                if (road.isFree()) {
+                    road.occupy();
+                    System.out.println(car1.getName() + " is driving.");
+                    break;
+                } else {
+                    System.out.println(car1.getName() + " is waiting for the road.");
+                    try {
+                        Thread.sleep(100); // Yield control to other thread
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        });
+
+        // Thread 2 trying to drive Car 2
+        Thread t2 = new Thread(() -> {
+            while (true) {
+                if (road.isFree()) {
+                    road.occupy();
+                    System.out.println(car2.getName() + " is driving.");
+                    break;
+                } else {
+                    System.out.println(car2.getName() + " is waiting for the road.");
+                    try {
+                        Thread.sleep(100); // Yield control to other thread
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+### Explanation of Livelock:
+
+- In this example, we have two cars, `car1` and `car2`, and a `road` that both cars want to occupy.
+- Both cars try to acquire the road in the `while (true)` loop:
+  - If the road is free, the car occupies it and proceeds.
+  - If the road is occupied, the car yields (using `Thread.sleep(100)`) and tries again, hoping that the other car will eventually release the road.
+  
+- **Livelock occurs** because both threads are in a loop, each trying to acquire the road but constantly yielding and retrying, without ever successfully occupying the road. Both cars are actively waiting, but neither makes progress since they are caught in a cycle of repeatedly checking and yielding.
+
+### Why is Livelock Different from Deadlock?
+
+- **Deadlock**: Occurs when two or more threads are blocked forever, waiting for resources held by each other. In a deadlock, threads stop progressing because they wait for each other to release resources.
+  
+- **Livelock**: In contrast, threads in a livelock are not blocked; they are still actively running and trying to make progress, but their actions continuously interfere with each other in such a way that neither of them can complete their task.
+
+### How to Avoid Livelock
+
+To avoid livelocks, you can:
+
+1. **Introduce a Backoff Mechanism**: Introduce random delays or backoff mechanisms, so threads don't continuously retry immediately after yielding. This gives the other threads a chance to progress.
+
+2. **Use a Timeout**: Implement a timeout or maximum number of retries to break the cycle and ensure that threads don't keep yielding indefinitely.
+
+3. **Better Resource Allocation**: Ensure that resources are allocated in a way that prevents threads from endlessly waiting for each other. For example, you could introduce priority or fairness in how resources are assigned.
+
+#### Solution to Avoid Livelock in the Above Example:
+
+One way to solve this is to introduce a backoff mechanism, where cars wait for a random amount of time before trying again, rather than continuously retrying in a tight loop.
+
+```java
+import java.util.Random;
+
+public class LivelockAvoidanceExample {
+    public static void main(String[] args) {
+        Road road = new Road();
+        Car car1 = new Car("Car 1");
+        Car car2 = new Car("Car 2");
+
+        // Thread 1 trying to drive Car 1
+        Thread t1 = new Thread(() -> {
+            Random random = new Random();
+            while (true) {
+                if (road.isFree()) {
+                    road.occupy();
+                    System.out.println(car1.getName() + " is driving.");
+                    break;
+                } else {
+                    System.out.println(car1.getName() + " is waiting for the road.");
+                    try {
+                        Thread.sleep(random.nextInt(500)); // Random wait time to avoid livelock
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        });
+
+        // Thread 2 trying to drive Car 2
+        Thread t2 = new Thread(() -> {
+            Random random = new Random();
+            while (true) {
+                if (road.isFree()) {
+                    road.occupy();
+                    System.out.println(car2.getName() + " is driving.");
+                    break;
+                } else {
+                    System.out.println(car2.getName() + " is waiting for the road.");
+                    try {
+                        Thread.sleep(random.nextInt(500)); // Random wait time to avoid livelock
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+### Explanation of the Fix:
+- **Random Delay**: Instead of both threads trying to acquire the road immediately after it becomes free, the threads now wait for a random amount of time (using `Thread.sleep(random.nextInt(500))`), which helps avoid the livelock situation. The random delay gives a chance for one of the cars to acquire the road, while the other threads back off and don't continually retry in a tight loop.
+  
+- This random delay introduces a form of **backoff**, which ensures that both cars are not perpetually trying to acquire the road, and it gives each thread time to make progress.
+
+### Conclusion
+
+- **Livelock** is a concurrency problem where threads actively avoid blocking each other but end up in a situation where neither can make progress.
+- It differs from **deadlock**, where threads are stuck waiting for each other to release resources.
+- To avoid livelock, you can introduce **random delays** (backoff), **timeouts**, or ensure better management of resources to prevent threads from repeatedly conflicting in their actions.
+
+---
+### Starvation in Java
+
+**Starvation** in the context of multithreading occurs when a thread is perpetually prevented from gaining access to the resources it needs to proceed with its execution. This happens when higher-priority threads continuously occupy the resources or when certain threads are never able to acquire a lock, leading to the thread being unable to complete its task.
+
+In simple terms, starvation is the situation where a thread is **starved** of CPU time or required resources because the system gives precedence to other threads, often because of incorrect thread scheduling or improper resource management.
+
+### How Does Starvation Happen?
+
+Starvation usually occurs when:
+- **Thread priorities** are set improperly, leading to lower-priority threads being ignored.
+- **Improper synchronization** where some threads are given constant access to a shared resource, while others are not.
+- **Blocking** due to other threads holding locks for a prolonged period, preventing others from getting a chance to acquire the lock and execute.
+
+### Example of Starvation
+
+Let’s look at a simplified example where a thread with a lower priority might never get executed due to the constant execution of a higher-priority thread.
+
+#### Example Code Demonstrating Starvation:
+
+```java
+class StarvationExample {
+    public static void main(String[] args) throws InterruptedException {
+        // Create threads with different priorities
+        Thread highPriorityThread = new Thread(new Task(), "High Priority Thread");
+        Thread lowPriorityThread = new Thread(new Task(), "Low Priority Thread");
+
+        // Setting high priority for one thread and low priority for the other
+        highPriorityThread.setPriority(Thread.MAX_PRIORITY); // 10
+        lowPriorityThread.setPriority(Thread.MIN_PRIORITY); // 1
+
+        // Start both threads
+        highPriorityThread.start();
+        lowPriorityThread.start();
+        
+        // Wait for the threads to finish
+        highPriorityThread.join();
+        lowPriorityThread.join();
+    }
+}
+
+class Task implements Runnable {
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println(Thread.currentThread().getName() + " is executing");
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
+    }
+}
+```
+
+In this example:
+- The `highPriorityThread` is given the **maximum priority** (`Thread.MAX_PRIORITY`), while the `lowPriorityThread` has **minimum priority** (`Thread.MIN_PRIORITY`).
+- If the thread scheduler is biased towards higher-priority threads, the **low-priority thread** may not get a chance to execute, leading to **starvation**.
+
+### Key Points to Consider:
+1. **Thread Priority:** Java allows threads to have priorities (from `Thread.MIN_PRIORITY` to `Thread.MAX_PRIORITY`), but thread priority **does not guarantee** execution order. It merely suggests to the thread scheduler which threads should get more CPU time. In some systems, if there are always higher-priority threads running, lower-priority threads might starve.
+   
+2. **Synchronized Blocks:** If many threads are waiting to acquire the same lock, but a single thread continuously acquires that lock, it can cause other threads to starve, especially in situations where the lock is never released.
+
+3. **Thread Scheduling:** The Java thread scheduler uses different strategies depending on the platform. While thread priorities are a suggestion, the underlying operating system and JVM have the final say on how threads are scheduled. Some systems may give **CPU time** to higher-priority threads more frequently, which can cause starvation for lower-priority threads.
+
+### Preventing Starvation
+
+To prevent starvation, you can implement the following strategies:
+
+#### 1. **Fair Scheduling (Fair Locks)**
+
+One common approach is using **fair locks**, which ensure that every thread gets a chance to execute. For instance, you can use `ReentrantLock` with a fairness policy, which guarantees that threads acquire the lock in the order they requested it.
+
+```java
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class FairLockExample {
+    private final Lock lock = new ReentrantLock(true); // true for fairness
+
+    public void accessResource() {
+        lock.lock();
+        try {
+            // Simulate resource access
+            System.out.println(Thread.currentThread().getName() + " is accessing the resource.");
+            Thread.sleep(100); // Simulate work
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        FairLockExample resource = new FairLockExample();
+
+        Runnable task = () -> {
+            for (int i = 0; i < 5; i++) {
+                resource.accessResource();
+            }
+        };
+
+        Thread t1 = new Thread(task, "Thread 1");
+        Thread t2 = new Thread(task, "Thread 2");
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+    }
+}
+```
+
+In this example, the `ReentrantLock` with the **fairness parameter** set to `true` ensures that threads acquire the lock in the order they requested it, preventing starvation.
+
+#### 2. **Thread Scheduling Adjustments**
+
+In certain scenarios, you can adjust the thread priority (using `Thread.setPriority()`) to ensure that no thread is unduly starved. However, this approach should be used with caution, as it can also lead to **other concurrency problems**, such as **priority inversion** (where lower-priority threads hold resources needed by higher-priority threads).
+
+#### 3. **Using Thread Pools**
+
+Using thread pools can help manage thread execution in a more balanced way. Thread pools typically use **fair scheduling algorithms** and avoid thread starvation by controlling the number of threads actively working at any given time.
+
+```java
+import java.util.concurrent.*;
+
+public class ThreadPoolExample {
+    public static void main(String[] args) throws InterruptedException {
+        // Create a fixed-size thread pool
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Runnable task = () -> {
+            System.out.println(Thread.currentThread().getName() + " is executing the task.");
+        };
+
+        // Submit tasks to the pool
+        pool.submit(task);
+        pool.submit(task);
+        pool.submit(task);
+
+        // Gracefully shutdown the pool
+        pool.shutdown();
+    }
+}
+```
+
+In the above example, using an `ExecutorService` ensures that the threads are managed effectively, and no single thread is starved of CPU time.
+
+#### 4. **Timeout Mechanisms**
+
+Another strategy is to use **timeouts** when attempting to acquire a lock or waiting for a resource. This helps prevent threads from being blocked indefinitely and ensures that no thread is starved.
+
+```java
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class TimeoutLockExample {
+    private final Lock lock = new ReentrantLock();
+
+    public void accessResource() {
+        try {
+            // Attempt to acquire the lock within a specified timeout
+            if (lock.tryLock(1000, java.util.concurrent.TimeUnit.MILLISECONDS)) {
+                try {
+                    System.out.println(Thread.currentThread().getName() + " is accessing the resource.");
+                    Thread.sleep(100); // Simulate work
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                System.out.println(Thread.currentThread().getName() + " could not acquire the lock.");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        TimeoutLockExample resource = new TimeoutLockExample();
+
+        Runnable task = () -> {
+            for (int i = 0; i < 5; i++) {
+                resource.accessResource();
+            }
+        };
+
+        Thread t1 = new Thread(task, "Thread 1");
+        Thread t2 = new Thread(task, "Thread 2");
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+    }
+}
+```
+
+In this example, the `tryLock()` method attempts to acquire the lock with a timeout. If the lock is not available within the specified time, the thread can avoid being blocked indefinitely, reducing the risk of starvation.
+
+### Conclusion
+
+- **Starvation** occurs when a thread is perpetually unable to acquire resources or CPU time due to other threads continuously getting preference.
+- **Starvation** can happen due to improper thread scheduling, poor thread priority management, and improper synchronization.
+- To prevent starvation, you can use **fair locks**, **thread pools**, **timeouts**, and **thread priority management** strategies.
