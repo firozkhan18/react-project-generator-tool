@@ -764,3 +764,242 @@ Thread2:      +--------------------+
 
 This diagram helps in visualizing the flow of control and memory updates with a `volatile` variable. It illustrates how one thread can make a variable's value immediately visible to other threads, avoiding issues of local thread caches or optimizations that might otherwise delay the update.
 
+---
+### Java Concurrency Framework
+
+The **Java Concurrency Framework** is a set of classes and interfaces provided by the Java API that helps you develop multithreaded and parallel applications. It is part of the `java.util.concurrent` package introduced in Java 5, which offers a more advanced and flexible way to handle concurrent programming compared to using low-level synchronization mechanisms like `synchronized` blocks and `Thread` class alone.
+
+The framework includes various tools for managing thread execution, synchronization, coordination, and resource management, as well as utility classes for handling common concurrency tasks such as queues, executors, and thread pooling.
+
+### Key Classes and Interfaces in the Java Concurrency Framework
+
+Here’s a list of important classes and interfaces in the `java.util.concurrent` package, along with their uses:
+
+---
+
+### 1. **Executor Framework**
+
+The **Executor Framework** simplifies the task of managing and controlling thread execution. Instead of manually managing thread creation and scheduling, you can use the framework to offload this responsibility to predefined components.
+
+#### Key Classes and Interfaces in Executor Framework:
+   
+1. **Executor Interface**
+   - **Description**: This is the simplest interface that defines a single method, `execute(Runnable command)`, for executing tasks asynchronously.
+   - **Use**: It is the base interface for task execution. It provides a way to decouple task submission from the mechanics of how each task will be executed.
+
+   ```java
+   public interface Executor {
+       void execute(Runnable command);
+   }
+   ```
+
+2. **ExecutorService Interface**
+   - **Description**: Extends `Executor` and adds methods for managing the lifecycle of the executor and submitting callable tasks that return results.
+   - **Methods**:
+     - `submit(Callable<T> task)`: Submits a task for execution and returns a `Future` representing the result.
+     - `shutdown()`: Initiates an orderly shutdown of the executor.
+     - `invokeAll(Collection<? extends Callable<T>> tasks)`: Executes a list of tasks and returns their results.
+
+   ```java
+   public interface ExecutorService extends Executor {
+       <T> Future<T> submit(Callable<T> task);
+       void shutdown();
+   }
+   ```
+
+3. **ThreadPoolExecutor Class**
+   - **Description**: A powerful class implementing the `ExecutorService` interface that provides a pool of worker threads to execute submitted tasks.
+   - **Use**: You can configure the thread pool size, maximum pool size, and task queue.
+   - **Methods**:
+     - `execute(Runnable command)`: Executes a task asynchronously.
+     - `shutdown()`: Gracefully shuts down the executor.
+     - `getPoolSize()`: Returns the current size of the thread pool.
+
+   ```java
+   ExecutorService executor = new ThreadPoolExecutor(10, 50, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+   ```
+
+4. **ScheduledExecutorService Interface**
+   - **Description**: Extends `ExecutorService` and adds methods to schedule tasks with fixed-rate or fixed-delay executions.
+   - **Methods**:
+     - `scheduleAtFixedRate()`: Executes a task periodically with a fixed rate.
+     - `scheduleWithFixedDelay()`: Executes a task with a fixed delay between executions.
+
+   ```java
+   ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+   scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
+   ```
+
+5. **Executors Class**
+   - **Description**: This is a utility class that provides factory methods for creating different types of executors (e.g., cached thread pools, fixed thread pools, and scheduled thread pools).
+   - **Methods**:
+     - `newFixedThreadPool()`: Creates a thread pool with a fixed number of threads.
+     - `newSingleThreadExecutor()`: Creates an executor that uses a single worker thread.
+     - `newScheduledThreadPool()`: Creates a pool of threads for scheduled tasks.
+
+   ```java
+   ExecutorService executor = Executors.newFixedThreadPool(10);
+   ```
+
+---
+
+### 2. **Callable and Future**
+
+#### **Callable Interface**
+   - **Description**: Similar to `Runnable`, but it can return a result or throw an exception. This makes it useful for tasks that need to compute and return a result asynchronously.
+   - **Use**: `Callable` is typically used with `ExecutorService` to submit tasks that return a result.
+   
+   ```java
+   public interface Callable<V> {
+       V call() throws Exception;
+   }
+   ```
+
+#### **Future Interface**
+   - **Description**: Represents the result of an asynchronous computation. A `Future` object can be used to retrieve the result of a computation once it has completed.
+   - **Methods**:
+     - `get()`: Blocks until the result is available.
+     - `cancel()`: Attempts to cancel the task.
+     - `isDone()`: Checks if the task is completed.
+
+   ```java
+   Future<Integer> future = executor.submit(() -> {
+       return 10;
+   });
+   Integer result = future.get();
+   ```
+
+---
+
+### 3. **Synchronization Utilities**
+
+Java's concurrency framework also includes classes to handle synchronization and resource management.
+
+1. **ReentrantLock**
+   - **Description**: A lock that allows a thread to acquire a lock multiple times without causing a deadlock. It provides more control compared to `synchronized` blocks.
+   - **Methods**:
+     - `lock()`: Acquires the lock.
+     - `unlock()`: Releases the lock.
+     - `tryLock()`: Attempts to acquire the lock without blocking.
+   - **Use**: You can use it to synchronize access to shared resources, and it provides features like try-locking and timed locking.
+
+   ```java
+   Lock lock = new ReentrantLock();
+   lock.lock();
+   try {
+       // Critical section
+   } finally {
+       lock.unlock();
+   }
+   ```
+
+2. **ReadWriteLock**
+   - **Description**: A special type of lock that allows multiple readers to access the resource concurrently, but only one writer can access the resource at a time.
+   - **Methods**:
+     - `readLock()`: Acquires a lock for reading.
+     - `writeLock()`: Acquires a lock for writing.
+   - **Use**: This is useful when reads happen more often than writes, and you want to allow concurrency for reads.
+
+   ```java
+   ReadWriteLock rwLock = new ReentrantReadWriteLock();
+   rwLock.readLock().lock();
+   try {
+       // Reading operation
+   } finally {
+       rwLock.readLock().unlock();
+   }
+   ```
+
+---
+
+### 4. **Concurrent Collections**
+
+Java provides a set of thread-safe collections that are particularly useful for multi-threaded applications.
+
+1. **ConcurrentHashMap**
+   - **Description**: A thread-safe map that allows concurrent reads and writes. It is optimized for concurrency by dividing the map into segments.
+   - **Use**: It's commonly used when multiple threads need to access a map concurrently without the need for explicit synchronization.
+
+   ```java
+   ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+   map.put("key1", 1);
+   map.put("key2", 2);
+   ```
+
+2. **CopyOnWriteArrayList**
+   - **Description**: A thread-safe list where modifications (add/remove) result in a new copy of the underlying array.
+   - **Use**: This is useful when you have frequent read operations but rare writes (e.g., event listeners).
+
+   ```java
+   List<String> list = new CopyOnWriteArrayList<>();
+   list.add("Element");
+   ```
+
+3. **BlockingQueue**
+   - **Description**: A queue that supports operations that block when the queue is empty (for consumption) or full (for production).
+   - **Use**: This is particularly useful for producer-consumer problems where threads wait for the availability of resources.
+
+   ```java
+   BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+   queue.put(1); // Will block if the queue is full
+   ```
+
+---
+
+### 5. **Atomic Variables**
+
+The `java.util.concurrent.atomic` package provides classes for atomic operations on single variables. These are useful when you need to update a variable atomically without using explicit synchronization.
+
+1. **AtomicInteger**
+   - **Description**: Provides atomic operations for integers. Methods include `incrementAndGet()`, `decrementAndGet()`, and `getAndSet()`.
+   - **Use**: It's used when multiple threads need to safely update integer values without using synchronization.
+
+   ```java
+   AtomicInteger atomicInt = new AtomicInteger(0);
+   atomicInt.incrementAndGet();
+   ```
+
+2. **AtomicReference**
+   - **Description**: Provides atomic operations for object references. Similar to `AtomicInteger` but for objects.
+   - **Use**: This can be used when you need to atomically update object references (e.g., for thread-safe state changes).
+
+   ```java
+   AtomicReference<MyObject> atomicRef = new AtomicReference<>();
+   atomicRef.set(new MyObject());
+   ```
+
+---
+
+### 6. **Other Important Classes**
+
+1. **CountDownLatch**
+   - **Description**: A synchronization aid that allows one or more threads to wait until a set of operations in other threads are completed.
+   - **Use**: Useful when you want one thread to wait for multiple threads to finish before continuing.
+
+   ```java
+   CountDownLatch latch = new CountDownLatch(3);
+   latch.countDown(); // Decreases count
+   latch.await();     // Waits until count reaches zero
+   ```
+
+2. **CyclicBarrier**
+   - **Description**: A synchronization aid that allows a set of threads to all wait for each other to reach a
+
+ common barrier point.
+   - **Use**: Used in situations where multiple threads need to wait until all threads reach a certain point of execution.
+
+   ```java
+   CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All threads reached barrier"));
+   ```
+
+---
+
+### Conclusion
+
+The **Java Concurrency Framework** provides a rich set of tools for working with multithreading and concurrency. Key features include:
+
+- **Executors** for managing thread pools and asynchronous tasks.
+- **Locks** like `ReentrantLock` and `ReadWriteLock` for managing thread synchronization.
+- **Concurrent collections** such as `ConcurrentHashMap` and `CopyOnWriteArrayList` for thread-safe data structures.
+- **Atomic classes** for performing atomic operations without synchronization.
+- **Synchronization utilities** like `CountDownLatch` and `CyclicBarrier` for coordinating threads.
