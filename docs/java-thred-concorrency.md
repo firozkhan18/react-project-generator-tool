@@ -1,9 +1,132 @@
 
+[Abstraction and Encapsulation in Java](#abstraction-and-encapsulation-in-java)
 [Interfaces in Java](#interfaces-in-java)
 [Final Keyword in Java](#final-keyword-in-java)
 [Thread in Java](#interfaces-in-java)
 [volatile Keyword in Java](#volatile-keyword-in-java)
 [Java Concurrency Framework](#java-concurrency-framework)
+
+## Difference Between Abstraction and Encapsulation in Java
+
+In Object-Oriented Programming (OOP), **Abstraction** and **Encapsulation** are two key concepts, both used to hide implementation details, but they serve different purposes and are implemented differently. Here's a breakdown of their differences and use cases:
+
+### 1. **Definition:**
+
+- **Abstraction**:
+  - Abstraction is the process of **hiding the implementation details** and exposing only the essential features or functionalities.
+  - It is about defining **what** a system or object does, rather than how it does it.
+  - In Java, **abstraction** can be achieved through **abstract classes** and **interfaces**.
+
+- **Encapsulation**:
+  - Encapsulation refers to **bundling the data** (variables) and methods that operate on the data into a single unit, and **restricting direct access** to some of the object’s components.
+  - It is about **hiding the internal details** of how data is stored or manipulated to ensure that the data is safe from outside interference and misuse.
+  - In Java, **encapsulation** is implemented using **access modifiers** like `private`, `protected`, `public`, and `default`.
+
+---
+
+### 2. **Purpose:**
+
+- **Abstraction**: 
+  - The purpose of abstraction is to **simplify complex systems** by only focusing on the relevant information and hiding the unnecessary details.
+  - Example: When you drive a car, you care about the controls (steering, accelerator, brakes), but you don’t need to know about how the engine works internally.
+
+- **Encapsulation**:
+  - The purpose of encapsulation is to **protect the data** from unauthorized access and modification, while providing a controlled interface to the outside world.
+  - Example: A **bank account** encapsulates the balance and the operations (deposit, withdraw) that can be performed on it. The actual balance is hidden, and the operations are controlled by methods.
+
+---
+
+### 3. **Implementation:**
+
+- **Abstraction**:
+  - Achieved using **abstract classes** and **interfaces**.
+  - In an **abstract class**, you can define abstract methods (without implementation) that must be implemented by subclasses.
+  - In an **interface**, you define methods that are intended to be implemented by classes that use the interface.
+  
+  **Example**:  
+  ```java
+  abstract class Animal {
+      abstract void sound();  // Abstract method
+  }
+
+  class Dog extends Animal {
+      void sound() {  // Implementation of abstract method
+          System.out.println("Bark");
+      }
+  }
+  ```
+
+- **Encapsulation**:
+  - Achieved using **access modifiers** like `private`, `protected`, and `public` to control access to data and methods.
+  - The fields (data) are often made `private`, and access to these fields is provided through `getter` and `setter` methods.
+
+  **Example**:
+  ```java
+  class Account {
+      // Private data (hidden from outside)
+      private double balance;
+
+      // Getter method (provides controlled access to private data)
+      public double getBalance() {
+          return balance;
+      }
+
+      // Setter method (sets a value while maintaining control)
+      public void setBalance(double balance) {
+          if (balance > 0) {
+              this.balance = balance;
+          }
+      }
+  }
+  ```
+
+---
+
+### 4. **Visibility:**
+
+- **Abstraction**: 
+  - Focuses on the **"what"** an object does (its behavior) and hides the **"how"** it works (implementation details).
+  - **Exposes only the necessary information** to the user.
+
+- **Encapsulation**: 
+  - Focuses on **hiding the internal data** (state) of an object and ensures it can only be accessed through specific methods.
+  - **Controls how data is accessed** and modified.
+
+---
+
+### 5. **Real-World Example:**
+
+- **Abstraction**:
+  - Think of an **ATM machine**. The user interacts with the machine to check balance, withdraw money, or transfer funds. The user does not need to know how the machine processes transactions behind the scenes; they only need to understand the available actions.
+  - In this case, the ATM provides an **abstracted interface** to the user while hiding the complex internal workings (e.g., database transactions, account balances, etc.).
+
+- **Encapsulation**:
+  - Think of a **smartphone**. The phone's battery, camera, and screen are all encapsulated inside the phone body. You interact with the phone through its interface (touchscreen, buttons, etc.), and you don’t have direct access to the battery or circuit board. 
+  - The internal components of the phone are hidden, and access is only allowed through specific methods (e.g., pressing a button or touching the screen).
+
+---
+
+### 6. **Key Differences:**
+
+| Aspect                    | **Abstraction**                                 | **Encapsulation**                                   |
+|---------------------------|-------------------------------------------------|-----------------------------------------------------|
+| **Definition**             | Hides implementation details, showing only functionality. | Hides the internal state and provides controlled access. |
+| **Purpose**                | Simplifies interaction by hiding complexity.    | Protects the data and ensures controlled access.     |
+| **Achieved by**            | Abstract classes, interfaces.                   | Access modifiers (`private`, `public`, `protected`) and getter/setter methods. |
+| **Focus**                  | Focuses on **what** an object does.             | Focuses on **how** an object’s state is protected.    |
+| **Visibility**             | Hides how an operation is performed.            | Hides data (variables) and controls how they are accessed. |
+| **Real-World Analogy**     | Driving a car (abstracting the engine mechanics). | Smartphone (encapsulating the battery and internal circuits). |
+| **Example**                | Abstract class or interface methods.            | Private variables and public getter/setter methods.  |
+
+---
+
+### Conclusion:
+
+- **Abstraction** and **Encapsulation** are both fundamental OOP concepts, but they serve different purposes:
+  - **Abstraction** is about simplifying complex systems by hiding implementation details, focusing on the “what” an object does.
+  - **Encapsulation** is about hiding an object’s state and controlling access to it, focusing on the “how” an object’s data is accessed and modified.
+  
+Understanding both concepts and using them effectively helps in creating clean, maintainable, and secure Java programs.
 
 ## Interfaces in Java 
 
@@ -154,129 +277,6 @@ The main utility of interfaces in Java lies in their ability to:
 In summary, interfaces are essential for writing **modular**, **extensible**, and **flexible** code in Java. They allow objects to behave in multiple ways, ensure that the right contracts are in place, and help separate the concerns of different parts of an application.
 
 ---
-
-## Difference Between Abstraction and Encapsulation in Java
-
-In Object-Oriented Programming (OOP), **Abstraction** and **Encapsulation** are two key concepts, both used to hide implementation details, but they serve different purposes and are implemented differently. Here's a breakdown of their differences and use cases:
-
-### 1. **Definition:**
-
-- **Abstraction**:
-  - Abstraction is the process of **hiding the implementation details** and exposing only the essential features or functionalities.
-  - It is about defining **what** a system or object does, rather than how it does it.
-  - In Java, **abstraction** can be achieved through **abstract classes** and **interfaces**.
-
-- **Encapsulation**:
-  - Encapsulation refers to **bundling the data** (variables) and methods that operate on the data into a single unit, and **restricting direct access** to some of the object’s components.
-  - It is about **hiding the internal details** of how data is stored or manipulated to ensure that the data is safe from outside interference and misuse.
-  - In Java, **encapsulation** is implemented using **access modifiers** like `private`, `protected`, `public`, and `default`.
-
----
-
-### 2. **Purpose:**
-
-- **Abstraction**: 
-  - The purpose of abstraction is to **simplify complex systems** by only focusing on the relevant information and hiding the unnecessary details.
-  - Example: When you drive a car, you care about the controls (steering, accelerator, brakes), but you don’t need to know about how the engine works internally.
-
-- **Encapsulation**:
-  - The purpose of encapsulation is to **protect the data** from unauthorized access and modification, while providing a controlled interface to the outside world.
-  - Example: A **bank account** encapsulates the balance and the operations (deposit, withdraw) that can be performed on it. The actual balance is hidden, and the operations are controlled by methods.
-
----
-
-### 3. **Implementation:**
-
-- **Abstraction**:
-  - Achieved using **abstract classes** and **interfaces**.
-  - In an **abstract class**, you can define abstract methods (without implementation) that must be implemented by subclasses.
-  - In an **interface**, you define methods that are intended to be implemented by classes that use the interface.
-  
-  **Example**:  
-  ```java
-  abstract class Animal {
-      abstract void sound();  // Abstract method
-  }
-
-  class Dog extends Animal {
-      void sound() {  // Implementation of abstract method
-          System.out.println("Bark");
-      }
-  }
-  ```
-
-- **Encapsulation**:
-  - Achieved using **access modifiers** like `private`, `protected`, and `public` to control access to data and methods.
-  - The fields (data) are often made `private`, and access to these fields is provided through `getter` and `setter` methods.
-
-  **Example**:
-  ```java
-  class Account {
-      // Private data (hidden from outside)
-      private double balance;
-
-      // Getter method (provides controlled access to private data)
-      public double getBalance() {
-          return balance;
-      }
-
-      // Setter method (sets a value while maintaining control)
-      public void setBalance(double balance) {
-          if (balance > 0) {
-              this.balance = balance;
-          }
-      }
-  }
-  ```
-
----
-
-### 4. **Visibility:**
-
-- **Abstraction**: 
-  - Focuses on the **"what"** an object does (its behavior) and hides the **"how"** it works (implementation details).
-  - **Exposes only the necessary information** to the user.
-
-- **Encapsulation**: 
-  - Focuses on **hiding the internal data** (state) of an object and ensures it can only be accessed through specific methods.
-  - **Controls how data is accessed** and modified.
-
----
-
-### 5. **Real-World Example:**
-
-- **Abstraction**:
-  - Think of an **ATM machine**. The user interacts with the machine to check balance, withdraw money, or transfer funds. The user does not need to know how the machine processes transactions behind the scenes; they only need to understand the available actions.
-  - In this case, the ATM provides an **abstracted interface** to the user while hiding the complex internal workings (e.g., database transactions, account balances, etc.).
-
-- **Encapsulation**:
-  - Think of a **smartphone**. The phone's battery, camera, and screen are all encapsulated inside the phone body. You interact with the phone through its interface (touchscreen, buttons, etc.), and you don’t have direct access to the battery or circuit board. 
-  - The internal components of the phone are hidden, and access is only allowed through specific methods (e.g., pressing a button or touching the screen).
-
----
-
-### 6. **Key Differences:**
-
-| Aspect                    | **Abstraction**                                 | **Encapsulation**                                   |
-|---------------------------|-------------------------------------------------|-----------------------------------------------------|
-| **Definition**             | Hides implementation details, showing only functionality. | Hides the internal state and provides controlled access. |
-| **Purpose**                | Simplifies interaction by hiding complexity.    | Protects the data and ensures controlled access.     |
-| **Achieved by**            | Abstract classes, interfaces.                   | Access modifiers (`private`, `public`, `protected`) and getter/setter methods. |
-| **Focus**                  | Focuses on **what** an object does.             | Focuses on **how** an object’s state is protected.    |
-| **Visibility**             | Hides how an operation is performed.            | Hides data (variables) and controls how they are accessed. |
-| **Real-World Analogy**     | Driving a car (abstracting the engine mechanics). | Smartphone (encapsulating the battery and internal circuits). |
-| **Example**                | Abstract class or interface methods.            | Private variables and public getter/setter methods.  |
-
----
-
-### Conclusion:
-
-- **Abstraction** and **Encapsulation** are both fundamental OOP concepts, but they serve different purposes:
-  - **Abstraction** is about simplifying complex systems by hiding implementation details, focusing on the “what” an object does.
-  - **Encapsulation** is about hiding an object’s state and controlling access to it, focusing on the “how” an object’s data is accessed and modified.
-  
-Understanding both concepts and using them effectively helps in creating clean, maintainable, and secure Java programs.
-
 
 ## Final Keyword in Java
 
