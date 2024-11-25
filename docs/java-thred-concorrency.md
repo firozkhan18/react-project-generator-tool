@@ -1,3 +1,10 @@
+
+[Interfaces in Java](#interfaces-in-java)
+[Final Keyword in Java](#final-keyword-in-java)
+[Thread in Java](#interfaces-in-java)
+[volatile Keyword in Java](#volatile-keyword-in-java)
+[Java Concurrency Framework](#java-concurrency-framework)
+
 ## Interfaces in Java 
 
 The use of **interfaces** in Java is central to understanding how Java supports **polymorphism**, **abstraction**, and **loose coupling** in software design. While it may seem that interfaces are just a way to declare methods without implementation, their real power comes from the **design principles** they help enforce and the flexibility they offer.
@@ -271,7 +278,7 @@ In Object-Oriented Programming (OOP), **Abstraction** and **Encapsulation** are 
 Understanding both concepts and using them effectively helps in creating clean, maintainable, and secure Java programs.
 
 
-## The `final` Keyword in Java
+## Final Keyword in Java
 
 In Java, the `final` keyword is used to define constants, prevent method overriding, and prevent inheritance. It can be applied to variables, methods, and classes, and it plays a crucial role in various programming scenarios.
 
@@ -460,6 +467,8 @@ By using the `final` keyword appropriately, you can make your code more predicta
 
 ---
 
+## Thread in Java
+
 ### Implementing Threads in Java
 
 In Java, **multithreading** allows for the concurrent execution of two or more threads. It is widely used for tasks like handling multiple user requests, running background processes, etc. There are two common ways to implement threads in Java:
@@ -606,7 +615,7 @@ In this example:
 Understanding Java threading is essential for building efficient, scalable, and high-performance applications. Concurrency control techniques, such as synchronization and using thread pools, are also crucial for creating thread-safe applications.
 
 ---
-## Volatile
+## Volatile Keyword in Java
 
 ### What is a Volatile Variable in Java?
 
@@ -765,7 +774,7 @@ Thread2:      +--------------------+
 This diagram helps in visualizing the flow of control and memory updates with a `volatile` variable. It illustrates how one thread can make a variable's value immediately visible to other threads, avoiding issues of local thread caches or optimizations that might otherwise delay the update.
 
 ---
-### Java Concurrency Framework
+## Java Concurrency Framework
 
 The **Java Concurrency Framework** is a set of classes and interfaces provided by the Java API that helps you develop multithreaded and parallel applications. It is part of the `java.util.concurrent` package introduced in Java 5, which offers a more advanced and flexible way to handle concurrent programming compared to using low-level synchronization mechanisms like `synchronized` blocks and `Thread` class alone.
 
