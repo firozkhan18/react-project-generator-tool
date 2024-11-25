@@ -82,6 +82,8 @@
 - [Thread in Java](#interfaces-in-java)
 - [volatile Keyword in Java](#volatile-keyword-in-java)
 - [Java Concurrency Framework](#java-concurrency-framework)
+- [Singleton](#singleton)
+
 
 ## Difference Between Abstraction and Encapsulation in Java
 
@@ -3140,3 +3142,126 @@ future.thenAccept(result -> System.out.println("Result: " + result));
 8. **CompletableFuture**: For combining multiple asynchronous tasks in a more flexible way.
 
 These utilities enable safe and efficient handling of concurrency in Java applications and are especially useful for complex multi-threaded programs. They allow developers to avoid common pitfalls such as deadlocks, race conditions, and inefficient thread management.
+
+---
+
+## Singleton
+
+### Thread-Safe Singleton in Java: Double-Checked Locking Pattern
+
+A **Singleton** is a design pattern that ensures a class has only one instance and provides a global point of access to that instance. To make a Singleton thread-safe in Java, the **Double-Checked Locking Pattern** is often used. This pattern ensures that the Singleton instance is created only once, even in a multi-threaded environment, and that synchronization is used efficiently to minimize performance overhead.
+
+### Key Concepts:
+1. **Singleton Pattern**: Ensures that a class has only one instance throughout the entire Java application.
+2. **Thread Safety**: Guarantees that multiple threads can access and modify the instance without causing any inconsistent or corrupt state.
+3. **Double-Checked Locking**: A performance optimization for the Singleton pattern that minimizes the use of synchronization (which is expensive in terms of performance).
+
+### Why Use Double-Checked Locking?
+
+Without synchronization, multiple threads might try to create a new instance of the Singleton class concurrently, causing multiple instances of the Singleton to be created. This violates the Singleton pattern. To prevent this, synchronization can be applied, but it is expensive in terms of performance.
+
+**Double-Checked Locking** minimizes the performance cost by only locking the block of code where the instance is created. It ensures synchronization is used only the first time the instance is created, and subsequent access is thread-safe without the need for synchronization.
+
+### How Does the Double-Checked Locking Pattern Work?
+
+1. **First Check (Outside Synchronization)**: The first check happens outside the synchronized block. If the instance is already created, there's no need for synchronization, and the method can return the existing instance immediately.
+   
+2. **Synchronization (Second Check)**: If the instance is not created, the code enters a synchronized block to ensure that only one thread can initialize the Singleton instance. However, even inside the synchronized block, the instance is checked again to ensure that no other thread has already created the instance in the meantime.
+
+### Example Code
+
+```java
+public class Singleton {
+
+    // volatile keyword ensures that the instance is correctly visible to all threads
+    private static volatile Singleton instance;
+
+    // private constructor to prevent instantiation
+    private Singleton() {
+    }
+
+    public static Singleton getInstance() {
+        // First check (outside synchronization)
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                // Second check (inside synchronization)
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+### Explanation of the Code:
+1. **`private static volatile Singleton instance;`**:
+   - `volatile` ensures that the `instance` variable is not cached locally by any thread, which could lead to inconsistent reads.
+   
+2. **`private Singleton()`**:
+   - The constructor is private to prevent the creation of new instances from outside the class.
+   
+3. **`getInstance()` method**:
+   - The method first checks if the `instance` is `null`. If it is not `null`, it simply returns the existing instance, which is thread-safe without synchronization.
+   - If `instance` is `null`, it enters the synchronized block. However, the `if (instance == null)` check is done again inside the synchronized block to ensure that only one thread can create the instance.
+
+### Why Use `volatile`?
+
+- The `volatile` keyword ensures that the instance is always read from main memory and not from a thread's local cache. This is crucial for preventing **"half-initialized"** objects when multiple threads are involved. Without `volatile`, a thread might read an instance that has been partially constructed, leading to unpredictable behavior.
+
+### Pros and Cons of Double-Checked Locking
+
+#### **Pros**:
+- **Performance**: The pattern minimizes synchronization overhead after the Singleton instance is created. Once the instance is initialized, the method executes without locking.
+- **Thread Safety**: It guarantees that only one instance of the Singleton is created, even in a multithreaded environment.
+
+#### **Cons**:
+- **Complexity**: The pattern introduces additional complexity to the code. The double-checking mechanism and the use of the `volatile` keyword can be difficult for developers to understand initially.
+- **Older JVM Versions**: Prior to Java 5, the Double-Checked Locking pattern was not safe due to issues with how the JVM handled the `volatile` keyword. In modern JVMs (Java 5 and beyond), it is safe and efficient.
+
+### Alternatives to Double-Checked Locking
+
+If the Double-Checked Locking Pattern seems complicated or you're looking for other solutions, here are a few alternatives:
+
+1. **Bill Pugh Singleton Design (Static Inner Class)**:
+   - A simpler and more elegant solution that relies on the Java ClassLoader mechanism to ensure thread safety.
+   
+   ```java
+   public class Singleton {
+       private Singleton() {
+       }
+
+       private static class SingletonHelper {
+           private static final Singleton INSTANCE = new Singleton();
+       }
+
+       public static Singleton getInstance() {
+           return SingletonHelper.INSTANCE;
+       }
+   }
+   ```
+   - This is thread-safe, and the instance is created only when the `getInstance()` method is called. It also avoids the performance overhead of synchronization.
+
+2. **Eager Initialization**:
+   - If the instance creation is not resource-intensive, you can initialize the Singleton eagerly at the start of the application.
+   
+   ```java
+   public class Singleton {
+       private static final Singleton instance = new Singleton();
+   
+       private Singleton() {
+       }
+
+       public static Singleton getInstance() {
+           return instance;
+       }
+   }
+   ```
+   - This is simpler but may not be suitable if the creation of the instance is costly or the application may not need the Singleton at all.
+
+---
+
+### Conclusion
+
+The **Double-Checked Locking Pattern** is an effective way to implement a **thread-safe Singleton** with minimal performance overhead. However, it requires careful attention to the use of `volatile` and the two checks for the instance, especially in multi-threaded environments. If you're looking for simpler alternatives, the **Bill Pugh Singleton** or **Eager Initialization** could be more appropriate depending on the use case.
