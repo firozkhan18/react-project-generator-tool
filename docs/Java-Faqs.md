@@ -1167,6 +1167,117 @@ In Java, **functional interfaces** are interfaces that have exactly one abstract
 
 ---
 
+### What is Stream API in java and what is the diffrence between intermediate and terminal operations?
+
+
+### **What is Stream API in Java?**
+
+The **Stream API** in Java, introduced in **Java 8**, is a powerful abstraction that allows for the functional-style processing of sequences of data (e.g., collections, arrays). It provides a set of operations that allow you to process, filter, map, and reduce data in a declarative manner, making your code more readable, concise, and efficient.
+
+Streams allow for operations on data in a way that focuses on **what** to do with the data (declarative programming) rather than **how** to do it (imperative programming). This leads to more compact and maintainable code.
+
+### **Key Features of Stream API:**
+1. **Functional in nature**: Stream operations can be performed with lambda expressions and method references.
+2. **Lazy Evaluation**: Intermediate operations are **lazy**; they don’t execute until a terminal operation is invoked.
+3. **Supports Parallel Processing**: Streams can be processed in parallel, allowing you to take advantage of multicore architectures for improved performance.
+4. **Non-mutating**: Stream operations do not modify the underlying data structure; instead, they produce new results.
+
+### **Stream Operations: Intermediate vs. Terminal**
+
+Stream operations are divided into two categories: **Intermediate Operations** and **Terminal Operations**. Here's a detailed explanation of each:
+
+---
+
+### **1. Intermediate Operations**
+
+**Intermediate operations** are operations that **transform** a stream into another stream. They are **lazy** in nature, meaning that they don’t execute until a terminal operation is invoked. Intermediate operations are often chained together to form a pipeline of processing.
+
+- **Characteristics**:
+  - They return a new stream (they don't modify the original stream).
+  - They are **lazy**: the computation is not performed until the terminal operation is invoked.
+  - They can be **chained** to perform a series of transformations.
+
+- **Examples of Intermediate Operations**:
+  - `filter()`: Filters elements based on a condition.
+  - `map()`: Transforms each element by applying a function.
+  - `distinct()`: Removes duplicates.
+  - `sorted()`: Sorts the elements.
+  - `peek()`: Performs a side-effect action on each element.
+
+#### **Example: Intermediate Operations**
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+
+// Intermediate operations (lazy evaluation)
+Stream<Integer> result = numbers.stream()
+                                .filter(n -> n % 2 == 0)  // Only even numbers
+                                .map(n -> n * n);          // Square each number
+
+// Terminal operation to trigger processing
+result.forEach(System.out::println);  // Prints: 4, 16, 36
+```
+
+In this example, `filter()` and `map()` are intermediate operations. They are applied lazily, meaning no action occurs until `forEach()` (the terminal operation) is invoked.
+
+---
+
+### **2. Terminal Operations**
+
+**Terminal operations** are operations that **consume** the stream and produce a result or a side-effect. They **trigger the processing** of the stream and are typically the end of the stream pipeline.
+
+- **Characteristics**:
+  - They **consume** the stream (i.e., they don’t return another stream).
+  - They are **eager**: once invoked, they trigger the entire chain of intermediate operations.
+  - After a terminal operation, the stream is considered **consumed** and can no longer be used.
+
+- **Examples of Terminal Operations**:
+  - `collect()`: Collects the elements into a collection, such as a list or a set.
+  - `forEach()`: Performs an action for each element.
+  - `reduce()`: Combines elements into a single result (e.g., sum, product).
+  - `count()`: Counts the number of elements in the stream.
+  - `anyMatch()`, `allMatch()`, `noneMatch()`: Checks if any/all/none of the elements match a condition.
+
+#### **Example: Terminal Operations**
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+
+// Intermediate operations
+Stream<Integer> stream = numbers.stream()
+                                .filter(n -> n % 2 == 0)
+                                .map(n -> n * n);
+
+// Terminal operation
+stream.forEach(System.out::println);  // Prints: 4, 16, 36
+```
+
+In this example, `forEach()` is the terminal operation that triggers the processing of the intermediate operations (`filter()` and `map()`).
+
+---
+
+### **Difference Between Intermediate and Terminal Operations**
+
+| **Feature**              | **Intermediate Operations**                            | **Terminal Operations**                               |
+|--------------------------|---------------------------------------------------------|-------------------------------------------------------|
+| **Return Type**           | Returns a new stream.                                  | Returns a result (e.g., a value, collection, void).   |
+| **Execution**             | Lazy evaluation (only executed when a terminal operation is invoked). | Eager evaluation (they trigger the execution of the stream pipeline). |
+| **Chaining**              | Can be chained together to create a processing pipeline. | Ends the stream pipeline and doesn’t return a stream. |
+| **Effect on Stream**      | Does not consume or modify the stream.                 | Consumes the stream (can only be used once).          |
+| **Examples**              | `map()`, `filter()`, `distinct()`, `sorted()`           | `collect()`, `forEach()`, `reduce()`, `count()`       |
+
+---
+
+### **Conclusion**
+
+- **Intermediate operations** are **lazy** and **return a new stream**, allowing you to chain multiple operations.
+- **Terminal operations** are **eager**, triggering the execution of the entire stream pipeline and producing a result.
+- Both types of operations can be combined to form powerful and flexible data processing pipelines, especially useful in working with large datasets, parallel processing, and functional programming.
+
+Understanding the distinction between intermediate and terminal operations is essential for working effectively with the Stream API and writing efficient, readable Java code.
+
+---
+
 ## How to generate all permutations of a string (e.g., "ABC") using Java's Stream API
 
 To generate all permutations of a string (e.g., "ABC") using Java's Stream API, you can utilize the `Stream` and `Collectors` to create a more functional approach. While Java's Stream API does not have a direct method to generate permutations, we can create a recursive solution that generates permutations and then use the Stream API to process them.
