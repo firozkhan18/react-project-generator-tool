@@ -2,7 +2,7 @@
 
 ### **Java OOPs Concepts**
 
-Object-Oriented Programming (O O P) in Java revolves around four fundamental principles: **Abstraction**, **Polymorphism**, **Encapsulation**, and **Inheritance**. These principles enable developers to design software in a more modular, flexible, and maintainable manner. Additionally, **Composition**, **Association**, and **Aggregation** are design concepts that help model real-world relationships between objects. Below, I will explain each concept in-depth with examples and real-world use cases.
+Object-Oriented Programming (O O P) in Java revolves around four fundamental principles: **Abstraction**, **Polymorphism**, **Encapsulation**, and **Inheritance**. These principles enable developers to design software in a more modular, flexible, and maintainable manner. Additionally, **Composition**, **Association**, and **Aggregation** are design concepts that help model real-world relationships between objects. Below, explain each concept in-depth with examples and real-world use cases.
 
 ---
 
