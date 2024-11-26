@@ -706,6 +706,111 @@ public class Main {
 - **Default and Static Methods** in interfaces provide ways to add functionality without breaking existing implementations and allow utility methods in interfaces, respectively.
 
 ---
+### **What is the Diamond Problem in Java?**
+
+The **Diamond Problem** is a term used to describe a complication that arises when a class inherits from multiple classes that have a method with the same signature. This can lead to ambiguity about which method should be called, especially when both parent classes provide different implementations of the same method.
+
+In Java, this issue is mainly related to **multiple inheritance** (inheritance from more than one class). However, **Java does not support multiple inheritance** of classes (i.e., a class cannot extend more than one class), so the diamond problem does not occur with class inheritance. But it can still happen when dealing with **interfaces**.
+
+### **Diamond Problem Scenario (Interface Inheritance)**
+
+The Diamond Problem becomes relevant in Java when multiple interfaces contain default methods with the same signature, and a class implements both interfaces. The class may not know which default method to inherit and use, leading to a conflict.
+
+#### **Example of the Diamond Problem**:
+
+Consider the following example, where two interfaces, `A` and `B`, both define a default method `hello()`, and a class `C` implements both interfaces:
+
+```java
+interface A {
+    default void hello() {
+        System.out.println("Hello from A");
+    }
+}
+
+interface B {
+    default void hello() {
+        System.out.println("Hello from B");
+    }
+}
+
+class C implements A, B {
+    // The class has to resolve the conflict, as both A and B provide a hello() method
+}
+```
+
+In this scenario, class `C` implements both interfaces `A` and `B`, and both interfaces define a `hello()` method. When the `hello()` method is called on an instance of class `C`, the Java compiler will not know which `hello()` method to use—whether it should use `A`'s or `B`'s implementation. This will cause a **compilation error** due to the ambiguity.
+
+### **How to Prevent the Diamond Problem?**
+
+Java provides a mechanism to **resolve** the Diamond Problem by **overriding the conflicting default methods** in the implementing class. When a class implements multiple interfaces with conflicting default methods, it can explicitly override the method to provide its own implementation or decide which parent interface's default method to invoke.
+
+#### **Resolving the Conflict**:
+
+You can resolve the conflict by **overriding** the method in the implementing class, specifying exactly which method you want to use.
+
+Here's how you can resolve the conflict:
+
+```java
+interface A {
+    default void hello() {
+        System.out.println("Hello from A");
+    }
+}
+
+interface B {
+    default void hello() {
+        System.out.println("Hello from B");
+    }
+}
+
+class C implements A, B {
+    // Resolving the conflict by overriding the hello() method
+    @Override
+    public void hello() {
+        // You can choose to call one of the interfaces' default methods explicitly
+        A.super.hello(); // Calling hello() from Interface A
+        B.super.hello(); // Calling hello() from Interface B
+        System.out.println("Hello from C");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        C obj = new C();
+        obj.hello();
+    }
+}
+```
+
+### **Explanation**:
+- Both `A` and `B` define the `hello()` method with default implementations.
+- In class `C`, we **override** the `hello()` method to resolve the conflict.
+- Inside the overridden method, you can call the `hello()` method from either `A` or `B` using the syntax `InterfaceName.super.methodName()`. This allows you to use both `A`'s and `B`'s default methods, if desired.
+- Finally, you can add a custom implementation to the method in `C` (e.g., `System.out.println("Hello from C")`).
+
+#### **Output**:
+
+```
+Hello from A
+Hello from B
+Hello from C
+```
+
+### **Why Does Java Allow This?**
+
+Java introduced **default methods** in interfaces in Java 8 to support **backward compatibility**. Default methods allow you to add new methods to interfaces without breaking existing classes that implement those interfaces. However, this flexibility can lead to the Diamond Problem when multiple interfaces have the same default method.
+
+To prevent ambiguity and allow flexibility, Java forces the programmer to **resolve** the conflict by overriding the method in the implementing class. This makes the language more robust by enforcing the rule that the programmer must explicitly handle method conflicts when they arise.
+
+### **Summary:**
+- The **Diamond Problem** arises in Java when a class implements multiple interfaces that provide the same default method, leading to ambiguity.
+- **Java does not support multiple class inheritance**, so the problem only occurs with interface inheritance.
+- You can resolve the conflict by **overriding** the conflicting method in the implementing class and deciding which default method to use or providing your own custom implementation.
+- If needed, you can use `InterfaceName.super.methodName()` to explicitly call a specific interface’s default method within the overriding method.
+
+By **explicitly overriding** conflicting default methods, you ensure that Java's multiple inheritance mechanism via interfaces works in a predictable and controlled manner.
+
+---
 
 ### How to handle such situation if two functional interface have same default method and implement by single class.
 
