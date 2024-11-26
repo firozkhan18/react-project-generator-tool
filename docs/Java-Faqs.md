@@ -3673,4 +3673,627 @@ public class ExecutorsExample {
 - **`ExecutorService`** allows you to submit tasks (`Runnable`, `Callable`), manage their execution, and retrieve their results via `Future` objects.
 - **`ScheduledExecutorService`** is used to schedule tasks for future execution or periodically.
 - Factory methods in **`Executors`** simplify the creation of thread pools for different use cases (fixed size, cached, scheduled, etc.).
-- 
+
+---
+In Java, **`void`** and **`Void`** are often confused, but they serve different purposes. Here's a detailed explanation:
+
+### 1. **`void` (Primitive Type)**
+
+- **Definition**: `void` is a keyword in Java used to indicate that a method does not return any value.
+- **Usage**: It's used in method signatures to specify that the method does not return any result.
+- **Example**:
+  
+  ```java
+  public class MyClass {
+      // A method that does not return anything
+      public void printMessage() {
+          System.out.println("Hello, World!");
+      }
+  }
+  ```
+
+- **Key Points**:
+  - **`void`** is not a data type and cannot be used as an object or variable type.
+  - **`void`** is typically used in method signatures where the method doesn't return any value (like `printMessage()` in the example).
+  - You cannot assign a `void` type to a variable.
+  
+---
+
+### 2. **`Void` (Class)**
+
+- **Definition**: `Void` is a class that is part of the `java.lang` package, and it is used as a wrapper for the `void` type in situations where you need a reference type, such as when working with generics or collections.
+- **Usage**: **`Void`** is used in certain contexts, like with `Generics` or when you want to represent `void` in a more object-oriented manner.
+- **Example**:
+
+  ```java
+  import java.util.concurrent.*;
+
+  public class VoidExample {
+      public static void main(String[] args) {
+          // Using Void with a Future
+          ExecutorService executorService = Executors.newFixedThreadPool(1);
+          
+          // A task that returns Void (no result)
+          Callable<Void> task = () -> {
+              System.out.println("Executing task");
+              return null; // Returning null because Void is used
+          };
+          
+          Future<Void> future = executorService.submit(task);
+          try {
+              future.get(); // This will not return any value
+          } catch (InterruptedException | ExecutionException e) {
+              e.printStackTrace();
+          }
+          
+          executorService.shutdown();
+      }
+  }
+  ```
+
+- **Key Points**:
+  - **`Void`** is a class and can be used as a reference type, unlike the primitive `void`.
+  - It is useful when working with **generics**, where the actual return type of a method is `void`, but you need to use a type parameter.
+  - **`Void`** is often used in frameworks (like `Future<Void>`) to represent a method that does not return anything in the context of generics.
+
+---
+
+### Summary of Differences:
+
+| Feature        | `void`                                   | `Void`                                         |
+|----------------|------------------------------------------|-----------------------------------------------|
+| **Type**       | Primitive type                          | A wrapper class (part of `java.lang`)         |
+| **Usage**      | Used in method signatures to indicate no return value | Used as a reference type, often in generics |
+| **Can it be assigned to a variable?** | No                                      | Yes                                           |
+| **Example**    | `public void doSomething()`             | `Future<Void> result = executor.submit(task)` |
+
+In summary, **`void`** is a keyword that denotes no return value in methods, whereas **`Void`** is a class that can be used when you need an object representation of the `void` type, typically in generics or reference-based contexts.
+
+---
+
+### ACID Properties in Database Systems
+
+ACID stands for **Atomicity**, **Consistency**, **Isolation**, and **Durability**, which are the key properties that ensure reliable processing of database transactions.
+
+1. **Atomicity**
+   - **Definition**: Atomicity ensures that all the operations in a transaction are completed successfully. If any operation fails, the entire transaction is rolled back to the state before the transaction started. In other words, a transaction is atomic; it either happens entirely, or it doesn’t happen at all.
+   - **Example**: Consider a bank transfer between two accounts:
+     - If the debit operation succeeds but the credit operation fails, the entire transaction is rolled back. No money is transferred.
+
+2. **Consistency**
+   - **Definition**: Consistency ensures that a transaction brings the database from one valid state to another. After the transaction, the database must be in a consistent state, meaning it must adhere to all defined rules (such as constraints, triggers, etc.).
+   - **Example**: If you have a rule in the database that the total amount in an account cannot be negative, a transaction that tries to withdraw more than the balance should be rejected, maintaining consistency.
+
+3. **Isolation**
+   - **Definition**: Isolation ensures that transactions are executed in isolation from one another. Even though transactions may run concurrently, they should not affect each other’s execution. The intermediate state of a transaction should not be visible to others until the transaction is complete.
+   - **Example**: If two transactions are simultaneously trying to update the same record, the system must isolate them to avoid conflicts like overwriting data or reading stale data.
+
+4. **Durability**
+   - **Definition**: Durability ensures that once a transaction is committed, its changes are permanent, even if the system crashes after the transaction is completed. The changes made by the transaction are saved to non-volatile memory.
+   - **Example**: After a successful transaction that updates a balance in a bank account, the changes are saved to the disk. Even if the server crashes, the update will not be lost.
+
+---
+
+### Isolation Levels in Database Systems
+
+Isolation levels define the degree to which the operations in one transaction are isolated from the operations in other concurrent transactions. There are several isolation levels in SQL, each balancing performance and data consistency.
+
+1. **Read Uncommitted**
+   - **Description**: The lowest isolation level. In this level, transactions are allowed to read data that has been modified but not yet committed by other transactions. This is known as **dirty reads**.
+   - **Example**: Transaction A is updating a record, and Transaction B can read the updated record even before A has committed. If Transaction A rolls back, Transaction B would have read an invalid value.
+   - **Problems**: Dirty reads, non-repeatable reads, phantom reads.
+
+2. **Read Committed**
+   - **Description**: A transaction can only read data that has been committed by other transactions. This prevents dirty reads but still allows **non-repeatable reads**, where a value read by one transaction may change if another transaction modifies it before the first transaction is complete.
+   - **Example**: Transaction A reads a record, and while A is still processing, Transaction B updates the record. If Transaction A reads it again, it will see a different value.
+   - **Problems**: Non-repeatable reads, phantom reads.
+
+3. **Repeatable Read**
+   - **Description**: This level ensures that once a transaction reads a value, it will see the same value if it reads it again during the transaction. This prevents **non-repeatable reads**, but it still allows **phantom reads** where a transaction may see new rows that were inserted by other transactions.
+   - **Example**: Transaction A reads a record, and even if Transaction B modifies or inserts new rows, Transaction A will always see the same value for the record.
+   - **Problems**: Phantom reads.
+
+4. **Serializable**
+   - **Description**: The highest isolation level. This level ensures complete isolation between transactions, effectively serializing their execution. It prevents **dirty reads**, **non-repeatable reads**, and **phantom reads** by making transactions behave as though they were executed sequentially, one after the other.
+   - **Example**: Transaction A and Transaction B cannot read or modify the same data concurrently, ensuring full isolation.
+   - **Problems**: Lower performance due to locking and reduced concurrency.
+
+---
+
+### Summary of Isolation Levels and Their Effects:
+
+| **Isolation Level**      | **Dirty Read** | **Non-repeatable Read** | **Phantom Read** |
+|--------------------------|----------------|-------------------------|------------------|
+| **Read Uncommitted**      | Allowed        | Allowed                 | Allowed          |
+| **Read Committed**        | Not Allowed    | Allowed                 | Allowed          |
+| **Repeatable Read**       | Not Allowed    | Not Allowed             | Allowed          |
+| **Serializable**          | Not Allowed    | Not Allowed             | Not Allowed      |
+
+---
+
+### How Isolation Levels Affect Transactions
+
+- **Read Uncommitted** is the least restrictive and provides the highest concurrency but at the cost of potentially reading incorrect or inconsistent data (dirty reads).
+- **Read Committed** prevents dirty reads, ensuring that only committed data is read, but it still allows non-repeatable reads (data may change during the transaction).
+- **Repeatable Read** ensures that once a value is read, it remains consistent throughout the transaction, but it still allows phantom reads, where new rows might appear due to inserts.
+- **Serializable** provides the strictest isolation, ensuring no other transactions can interfere, but this comes with a performance cost and potentially lower concurrency.
+
+### Conclusion
+
+- **ACID properties** ensure that database transactions are reliable and maintain data integrity even in the face of errors, crashes, and concurrent operations.
+- **Isolation levels** help balance the trade-off between data consistency and performance, with higher isolation levels providing more consistency at the cost of reduced concurrency and performance.
+
+---
+
+The **SOLID principles** are a set of five design principles that help software developers create more maintainable, flexible, and scalable object-oriented software. They were introduced by Robert C. Martin (Uncle Bob) and provide guidelines for writing clean, modular, and reusable code.
+
+Here’s a breakdown of each principle:
+
+### 1. **S - Single Responsibility Principle (SRP)**
+   - **Definition**: A class should have only one reason to change, meaning it should have only one job or responsibility.
+   - **Explanation**: This principle suggests that a class should do one thing and do it well. If a class is responsible for multiple things, it becomes difficult to maintain and extend.
+   - **Example**:
+     ```java
+     // Violating SRP
+     class Employee {
+         public void calculateSalary() {
+             // Logic for salary calculation
+         }
+         
+         public void saveToDatabase() {
+             // Logic for saving employee details to the database
+         }
+     }
+
+     // Following SRP
+     class SalaryCalculator {
+         public void calculateSalary(Employee employee) {
+             // Logic for salary calculation
+         }
+     }
+
+     class EmployeeRepository {
+         public void saveToDatabase(Employee employee) {
+             // Logic for saving employee details to the database
+         }
+     }
+     ```
+
+### 2. **O - Open/Closed Principle (OCP)**
+   - **Definition**: Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.
+   - **Explanation**: This means that the behavior of a module can be extended without modifying its source code. This is typically achieved by using interfaces or abstract classes and allowing new functionality to be added via inheritance or composition.
+   - **Example**:
+     ```java
+     // Violating OCP
+     class Rectangle {
+         private int width;
+         private int height;
+         
+         public int calculateArea() {
+             return width * height;
+         }
+     }
+
+     class AreaCalculator {
+         public int calculateArea(Rectangle rectangle) {
+             return rectangle.calculateArea();
+         }
+     }
+     
+     // Following OCP - Open for extension, closed for modification
+     interface Shape {
+         int calculateArea();
+     }
+
+     class Rectangle implements Shape {
+         private int width;
+         private int height;
+         
+         public int calculateArea() {
+             return width * height;
+         }
+     }
+
+     class Circle implements Shape {
+         private int radius;
+         
+         public int calculateArea() {
+             return (int) (Math.PI * radius * radius);
+         }
+     }
+
+     class AreaCalculator {
+         public int calculateArea(Shape shape) {
+             return shape.calculateArea();
+         }
+     }
+     ```
+
+### 3. **L - Liskov Substitution Principle (LSP)**
+   - **Definition**: Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
+   - **Explanation**: This principle ensures that a subclass can be used interchangeably with its superclass without introducing errors or changing the expected behavior of the program.
+   - **Example**:
+     ```java
+     // Violating LSP
+     class Bird {
+         public void fly() {
+             // flying logic
+         }
+     }
+
+     class Ostrich extends Bird {
+         @Override
+         public void fly() {
+             // Ostriches can't fly, violating LSP
+             throw new UnsupportedOperationException();
+         }
+     }
+
+     // Following LSP
+     class Bird {
+         public void move() {
+             // general move logic
+         }
+     }
+
+     class Sparrow extends Bird {
+         @Override
+         public void move() {
+             // flying logic for sparrows
+         }
+     }
+
+     class Ostrich extends Bird {
+         @Override
+         public void move() {
+             // walking logic for ostriches
+         }
+     }
+     ```
+
+### 4. **I - Interface Segregation Principle (ISP)**
+   - **Definition**: No client should be forced to depend on methods it does not use.
+   - **Explanation**: This principle advocates for creating smaller, more specific interfaces rather than large, general-purpose ones. It encourages separating interfaces into groups so that implementing classes are only required to implement the methods they actually need.
+   - **Example**:
+     ```java
+     // Violating ISP
+     interface Worker {
+         void work();
+         void eat();
+     }
+
+     class Manager implements Worker {
+         @Override
+         public void work() {
+             // Managing work
+         }
+
+         @Override
+         public void eat() {
+             // Eating
+         }
+     }
+
+     class Robot implements Worker {
+         @Override
+         public void work() {
+             // Working
+         }
+
+         @Override
+         public void eat() {
+             // Robots don't eat, violating ISP
+             throw new UnsupportedOperationException();
+         }
+     }
+
+     // Following ISP
+     interface Workable {
+         void work();
+     }
+
+     interface Eatable {
+         void eat();
+     }
+
+     class Manager implements Workable, Eatable {
+         @Override
+         public void work() {
+             // Managing work
+         }
+
+         @Override
+         public void eat() {
+             // Eating
+         }
+     }
+
+     class Robot implements Workable {
+         @Override
+         public void work() {
+             // Working
+         }
+     }
+     ```
+
+### 5. **D - Dependency Inversion Principle (DIP)**
+   - **Definition**: High-level modules should not depend on low-level modules. Both should depend on abstractions. Furthermore, abstractions should not depend on details. Details should depend on abstractions.
+   - **Explanation**: This principle encourages decoupling classes so that the high-level classes do not depend on low-level classes directly, but instead, both depend on abstractions (such as interfaces or abstract classes). This leads to more flexible and maintainable code, as the details can be changed without affecting high-level logic.
+   - **Example**:
+     ```java
+     // Violating DIP
+     class LightBulb {
+         public void turnOn() {
+             // turn on the light
+         }
+         
+         public void turnOff() {
+             // turn off the light
+         }
+     }
+
+     class Switch {
+         private LightBulb bulb;
+
+         public Switch(LightBulb bulb) {
+             this.bulb = bulb;
+         }
+
+         public void operate() {
+             bulb.turnOn();
+         }
+     }
+
+     // Following DIP
+     interface Switchable {
+         void turnOn();
+         void turnOff();
+     }
+
+     class LightBulb implements Switchable {
+         @Override
+         public void turnOn() {
+             // turn on the light
+         }
+
+         @Override
+         public void turnOff() {
+             // turn off the light
+         }
+     }
+
+     class Fan implements Switchable {
+         @Override
+         public void turnOn() {
+             // turn on the fan
+         }
+
+         @Override
+         public void turnOff() {
+             // turn off the fan
+         }
+     }
+
+     class Switch {
+         private Switchable device;
+
+         public Switch(Switchable device) {
+             this.device = device;
+         }
+
+         public void operate() {
+             device.turnOn();
+         }
+     }
+     ```
+
+---
+
+### Summary of SOLID Principles
+
+| **Principle**                | **Definition**                                                                                               |
+|------------------------------|-------------------------------------------------------------------------------------------------------------|
+| **Single Responsibility Principle (SRP)** | A class should have only one reason to change, meaning it should have only one job.                              |
+| **Open/Closed Principle (OCP)** | Software entities should be open for extension, but closed for modification.                                 |
+| **Liskov Substitution Principle (LSP)** | Subtypes must be substitutable for their base types without altering the correctness of the program.            |
+| **Interface Segregation Principle (ISP)** | Clients should not be forced to implement interfaces they do not use.                                          |
+| **Dependency Inversion Principle (DIP)** | High-level modules should not depend on low-level modules. Both should depend on abstractions.                |
+
+By following the **SOLID principles**, developers can write code that is easier to maintain, test, and extend, leading to higher-quality software.
+
+---
+
+### Types of SQL Joins
+
+SQL Joins are used to combine rows from two or more tables based on a related column between them. The following are the types of SQL joins:
+
+#### 1. **INNER JOIN**
+   - **Definition**: Returns records that have matching values in both tables.
+   - **Use Case**: When you want to select rows that have corresponding matches in both tables.
+   - **Example**:
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employee e
+     INNER JOIN department d ON e.department_id = d.department_id;
+     ```
+   - **Explanation**: The `INNER JOIN` returns only those employees who have a corresponding department.
+
+#### 2. **LEFT JOIN (or LEFT OUTER JOIN)**
+   - **Definition**: Returns all records from the left table (table1) and the matched records from the right table (table2). If there is no match, the result is `NULL` from the right table.
+   - **Use Case**: When you want to keep all rows from the left table and only matching rows from the right table.
+   - **Example**:
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employee e
+     LEFT JOIN department d ON e.department_id = d.department_id;
+     ```
+   - **Explanation**: If an employee does not belong to a department, `NULL` will be shown for the department name.
+
+#### 3. **RIGHT JOIN (or RIGHT OUTER JOIN)**
+   - **Definition**: Returns all records from the right table (table2) and the matched records from the left table (table1). If there is no match, the result is `NULL` from the left table.
+   - **Use Case**: When you want to keep all rows from the right table and only matching rows from the left table.
+   - **Example**:
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employee e
+     RIGHT JOIN department d ON e.department_id = d.department_id;
+     ```
+   - **Explanation**: If a department does not have any employees, `NULL` will be shown for the employee details.
+
+#### 4. **FULL JOIN (or FULL OUTER JOIN)**
+   - **Definition**: Returns records when there is a match in either left (table1) or right (table2) table. It returns `NULL` for non-matching rows from both tables.
+   - **Use Case**: When you want to keep all rows from both tables, even if there is no match between them.
+   - **Example**:
+     ```sql
+     SELECT e.employee_id, e.employee_name, d.department_name
+     FROM employee e
+     FULL OUTER JOIN department d ON e.department_id = d.department_id;
+     ```
+   - **Explanation**: The `FULL OUTER JOIN` will return all employees and departments, even if some employees are not assigned to a department or some departments have no employees.
+
+#### 5. **CROSS JOIN**
+   - **Definition**: Returns the Cartesian product of the two tables. This means it returns all possible combinations of rows between the two tables.
+   - **Use Case**: Generally used for creating combinations between tables, but rarely used in practice.
+   - **Example**:
+     ```sql
+     SELECT e.employee_name, p.project_name
+     FROM employee e
+     CROSS JOIN project p;
+     ```
+   - **Explanation**: The `CROSS JOIN` will return a row for each combination of an employee and a project.
+
+#### 6. **SELF JOIN**
+   - **Definition**: A self join is a regular join but the table is joined with itself.
+   - **Use Case**: Used when you need to compare rows within the same table.
+   - **Example**:
+     ```sql
+     SELECT e1.employee_name AS Employee, e2.employee_name AS Manager
+     FROM employee e1
+     INNER JOIN employee e2 ON e1.manager_id = e2.employee_id;
+     ```
+   - **Explanation**: Here, we are joining the `employee` table to itself to find the manager of each employee.
+
+---
+
+### Creating Index and Composite Primary Key in Java
+
+In Java, when working with databases, you can use SQL statements to create an index or a composite primary key, often through JDBC (Java Database Connectivity).
+
+#### 1. **Creating an Index in SQL**
+   - **Definition**: An index is a database object that improves the speed of data retrieval operations.
+   - **SQL Example**:
+     ```sql
+     CREATE INDEX idx_employee_name ON employee (employee_name);
+     ```
+
+   - **In Java using JDBC**:
+     ```java
+     String sql = "CREATE INDEX idx_employee_name ON employee (employee_name)";
+     Statement stmt = connection.createStatement();
+     stmt.executeUpdate(sql);
+     ```
+
+#### 2. **Creating a Composite Primary Key**
+   - **Definition**: A composite primary key is a primary key made up of more than one column.
+   - **SQL Example**:
+     ```sql
+     CREATE TABLE employee (
+         employee_id INT,
+         department_id INT,
+         employee_name VARCHAR(100),
+         PRIMARY KEY (employee_id, department_id)
+     );
+     ```
+
+   - **In Java using JDBC**:
+     ```java
+     String sql = "CREATE TABLE employee (" +
+                  "employee_id INT, " +
+                  "department_id INT, " +
+                  "employee_name VARCHAR(100), " +
+                  "PRIMARY KEY (employee_id, department_id))";
+     Statement stmt = connection.createStatement();
+     stmt.executeUpdate(sql);
+     ```
+
+---
+
+### Finding the Third Highest Salary using `DENSE_RANK`
+
+To retrieve the third highest salary from an employee table using the `DENSE_RANK()` function, we can use the following approach. The `DENSE_RANK()` function assigns a rank to each row, with no gaps in ranking, even if there are ties in the salary values.
+
+#### SQL Query to Find Third Highest Salary:
+```sql
+WITH SalaryRank AS (
+    SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rank
+    FROM employee
+)
+SELECT salary
+FROM SalaryRank
+WHERE rank = 3;
+```
+
+- **Explanation**:
+  1. **`DENSE_RANK() OVER (ORDER BY salary DESC)`**: This assigns a rank to each salary in descending order.
+  2. The `WITH` clause creates a temporary result set called `SalaryRank`, which contains salaries and their corresponding ranks.
+  3. The main query retrieves the salary where the rank is 3, which corresponds to the third highest salary.
+
+#### Java Code to Execute the Query Using JDBC:
+```java
+String sql = "WITH SalaryRank AS ( " +
+             "    SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rank " +
+             "    FROM employee " +
+             ") " +
+             "SELECT salary FROM SalaryRank WHERE rank = 3";
+
+Statement stmt = connection.createStatement();
+ResultSet rs = stmt.executeQuery(sql);
+
+while (rs.next()) {
+    int thirdHighestSalary = rs.getInt("salary");
+    System.out.println("Third Highest Salary: " + thirdHighestSalary);
+}
+```
+
+### Example Scenario with Two Tables: Employee and Department
+
+```sql
+-- Employee table
+CREATE TABLE employee (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(100),
+    department_id INT,
+    salary DECIMAL(10, 2)
+);
+
+-- Department table
+CREATE TABLE department (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100)
+);
+
+-- Finding the third highest salary using DENSE_RANK with employee and department tables
+WITH SalaryRank AS (
+    SELECT e.salary, DENSE_RANK() OVER (ORDER BY e.salary DESC) AS rank
+    FROM employee e
+)
+SELECT e.employee_name, e.salary, d.department_name
+FROM employee e
+JOIN department d ON e.department_id = d.department_id
+WHERE e.salary IN (SELECT salary FROM SalaryRank WHERE rank = 3);
+```
+
+In the above example:
+- We use `DENSE_RANK()` to assign ranks to salaries in descending order.
+- The query fetches employees who have the third highest salary and joins the result with the department table to show their respective department names.
+
+---
+
+### Summary
+
+1. **SQL Joins**: There are several types of joins like `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`, `FULL JOIN`, `CROSS JOIN`, and `SELF JOIN`, each serving different purposes when combining data from multiple tables.
+   
+2. **Creating Index and Composite Primary Key in Java**: You can create an index and composite primary key using SQL queries in Java with JDBC.
+
+3. **Third Highest Salary with `DENSE_RANK`**: Use `DENSE_RANK()` to rank salaries and then select the third highest salary from a table, potentially combining it with another table (like `department`) using a `JOIN`.
+
