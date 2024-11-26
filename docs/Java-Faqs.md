@@ -4297,3 +4297,299 @@ In the above example:
 
 3. **Third Highest Salary with `DENSE_RANK`**: Use `DENSE_RANK()` to rank salaries and then select the third highest salary from a table, potentially combining it with another table (like `department`) using a `JOIN`.
 
+---
+
+In Java, a **composite primary key** refers to a primary key that is made up of multiple columns. When working with Java Persistence API (JPA), composite primary keys can be implemented using either of the following methods:
+
+1. **Using `@Embeddable` and `@EmbeddedId` annotations**: This approach involves creating a separate class that is marked as `@Embeddable` to represent the composite key. This class is then used in the entity class as the primary key by using the `@EmbeddedId` annotation.
+
+2. **Using `@IdClass` annotation**: Another way to represent a composite primary key is to use the `@IdClass` annotation in the entity class, where a separate class (called an "ID class") is used to represent the primary key.
+
+### Approach 1: Using `@Embeddable` and `@EmbeddedId`
+
+#### Step-by-Step Example:
+
+Suppose we have an `Employee` entity and a `Department` entity, and we want to create a composite primary key using `employee_id` and `department_id`.
+
+#### 1. Define the Composite Primary Key Class (`EmployeeDepartmentPK`):
+
+This class is marked with `@Embeddable` to indicate that it can be used as a composite key.
+
+```java
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+
+@Embeddable
+public class EmployeeDepartmentPK implements Serializable {
+
+    private Long employeeId;
+    private Long departmentId;
+
+    // Default constructor
+    public EmployeeDepartmentPK() {}
+
+    public EmployeeDepartmentPK(Long employeeId, Long departmentId) {
+        this.employeeId = employeeId;
+        this.departmentId = departmentId;
+    }
+
+    // Getters and setters
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    // Override equals() and hashCode() for composite keys
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EmployeeDepartmentPK that = (EmployeeDepartmentPK) o;
+
+        if (!employeeId.equals(that.employeeId)) return false;
+        return departmentId.equals(that.departmentId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = employeeId.hashCode();
+        result = 31 * result + departmentId.hashCode();
+        return result;
+    }
+}
+```
+
+#### 2. Define the Entity Class (`Employee`):
+
+Here, we use `@EmbeddedId` to embed the composite key class inside the entity class.
+
+```java
+import javax.persistence.*;
+
+@Entity
+public class Employee {
+
+    @EmbeddedId
+    private EmployeeDepartmentPK id;  // Composite primary key
+
+    private String name;
+    private Double salary;
+
+    // Default constructor
+    public Employee() {}
+
+    public Employee(EmployeeDepartmentPK id, String name, Double salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    // Getters and setters
+    public EmployeeDepartmentPK getId() {
+        return id;
+    }
+
+    public void setId(EmployeeDepartmentPK id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+}
+```
+
+#### 3. The `EmployeeDepartmentPK` class is used to represent the composite key in the `Employee` entity.
+
+- The `@EmbeddedId` annotation tells JPA that the `EmployeeDepartmentPK` class is being used as the composite primary key for the `Employee` entity.
+- The `@Embeddable` annotation marks the `EmployeeDepartmentPK` class as an embeddable object that can be used in other entities as a key.
+
+#### 4. Usage in a Repository or Service Layer:
+
+You can use this entity in the repository layer like this:
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmployeeRepository extends JpaRepository<Employee, EmployeeDepartmentPK> {
+    // Custom queries can be added here
+}
+```
+
+In this case, the composite key type (`EmployeeDepartmentPK`) is specified as the primary key in the repository.
+
+### Approach 2: Using `@IdClass`
+
+In this approach, the composite key class is marked with `@IdClass` and the `Employee` entity uses the composite key class as the primary key.
+
+#### Step-by-Step Example:
+
+#### 1. Define the Composite Key Class (`EmployeeDepartmentPK`):
+
+This class is marked with `@IdClass`, indicating that it's used as a composite key for an entity.
+
+```java
+import java.io.Serializable;
+
+public class EmployeeDepartmentPK implements Serializable {
+
+    private Long employeeId;
+    private Long departmentId;
+
+    // Default constructor
+    public EmployeeDepartmentPK() {}
+
+    public EmployeeDepartmentPK(Long employeeId, Long departmentId) {
+        this.employeeId = employeeId;
+        this.departmentId = departmentId;
+    }
+
+    // Getters and setters
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    // Override equals() and hashCode()
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EmployeeDepartmentPK that = (EmployeeDepartmentPK) o;
+
+        if (!employeeId.equals(that.employeeId)) return false;
+        return departmentId.equals(that.departmentId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = employeeId.hashCode();
+        result = 31 * result + departmentId.hashCode();
+        return result;
+    }
+}
+```
+
+#### 2. Define the Entity Class (`Employee`):
+
+Here, we use `@IdClass` to associate the composite key class with the entity.
+
+```java
+import javax.persistence.*;
+
+@Entity
+@IdClass(EmployeeDepartmentPK.class)
+public class Employee {
+
+    @Id
+    private Long employeeId;
+
+    @Id
+    private Long departmentId;
+
+    private String name;
+    private Double salary;
+
+    // Default constructor
+    public Employee() {}
+
+    public Employee(Long employeeId, Long departmentId, String name, Double salary) {
+        this.employeeId = employeeId;
+        this.departmentId = departmentId;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    // Getters and setters
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+}
+```
+
+#### 3. Usage in Repository:
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmployeeRepository extends JpaRepository<Employee, EmployeeDepartmentPK> {
+    // Custom queries can be added here
+}
+```
+
+### Summary
+
+1. **Using `@EmbeddedId` and `@Embeddable`**: 
+   - The composite primary key is encapsulated in a separate class (`@Embeddable`) and embedded in the entity class with `@EmbeddedId`.
+   - This approach is usually more flexible when working with embedded composite keys.
+
+2. **Using `@IdClass`**: 
+   - The composite key is specified using the `@IdClass` annotation on the entity class.
+   - This approach can be less flexible as you must declare the key columns individually in the entity, but it’s simpler for straightforward cases.
+
+Both methods are valid, and the choice depends on the complexity of your use case and your preference for modeling the composite key.
+
