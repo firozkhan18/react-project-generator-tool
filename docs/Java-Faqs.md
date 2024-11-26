@@ -1,3 +1,712 @@
+### Explain Java oops concept (Abstraction, polymorphism, encapsulation and inheritance, composition, association, aggregation ) in depth with example and real time uses.
+
+### **Java OOPs Concepts**
+
+Object-Oriented Programming (O O P) in Java revolves around four fundamental principles: **Abstraction**, **Polymorphism**, **Encapsulation**, and **Inheritance**. These principles enable developers to design software in a more modular, flexible, and maintainable manner. Additionally, **Composition**, **Association**, and **Aggregation** are design concepts that help model real-world relationships between objects. Below, I will explain each concept in-depth with examples and real-world use cases.
+
+---
+
+### 1. **Abstraction**
+
+**Abstraction** is the process of hiding the implementation details and showing only the necessary functionality to the user. It helps reduce complexity and allows the user to interact with objects in a simplified way. In Java, abstraction is achieved using **abstract classes** and **interfaces**.
+
+#### **Real-world Example**:
+Think of a **vehicle**. A driver does not need to know the internal workings (like engine components, fuel consumption) to drive it; they only need to know how to operate the vehicle using controls like the steering wheel, pedals, and buttons.
+
+#### **Java Example**:
+```java
+// Abstract class Vehicle
+abstract class Vehicle {
+    // Abstract method (must be implemented by subclass)
+    abstract void start();
+    
+    void stop() {
+        System.out.println("Vehicle stopped.");
+    }
+}
+
+// Concrete class Car
+class Car extends Vehicle {
+    @Override
+    void start() {
+        System.out.println("Car started.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Vehicle myCar = new Car();
+        myCar.start();  // Output: Car started.
+        myCar.stop();   // Output: Vehicle stopped.
+    }
+}
+```
+
+#### **Real-world Use Cases**:
+- **ATM machine**: The user only needs to interact with the ATM interface (insert card, PIN, withdrawal amount) without knowing how the system processes transactions or communicates with the bank.
+- **Payment Gateway**: Only the payment interface is exposed to the user, abstracting all the underlying communication protocols, encryption, and transaction processing.
+
+---
+
+### 2. **Polymorphism**
+
+**Polymorphism** means "many forms." It allows one entity (e.g., a method or object) to take multiple forms. There are two types of polymorphism in Java:
+- **Compile-time polymorphism** (Method Overloading)
+- **Runtime polymorphism** (Method Overriding)
+
+#### **Real-world Example**:
+A **person** can perform many tasks — a person can run, a person can swim, or a person can talk. Here, the **person** can take many forms (i.e., a person can perform different actions).
+
+#### **Java Example**:
+
+- **Method Overloading** (Compile-time Polymorphism):
+```java
+class Calculator {
+    // Method Overloading
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Calculator calc = new Calculator();
+        System.out.println(calc.add(5, 3));       // Output: 8
+        System.out.println(calc.add(5.5, 3.3));   // Output: 8.8
+    }
+}
+```
+
+- **Method Overriding** (Runtime Polymorphism):
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myDog = new Dog();
+        myDog.sound();  // Output: Dog barks
+    }
+}
+```
+
+#### **Real-world Use Cases**:
+- **UI Frameworks (Swing, JavaFX)**: Polymorphism allows different UI elements (buttons, text fields, etc.) to be treated as a generic `Component` type. When clicked or interacted with, each element can perform its unique action.
+- **Payment Systems**: Different types of payments (credit, debit, PayPal) can be processed polymorphically, allowing them to all be treated through a common interface.
+
+---
+
+### 3. **Encapsulation**
+
+**Encapsulation** refers to bundling the data (variables) and the methods (functions) that operate on the data into a single unit, or class, and restricting direct access to some of the object's components. It is the concept of **data hiding**, which provides protection for the object's state.
+
+#### **Real-world Example**:
+A **television** has buttons to change the channel, adjust volume, etc. However, users cannot directly manipulate the internal components (like circuit boards) and can only interact with the interface provided.
+
+#### **Java Example**:
+```java
+class Employee {
+    private String name;  // private variable
+    private int age;      // private variable
+
+    // Getter and Setter for name
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Getter and Setter for age
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Employee emp = new Employee();
+        emp.setName("John");
+        emp.setAge(30);
+
+        System.out.println(emp.getName());  // Output: John
+        System.out.println(emp.getAge());   // Output: 30
+    }
+}
+```
+
+#### **Real-world Use Cases**:
+- **Bank Accounts**: An account balance is kept private, and only certain actions like deposit or withdraw are exposed to the user, protecting the integrity of the balance.
+- **Employee Information System**: Sensitive information like salary and personal data is hidden and accessed only through controlled getters and setters.
+
+---
+
+### 4. **Inheritance**
+
+**Inheritance** is a mechanism where one class acquires the properties and behaviors (methods) of another class. It represents the "is-a" relationship, where a subclass is a specialized version of a superclass.
+
+#### **Real-world Example**:
+A **dog** is an animal. The dog class can inherit properties (like `name`, `age`) and behaviors (like `eat`, `sleep`) from the animal class.
+
+#### **Java Example**:
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound();  // Output: Dog barks
+    }
+}
+```
+
+#### **Real-world Use Cases**:
+- **Vehicles**: A `Car` class can inherit from a generic `Vehicle` class and add specific functionality like `airConditioning()`.
+- **Employee System**: An `Employee` class can be extended by specialized employee types like `Manager`, `Developer`, etc.
+
+---
+
+### 5. **Composition**
+
+**Composition** is the concept where one class is made up of one or more objects of other classes. This represents a "has-a" relationship, where one class has an object of another class as part of its state.
+
+#### **Real-world Example**:
+A **car** has an engine, wheels, and seats. These parts (objects) are components of the car.
+
+#### **Java Example**:
+```java
+class Engine {
+    void start() {
+        System.out.println("Engine started");
+    }
+}
+
+class Car {
+    private Engine engine;
+
+    // Composition: Car "has-a" Engine
+    public Car() {
+        engine = new Engine();  // Initializing the Engine
+    }
+
+    void start() {
+        engine.start();  // Using Engine's start method
+        System.out.println("Car started");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car car = new Car();
+        car.start();  // Output: Engine started
+                      //         Car started
+    }
+}
+```
+
+#### **Real-world Use Cases**:
+- **Computer**: A `Computer` object may have multiple components like `CPU`, `Memory`, `HardDrive` as part of it.
+- **Library Management System**: A `Book` class might contain a `Publisher` and `Author` class as part of its composition.
+
+---
+
+### 6. **Association**
+
+**Association** represents the relationship between two or more objects in which one object interacts with another. It does not imply ownership. The relationship can be **one-to-one**, **one-to-many**, or **many-to-many**.
+
+#### **Real-world Example**:
+A **student** is associated with multiple **courses**. The student doesn't own the course, but the student is associated with it.
+
+#### **Java Example**:
+```java
+class Student {
+    private String name;
+    
+    Student(String name) {
+        this.name = name;
+    }
+}
+
+class Course {
+    private String courseName;
+    
+    Course(String courseName) {
+        this.courseName = courseName;
+    }
+
+    void assignStudent(Student student) {
+        System.out.println(student + " assigned to " + courseName);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Student s1 = new Student("John");
+        Course c1 = new Course("Java");
+        c1.assignStudent(s1);
+    }
+}
+```
+
+---
+
+### 7. **Aggregation**
+
+**Aggregation** is a special type of association where one object "has-a" another object, but the child object can exist independently
+
+. It represents a "whole-part" relationship.
+
+#### **Real-world Example**:
+A **department** can have multiple **employees**, but the employee can exist independently of the department.
+
+#### **Java Example**:
+```java
+class Employee {
+    private String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+}
+
+class Department {
+    private Employee employee;  // Aggregation: Department "has-a" Employee
+
+    Department(Employee employee) {
+        this.employee = employee;
+    }
+}
+```
+
+---
+
+### Conclusion
+
+Java's OOP principles—**Abstraction**, **Polymorphism**, **Encapsulation**, and **Inheritance**—enable code modularity, reusability, and maintainability. Concepts like **Composition**, **Association**, and **Aggregation** help model real-world relationships, leading to more intuitive, scalable, and maintainable software designs. Understanding these concepts deeply can improve the way you structure your code and solve complex problems.
+
+---
+
+### Anonymous class in java
+
+An **anonymous class** in Java is a type of inner class that does not have a name and is used to instantiate objects of a class or interface at the point of use. It is a short-lived, one-time-use class that is defined and instantiated in a single expression.
+
+Anonymous classes are used when you need to create a class instance without explicitly defining a separate named class. They are commonly used to implement interfaces or extend classes when you need a quick, one-time implementation without the need for creating a full class definition.
+
+### Syntax of an Anonymous Class
+An anonymous class is defined in the following way:
+
+```java
+ClassName obj = new ClassName() {
+    // Override methods
+    // Additional implementation
+};
+```
+
+For example, you can use an anonymous class when implementing an interface or extending an existing class.
+
+### Example 1: Anonymous Class Implementing an Interface
+
+```java
+interface Greeting {
+    void sayHello();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Anonymous class implementing Greeting interface
+        Greeting greeting = new Greeting() {
+            @Override
+            public void sayHello() {
+                System.out.println("Hello from anonymous class!");
+            }
+        };
+
+        greeting.sayHello();  // Output: Hello from anonymous class!
+    }
+}
+```
+
+- In this example, the `Greeting` interface is implemented using an anonymous class, and the `sayHello()` method is overridden.
+
+### Example 2: Anonymous Class Extending a Class
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Anonymous class extending Animal class
+        Animal animal = new Animal() {
+            @Override
+            void sound() {
+                System.out.println("Woof!");
+            }
+        };
+
+        animal.sound();  // Output: Woof!
+    }
+}
+```
+
+- Here, we are using an anonymous class to extend the `Animal` class and override its `sound()` method.
+
+### When to Use Anonymous Classes
+1. **Short-term use**: When you need a one-time implementation of an interface or class, without the need to create a separate named class.
+2. **Event handling**: In GUI frameworks (like Swing or JavaFX), anonymous classes are often used for event handling, where you need to define behavior for a specific event (like button clicks).
+3. **Simplifying code**: They help simplify code when a class is not required to be reused.
+
+### Limitations of Anonymous Classes
+1. **Limited to single use**: Anonymous classes are typically used for one-off implementations and cannot be reused.
+2. **No constructor**: You cannot explicitly define a constructor in an anonymous class, but you can use an initializer block.
+3. **Limited to one superclass**: An anonymous class can either extend one class or implement one interface, but not both.
+
+### Conclusion
+Anonymous classes in Java provide a convenient way to create short-lived implementations of classes and interfaces, particularly when you need a quick, one-time implementation. They are commonly used in event-driven programming, GUI development, and for implementing simple interfaces in a compact manner.
+
+---
+A **lambda expression** in Java is a feature introduced in Java 8 that allows you to pass behavior as a parameter to a method, or to define methods in a more concise way. It's a powerful tool that enables functional programming in Java by providing a clear and compact syntax for implementing instances of functional interfaces (interfaces with a single abstract method).
+
+### Syntax of a Lambda Expression:
+A lambda expression consists of three parts:
+1. **Parameter list**: It represents the input parameters (similar to method parameters).
+2. **Arrow token (`->`)**: Separates the parameters from the body of the lambda expression.
+3. **Body**: Defines the operation or the logic that is applied to the input parameters.
+
+#### General Syntax:
+```java
+(parameters) -> expression
+```
+
+Or, if the body has more than one statement:
+```java
+(parameters) -> { statement1; statement2; ... }
+```
+
+### Example 1: Simple Lambda Expression
+Consider a simple lambda expression that takes two integers as input and returns their sum:
+
+```java
+// Lambda expression that adds two numbers
+BinaryOperator<Integer> add = (a, b) -> a + b;
+System.out.println(add.apply(3, 4));  // Output: 7
+```
+
+- **BinaryOperator<Integer>** is a functional interface that represents an operation on two operands of the same type.
+- `(a, b) -> a + b` is the lambda expression, where `a` and `b` are the parameters, and `a + b` is the operation being applied.
+
+### Example 2: Lambda Expression in Collections
+
+Lambda expressions are commonly used with Java's **Stream API** for processing collections.
+
+```java
+import java.util.*;
+import java.util.stream.*;
+
+public class LambdaExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("John", "Jane", "Mary", "Steve");
+
+        // Using lambda to filter and print names that start with 'J'
+        names.stream()
+             .filter(name -> name.startsWith("J"))
+             .forEach(name -> System.out.println(name));
+    }
+}
+```
+
+- The `filter(name -> name.startsWith("J"))` uses a lambda expression to filter names that start with "J".
+- The `forEach(name -> System.out.println(name))` uses a lambda to print each name.
+
+### Example 3: Lambda with Runnable
+Instead of writing a full `Runnable` implementation, you can pass a lambda expression directly to `Thread`.
+
+```java
+public class LambdaRunnableExample {
+    public static void main(String[] args) {
+        // Traditional anonymous class
+        Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Running in thread 1");
+            }
+        };
+
+        // Using lambda expression
+        Runnable r2 = () -> System.out.println("Running in thread 2");
+
+        new Thread(r1).start();
+        new Thread(r2).start();
+    }
+}
+```
+
+In the second case, we used a lambda expression `() -> System.out.println("Running in thread 2")` to create a `Runnable` instance, which is much more concise than the anonymous class.
+
+### Benefits of Lambda Expressions:
+1. **Concise Syntax**: Reduces boilerplate code, especially for instances of functional interfaces.
+2. **Improved Readability**: Makes the code more readable, especially when using collections and streams.
+3. **Supports Functional Programming**: Allows Java to support functional programming features like higher-order functions and operations on streams.
+
+### Functional Interfaces
+
+A **functional interface** is an interface with exactly one abstract method. Lambda expressions can be used to instantiate functional interfaces. Some common functional interfaces in Java are:
+- `Runnable` (with no parameters and no return value)
+- `Comparator<T>` (for comparing objects)
+- `Function<T, R>` (for transforming an object of type `T` to `R`)
+- `Consumer<T>` (for consuming an object of type `T`)
+- `Supplier<T>` (for supplying an object of type `T`)
+
+For example:
+
+```java
+@FunctionalInterface
+interface MyFunctionalInterface {
+    void apply(String name);
+}
+
+public class LambdaFunctionalInterfaceExample {
+    public static void main(String[] args) {
+        // Using a lambda expression to implement the functional interface
+        MyFunctionalInterface myFunc = name -> System.out.println("Hello, " + name);
+        myFunc.apply("World");  // Output: Hello, World
+    }
+}
+```
+
+### Conclusion
+
+- Lambda expressions simplify the process of writing anonymous classes and are often used with the **Stream API** for functional-style programming.
+- They improve code readability and reduce boilerplate, making code more concise and expressive.
+- They are especially useful when working with collections, concurrency, and event-driven programming.
+
+By using lambda expressions, Java embraces more functional programming principles, enabling more efficient and readable code.
+
+---
+
+### What is abstract class and their rules with example? 
+
+### What is interface and their rules with example? 
+
+### What is functional interface and their rules with example? 
+
+### Provide differences between abstract class, regular interface and functional interface in java
+
+### Why we need Default and Static methods in functional interface
+
+### 1. **Abstract Class in Java**
+
+An **abstract class** in Java is a class that cannot be instantiated directly and may contain abstract methods (methods without implementation) as well as non-abstract methods (methods with implementation). The purpose of an abstract class is to provide a base class for other classes to extend and implement the abstract methods.
+
+#### **Rules of Abstract Class:**
+1. An abstract class can have both abstract methods (without implementation) and concrete methods (with implementation).
+2. You cannot instantiate an abstract class directly using `new`.
+3. An abstract class can have constructors, fields, and methods like a regular class.
+4. A class that extends an abstract class must provide implementations for all abstract methods unless it is also abstract.
+5. An abstract class can extend another class (abstract or concrete) and can implement interfaces.
+
+#### **Example:**
+
+```java
+abstract class Animal {
+    // Abstract method (does not have a body)
+    abstract void sound();
+
+    // Regular method (with a body)
+    void sleep() {
+        System.out.println("This animal is sleeping.");
+    }
+}
+
+class Dog extends Animal {
+    // Providing implementation for the abstract method
+    void sound() {
+        System.out.println("Woof! Woof!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal dog = new Dog();  // Cannot instantiate Animal directly
+        dog.sound();  // Output: Woof! Woof!
+        dog.sleep();  // Output: This animal is sleeping.
+    }
+}
+```
+
+### 2. **Interface in Java**
+
+An **interface** in Java is a reference type, similar to a class, that can contain only constants, method signatures, default methods, static methods, and nested types. Interfaces are used to represent a contract that the implementing class must follow.
+
+#### **Rules of Interface:**
+1. An interface cannot have instance fields. All fields are implicitly `public`, `static`, and `final`.
+2. Methods in an interface are implicitly `public` and `abstract` (except `default` and `static` methods introduced in Java 8).
+3. A class implements an interface by using the `implements` keyword.
+4. A class can implement multiple interfaces, which is a way to achieve multiple inheritance in Java.
+5. An interface cannot have constructors because it cannot be instantiated directly.
+6. Interfaces can have `default` and `static` methods starting from Java 8.
+
+#### **Example:**
+
+```java
+interface Animal {
+    // Abstract method (does not have a body)
+    void sound();
+
+    // Default method (with a body)
+    default void eat() {
+        System.out.println("This animal eats food.");
+    }
+}
+
+class Dog implements Animal {
+    // Providing implementation for the abstract method
+    public void sound() {
+        System.out.println("Woof! Woof!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal dog = new Dog();
+        dog.sound();  // Output: Woof! Woof!
+        dog.eat();    // Output: This animal eats food.
+    }
+}
+```
+
+### 3. **Functional Interface in Java**
+
+A **functional interface** in Java is an interface with exactly one abstract method. Functional interfaces can contain multiple `default` or `static` methods, but they must have only one abstract method. Functional interfaces are used to represent lambda expressions, which allow you to treat functionality as a method argument or to create a simple instance of an interface.
+
+#### **Rules of Functional Interface:**
+1. A functional interface must have exactly one abstract method.
+2. It can have multiple default or static methods.
+3. It can have any number of `private` methods.
+4. Functional interfaces are often used in lambda expressions or method references.
+5. The `@FunctionalInterface` annotation is optional but recommended. It is used to indicate that the interface is intended to be a functional interface and provides compile-time checking.
+
+#### **Example:**
+
+```java
+@FunctionalInterface
+interface Greeting {
+    // Single abstract method
+    void sayHello();
+
+    // Default method
+    default void sayGoodbye() {
+        System.out.println("Goodbye!");
+    }
+
+    // Static method
+    static void sayWelcome() {
+        System.out.println("Welcome!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Using a lambda expression to implement the functional interface
+        Greeting greeting = () -> System.out.println("Hello, World!");
+
+        greeting.sayHello();  // Output: Hello, World!
+        greeting.sayGoodbye(); // Output: Goodbye!
+        Greeting.sayWelcome(); // Output: Welcome!
+    }
+}
+```
+
+### 4. **Differences Between Abstract Class and Interface**
+
+| **Feature**             | **Abstract Class**                                         | **Interface**                                                |
+|-------------------------|------------------------------------------------------------|--------------------------------------------------------------|
+| **Method Implementation**| Can have both abstract and concrete methods.               | Can only have abstract methods (until Java 8, with default and static methods from Java 8). |
+| **Constructor**          | Can have constructors.                                      | Cannot have constructors.                                    |
+| **Multiple Inheritance** | Can extend one class only (single inheritance).             | Can implement multiple interfaces (supports multiple inheritance). |
+| **Access Modifiers**    | Can have access modifiers (private, protected, etc.).      | Methods are implicitly `public`. Fields are `public static final`. |
+| **Inheritance**          | A class can extend only one abstract class.                 | A class can implement multiple interfaces.                   |
+| **Fields**               | Can have instance variables.                               | Only constants (implicitly `public static final`).           |
+
+### 5. **Why We Need Default and Static Methods in Functional Interfaces**
+
+#### **Default Methods:**
+1. **Backward Compatibility**: Java 8 introduced `default` methods to allow interfaces to evolve without breaking existing implementations. For example, you can add a default method to an interface without forcing all implementing classes to provide an implementation.
+2. **Code Reusability**: Default methods enable code reuse in interfaces without requiring implementation classes to define the method. This allows functionality to be added to interfaces without modifying existing code.
+
+#### **Static Methods:**
+1. **Utility Functions**: Static methods in interfaces are often used for utility functions that are not tied to an instance of the interface. They can provide common functionality that does not rely on object state.
+2. **Encapsulation**: You can encapsulate common logic related to the interface within static methods.
+
+#### **Example with Default and Static Methods:**
+
+```java
+@FunctionalInterface
+interface Calculator {
+    // Single abstract method
+    int calculate(int a, int b);
+
+    // Default method
+    default int add(int a, int b) {
+        return a + b;
+    }
+
+    // Static method
+    static int multiply(int a, int b) {
+        return a * b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Calculator calc = (a, b) -> a - b;  // Implementing the abstract method
+
+        System.out.println(calc.calculate(5, 3));  // Output: 2
+        System.out.println(calc.add(5, 3));        // Output: 8 (Default method)
+        System.out.println(Calculator.multiply(5, 3)); // Output: 15 (Static method)
+    }
+}
+```
+
+### Conclusion:
+
+- **Abstract Classes**: Can have both abstract and concrete methods, and they are used to provide a base for other classes to extend.
+- **Interfaces**: Are contracts for classes to follow, with only abstract methods (until Java 8, where default and static methods were introduced).
+- **Functional Interfaces**: Have exactly one abstract method and are used primarily with lambda expressions in Java.
+- **Default and Static Methods** in interfaces provide ways to add functionality without breaking existing implementations and allow utility methods in interfaces, respectively.
+
+---
+## How to generate all permutations of a string (e.g., "ABC") using Java's Stream API
 
 To generate all permutations of a string (e.g., "ABC") using Java's Stream API, you can utilize the `Stream` and `Collectors` to create a more functional approach. While Java's Stream API does not have a direct method to generate permutations, we can create a recursive solution that generates permutations and then use the Stream API to process them.
 
