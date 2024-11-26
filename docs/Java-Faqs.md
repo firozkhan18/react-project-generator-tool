@@ -706,6 +706,249 @@ public class Main {
 - **Default and Static Methods** in interfaces provide ways to add functionality without breaking existing implementations and allow utility methods in interfaces, respectively.
 
 ---
+
+### How to handle such situation if two functional interface have same default method and implement by single class.
+
+In Java, if a class implements two functional interfaces that have the same default method, a conflict arises because both default methods are inherited by the class, and the class will not know which one to choose. This results in a **compilation error**.
+
+Java allows you to **resolve this conflict** by explicitly overriding the conflicting default methods in the implementing class. When you do so, you can provide your own implementation of the method.
+
+Here’s how you can handle the situation:
+
+### **Scenario Explanation**
+Let's say you have two functional interfaces, `InterfaceA` and `InterfaceB`, both of which have the same default method `sayHello()`. A class that implements both interfaces will face a conflict due to the same default method name.
+
+### **Example of Conflict:**
+
+```java
+@FunctionalInterface
+interface InterfaceA {
+    // Abstract method
+    void abstractMethod();
+
+    // Default method
+    default void sayHello() {
+        System.out.println("Hello from InterfaceA!");
+    }
+}
+
+@FunctionalInterface
+interface InterfaceB {
+    // Abstract method
+    void abstractMethod();
+
+    // Default method with the same name
+    default void sayHello() {
+        System.out.println("Hello from InterfaceB!");
+    }
+}
+
+class MyClass implements InterfaceA, InterfaceB {
+    // Must override the conflicting default method
+    @Override
+    public void sayHello() {
+        // Resolving the conflict by providing a custom implementation
+        System.out.println("Hello from MyClass!");
+    }
+
+    @Override
+    public void abstractMethod() {
+        System.out.println("Implemented abstract method.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.sayHello();  // Output: Hello from MyClass!
+        obj.abstractMethod();  // Output: Implemented abstract method.
+    }
+}
+```
+
+### **Explanation:**
+- In the above code, both `InterfaceA` and `InterfaceB` define a default method `sayHello()`.
+- When `MyClass` implements both interfaces, the compiler detects that both interfaces have the same default method (`sayHello()`), and it raises a conflict.
+- To resolve this conflict, `MyClass` explicitly overrides the `sayHello()` method, providing its own implementation. This eliminates the ambiguity.
+
+### **Key Points:**
+1. **Method Conflict**: If two interfaces define the same default method, the implementing class cannot inherit both methods without conflict.
+2. **Override the Default Method**: The class implementing both interfaces must override the default method to resolve the conflict.
+3. **Provide a Custom Implementation**: In the overriding method, you can provide a custom implementation or even call one of the interfaces' default methods explicitly using `InterfaceA.super.sayHello()` or `InterfaceB.super.sayHello()` if you wish to retain functionality from one of the interfaces.
+
+### **Calling Specific Interface's Default Method** (if needed):
+If you want to call the default method from a specific interface, you can do so by using the syntax `InterfaceName.super.methodName()`:
+
+```java
+class MyClass implements InterfaceA, InterfaceB {
+    @Override
+    public void sayHello() {
+        // Optionally, you can call one of the interface default methods explicitly
+        InterfaceA.super.sayHello();  // Calls InterfaceA's default method
+        InterfaceB.super.sayHello();  // Calls InterfaceB's default method
+        System.out.println("Custom implementation in MyClass");
+    }
+
+    @Override
+    public void abstractMethod() {
+        System.out.println("Implemented abstract method.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.sayHello();
+    }
+}
+```
+
+**Output**:
+```
+Hello from InterfaceA!
+Hello from InterfaceB!
+Custom implementation in MyClass
+```
+
+### **Summary**:
+When two functional interfaces have the same default method and are implemented by a single class, Java forces you to explicitly override the default method in the implementing class. This allows you to provide a custom implementation and resolve the conflict. You can also choose to invoke one of the default methods from a specific interface if needed using `InterfaceName.super.methodName()`.
+
+---
+
+### What is backward compatibility which resolved by functional interface usin default method even we have abstract classes and regular and predefined functional interfaces then why we need default method in functional interfaces.
+
+
+### **Backward Compatibility in Java**
+
+**Backward compatibility** refers to the ability of a newer version of a system, program, or software to work with older versions or to allow existing code written for an earlier version to run without issues. In the context of Java, backward compatibility ensures that code written in previous versions of Java can still run on newer versions without needing modifications.
+
+When new features are added to the language, they need to be compatible with existing codebases. This is particularly important for libraries and frameworks that have been in use for a long time. For example, Java cannot suddenly remove or change methods in existing interfaces or classes, as this would break existing code that relies on those methods.
+
+### **Why `default` Methods Were Introduced in Functional Interfaces**
+
+Before **Java 8**, interfaces in Java could only have **abstract methods**, which meant that any new functionality added to an interface would break backward compatibility, as all implementing classes would need to be modified to accommodate the new methods.
+
+With the introduction of **default methods** in Java 8, the language provided a way to add new methods to interfaces without breaking existing implementations. This is particularly useful for **functional interfaces** used in Java’s new **Stream API** and **lambda expressions**.
+
+Here’s how **default methods** solve the backward compatibility issue:
+
+1. **Adding Methods to Interfaces Without Breaking Existing Implementations**:  
+   You can add new methods to an interface without forcing existing classes to implement them. The default implementation in the interface provides a fallback if a class does not explicitly override the method.
+
+2. **Extending Predefined Functional Interfaces**:  
+   In the past, if you wanted to add a new method to a predefined functional interface (like `Runnable`, `Comparator`, etc.), it would break existing code that uses those interfaces. With **default methods**, Java allows you to add new functionality to predefined interfaces without breaking existing code that implements those interfaces.
+
+### **Example**: How Default Methods Resolve Backward Compatibility
+
+#### Without Default Methods (Before Java 8)
+
+Suppose you have a functional interface `MyFunction`:
+
+```java
+@FunctionalInterface
+interface MyFunction {
+    int apply(int x);
+}
+```
+
+If you want to add a new method to this interface in a new version of your library, all the classes that implement this interface will need to be updated to implement the new method. This is **not backward compatible**:
+
+```java
+@FunctionalInterface
+interface MyFunction {
+    int apply(int x);  // Existing method
+
+    // New method added
+    int newMethod(int y);  // Breaks backward compatibility
+}
+```
+
+Every class that implements `MyFunction` will now need to implement `newMethod(int y)` as well, which could be quite cumbersome for older codebases.
+
+#### With Default Methods (Java 8 and Beyond)
+
+Using **default methods**, you can add new methods without breaking backward compatibility:
+
+```java
+@FunctionalInterface
+interface MyFunction {
+    int apply(int x);  // Existing method
+
+    // Default method added, providing a default implementation
+    default int newMethod(int y) {
+        return y * 2;  // Default behavior
+    }
+}
+```
+
+Now, existing implementations of `MyFunction` don't need to implement `newMethod()`. The default implementation is used if not overridden by the implementing class. New classes can still override `newMethod()` if needed, providing more flexibility.
+
+```java
+class MyClass implements MyFunction {
+    @Override
+    public int apply(int x) {
+        return x * 2;
+    }
+
+    // No need to implement newMethod() unless desired
+}
+```
+
+### **Why Do We Still Need Default Methods in Functional Interfaces?**
+
+Even though **abstract classes** can also have default methods (concrete methods), **functional interfaces** with default methods serve a different purpose, especially in the context of Java 8's **lambda expressions** and **streams**. Let’s explore why we still need them:
+
+#### 1. **Lambda Expressions and Functional Programming**:
+   Java 8 introduced **lambda expressions**, which work seamlessly with **functional interfaces**. A functional interface is an interface that has exactly one abstract method. By adding default methods to functional interfaces, Java allows new methods to be added to these interfaces without breaking compatibility with lambda expressions.
+
+   For example, the **`Predicate`** interface, which represents a condition (i.e., a boolean-valued function), already existed in Java. With the introduction of default methods, we can add utility methods (like `and`, `or`, `negate`) to `Predicate` without breaking existing code:
+
+   ```java
+   @FunctionalInterface
+   interface Predicate<T> {
+       boolean test(T t);
+
+       // Default method
+       default Predicate<T> and(Predicate<? super T> other) {
+           return (T t) -> test(t) && other.test(t);
+       }
+   }
+   ```
+
+   This allows us to combine predicates (conditions) without modifying existing classes or interfaces.
+
+#### 2. **Java’s Predefined Functional Interfaces**:
+   Java 8 came with predefined functional interfaces like `Function<T, R>`, `Predicate<T>`, `Consumer<T>`, `Supplier<T>`, and `Comparator<T>`. These are widely used in functional programming paradigms, such as with **streams** and **lambda expressions**. The addition of default methods in these interfaces allows Java to add new functionality without breaking the existing code that uses these interfaces.
+
+   For example, `Comparator` already existed in Java, but with default methods, Java added the `reversed()` method:
+
+   ```java
+   @FunctionalInterface
+   interface Comparator<T> {
+       int compare(T o1, T o2);
+
+       // Default method added in Java 8
+       default Comparator<T> reversed() {
+           return (T o1, T o2) -> compare(o2, o1);
+       }
+   }
+   ```
+
+   This allows users of `Comparator` to reverse the comparison logic without modifying their existing code.
+
+#### 3. **Seamless Integration with Streams API**:
+   The **Streams API** introduced in Java 8 relies heavily on functional interfaces for operations like filtering, mapping, and reducing. Default methods enable these interfaces to evolve over time by adding new utility methods. Without default methods, adding new functionality to interfaces like `Predicate`, `Function`, and `Consumer` would break backward compatibility with existing code.
+
+### **Summary**
+
+- **Backward compatibility** is crucial in Java, especially when new features are introduced. Without backward compatibility, existing code would break when it is compiled with newer versions of Java.
+- **Default methods** in **functional interfaces** allow new methods to be added to existing interfaces without breaking existing implementations or using abstract classes. This ensures that older code can continue working with newer versions of libraries or APIs without modification.
+- Even though **abstract classes** can have default methods, functional interfaces with default methods are specifically designed to support functional programming constructs like lambda expressions, which wouldn't work as effectively with abstract classes.
+- The introduction of **default methods** ensures that Java's **functional interfaces** remain backward-compatible, maintainable, and adaptable, especially in the context of Java's Stream API and lambda expressions.
+
+Thus, default methods in functional interfaces were introduced to enhance backward compatibility while enabling future extensions without disrupting existing implementations.
+
+
 ## How to generate all permutations of a string (e.g., "ABC") using Java's Stream API
 
 To generate all permutations of a string (e.g., "ABC") using Java's Stream API, you can utilize the `Stream` and `Collectors` to create a more functional approach. While Java's Stream API does not have a direct method to generate permutations, we can create a recursive solution that generates permutations and then use the Stream API to process them.
