@@ -1506,6 +1506,8 @@ stateDiagram-v2
     RUNNING --> DEAD: run() Completes or stop() Called
 ```
 
+ ![Desktop Screenshot](images/Thread-LifeCycle.svg)
+ 
 ### Explanation of States:
 
 - **NEW**: The thread is created but not started.
