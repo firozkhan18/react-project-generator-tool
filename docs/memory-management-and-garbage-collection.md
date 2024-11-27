@@ -182,6 +182,17 @@ flowchart TD
     AA --> AB[Page Fault Handling]
     AB --> AC[Swapping Between RAM and Disk]
 
+    classDef heap fill:#f9f,stroke:#333,stroke-width:2px;
+    class E, F, G, H, I, J;
+
+    classDef gc fill:#ccf,stroke:#333,stroke-width:2px;
+    class L, M, O, Q;
+
+    classDef stack fill:#bbf,stroke:#333,stroke-width:2px;
+    class C, D;
+
+    classDef virtualMemory fill:#fdd,stroke:#333,stroke-width:2px;
+    class W, X, Y, Z, AA, AB, AC;
 
 ```
 
