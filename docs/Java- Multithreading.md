@@ -421,6 +421,7 @@ The lifecycle of a thread can be in one of the following states:
 5. **Timed Waiting:** A thread is in this state when it is waiting for a specified period (e.g., using `Thread.sleep()`).
 6. **Terminated:** A thread enters this state when it has finished executing, either normally or due to an exception.
 
+
 ### Thread Synchronization in Java
 Threads can access shared resources, which can lead to concurrency issues (e.g., data corruption). To solve this, Java provides synchronization mechanisms to ensure that only one thread can access a resource at a time.
 
@@ -1464,6 +1465,58 @@ graph TD
 - **Waiting**: Thread is waiting indefinitely for another thread.
 - **Timed Waiting**: Thread is waiting for a specified time.
 - **Terminated**: Thread has finished executing.
+
+### 1.4. Explain various states of the Thread lifecycle. Explain the state transitions.
+During its lifetime, a thread can be in the following states:
+
+- NEW
+- RUNNABLE (Ready or Running)
+- WAITING
+- TIMED WAITING
+- BLOCKED
+- DEAD or TERMINATED
+
+- When you create an instance of the Thread class, the thread is in the NEW state.
+
+- When you call the `start()` method on that thread class object, the thread is in the RUNNABLE (Ready to Run) state. In this state, the thread is waiting for the thread scheduler to assign the processor to it.
+
+- When the thread acquired the processor from thread-scheduler it starts executing the run() method, and it’s in the RUNNABLE (running) state.
+
+- On the running thread, if you call `sleep(time)`, `join(time)` or `wait(time)`, the thread enters into the TIMED WAITING state, and when the corresponding event takes place, then the thread returns back to the RUNNABLE (Ready to Run) state.
+
+- On the running thread, if you call `join()`, `wait()` or `suspend()`, the thread enters into the WAITING state, and when the corresponding event takes place then the thread returns back to the RUNNABLE (Ready to Run) state.
+
+- While calling `notify()` or `notifyAll()` method thread does not immediately release the lock that’s why the waiting thread that got the notification has to wait for the running thread to release the lock of the object. At this stage, the thread is in the BLOCKED state. Once the thread acquires the lock then it moves to the RUNNABLE (Ready to Run) state.
+
+- If the `run()` method completes or we call the stop() method on the running thread, the thread enters into the DEAD or TERMINATED state.
+
+Here's a diagram representing the thread life cycle based on the provided details:
+
+```mermaid
+stateDiagram-v2
+    [*] --> NEW: Create Thread Instance
+    NEW --> RUNNABLE: Call start()
+    RUNNABLE --> RUNNING: Thread Scheduler Assigns Processor
+    RUNNING --> TIMED_WAITING: Call sleep(time), join(time), or wait(time)
+    TIMED_WAITING --> RUNNABLE: Event Occurs
+    RUNNING --> WAITING: Call join(), wait(), or suspend()
+    WAITING --> RUNNABLE: Event Occurs
+    RUNNING --> BLOCKED: Call notify() or notifyAll() (waiting for lock)
+    BLOCKED --> RUNNABLE: Acquires Lock
+    RUNNING --> DEAD: run() Completes or stop() Called
+```
+
+### Explanation of States:
+
+- **NEW**: The thread is created but not started.
+- **RUNNABLE**: The thread is ready to run and waiting for CPU time.
+- **RUNNING**: The thread is actively executing.
+- **TIMED_WAITING**: The thread is waiting for a specified time (e.g., sleep, join).
+- **WAITING**: The thread is waiting indefinitely for another thread to perform a particular action.
+- **BLOCKED**: The thread is waiting to acquire a lock held by another thread.
+- **DEAD**: The thread has finished execution or has been terminated.
+
+This diagram visually illustrates the transitions between the various states in a thread's life cycle.
 
 ### **2.3. Example of Thread Lifecycle**
 
