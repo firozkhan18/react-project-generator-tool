@@ -191,13 +191,23 @@ flowchart TD
     class J heap;
 
     classDef gc fill:#ccf,stroke:#333,stroke-width:2px;
-    class L, M, O, Q gc;
+    class L gc;
+    class M gc;
+    class O gc;
+    class Q gc;
 
     classDef stack fill:#bbf,stroke:#333,stroke-width:2px;
-    class C, D stack;
+    class c stack;
+    class D stack;
 
     classDef virtualMemory fill:#fdd,stroke:#333,stroke-width:2px;
-    class W, X, Y, Z, AA, AB, AC virtualMemory;
+    class W virtualMemory;
+    class X virtualMemory;
+    class Y virtualMemory;
+    class Z virtualMemory;
+    class AA virtualMemory;
+    class AB virtualMemory;
+    class AC virtualMemory;
 ```
 
 ### Breakdown of the Diagram:
