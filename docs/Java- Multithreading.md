@@ -1375,22 +1375,20 @@ Understanding the **JMM** and how memory works in Java is vital for writing **th
 
 ---
 
-### **3. Basics of Threads - Part 1: Creating Threads**
+### 3. Basics of Threads - Part 1: Creating Threads
 - **Creating Threads**
   - **Extending the `Thread` class**: Create a subclass of `Thread` and override its `run()` method.
   - **Implementing
 
  the `Runnable` interface**: Implement `Runnable` and pass it to a `Thread` object.
-  
-# Basics of Threads - Part 1: Creating Threads
 
 In Java, multithreading is an important concept for executing multiple tasks concurrently. Let's break down how to create and manage threads in Java, and also understand the **thread lifecycle**.
 
-## **1. Creating Threads in Java**
+## 3.1. Creating Threads in Java
 
 There are two primary ways to create threads in Java:
 
-### **1.1. Extending the `Thread` class**
+### 3.1.1. Extending the `Thread` class
 
 In this approach, you **extend** the `Thread` class and override its `run()` method. The `run()` method contains the code that will be executed by the thread when it starts.
 
@@ -1412,7 +1410,7 @@ class MyThread extends Thread {
 
 - **Explanation**: Here, the `MyThread` class extends `Thread` and overrides the `run()` method. The `start()` method is called to initiate the thread, which internally calls the `run()` method.
 
-### **1.2. Implementing the `Runnable` Interface**
+### 3.1.2. Implementing the `Runnable` Interface
 
 In this approach, you **implement** the `Runnable` interface, which requires you to define the `run()` method. Then, you can pass this `Runnable` object to a `Thread` object.
 
@@ -1441,11 +1439,11 @@ class MyRunnable implements Runnable {
 
 ---
 
-## **2. Thread Lifecycle**
+## 3.2. Thread Lifecycle
 
 A thread goes through several stages during its lifecycle. Understanding these states is key to managing and controlling thread execution.
 
-### **2.1. Thread States**
+### 3.2.1. Thread States
 
 1. **New**:  
    - A thread is in the **new** state when it is created but has not yet started. At this point, the `start()` method has not been called.
@@ -1473,7 +1471,7 @@ A thread goes through several stages during its lifecycle. Understanding these s
      - It finishes executing the `run()` method.
      - It is terminated prematurely due to an exception or other interruption.
 
-### **2.2. Visualizing Thread Lifecycle**
+### 3.2.2. Visualizing Thread Lifecycle
 
 The thread lifecycle can be represented in a diagram as follows:
 
@@ -1570,7 +1568,7 @@ Next, we will discuss **Thread Synchronization** and how to manage shared resour
 
 ---
 
-### **4. Basics of Thread - Part 2: Inter-Thread Communication and Synchronization**
+### 4. Basics of Thread - Part 2: Inter-Thread Communication and Synchronization
 - **Synchronization and Thread Safety**
   - Use of `synchronized` methods and blocks to ensure mutual exclusion and thread safety.
   
@@ -1581,6 +1579,167 @@ Next, we will discuss **Thread Synchronization** and how to manage shared resour
 
 - **Producer-Consumer Problem (Assignment)**  
   Discuss how this classic synchronization problem can be solved using the concepts of `wait()` and `notify()`.
+
+Inter-thread communication and synchronization are crucial concepts for writing safe and efficient multi-threaded programs. Java provides mechanisms for threads to communicate with each other and synchronize their actions to avoid race conditions and ensure thread safety.
+
+---
+
+#### 4.1 Synchronization and Thread Safety
+
+In a multi-threaded environment, multiple threads may attempt to access shared resources concurrently. To prevent inconsistent results (such as corrupt data), synchronization ensures that only one thread can access a shared resource at a time.
+
+- **`synchronized` keyword**: This keyword is used to ensure that only one thread can execute a block of code or method at a time. When a thread enters a synchronized block, it acquires the lock associated with the object or method, preventing other threads from entering that block until the lock is released.
+
+- **`synchronized` methods**: You can synchronize entire methods, which ensures mutual exclusion for the method's execution.
+
+- **`synchronized` blocks**: You can synchronize specific blocks of code within a method, offering finer control over which parts of the method are synchronized.
+
+#### **Example: Synchronized Method**
+
+```java
+public class Counter {
+    private int count = 0;
+
+    // Synchronized method to ensure thread safety
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+In the example above, the `increment()` method is synchronized, ensuring that only one thread can modify the `count` variable at a time. This prevents race conditions.
+
+---
+
+#### 4.2. Inter-Thread Communication
+
+Java provides a way for threads to communicate with each other using the `wait()`, `notify()`, and `notifyAll()` methods. These methods are typically used in synchronization scenarios where one thread needs to wait for another thread to perform an action.
+
+- **`wait()`**: Causes the current thread to release the lock and enter the "waiting" state. The thread will remain in this state until another thread calls `notify()` or `notifyAll()` on the same object.
+- **`notify()`**: Wakes up one thread that is currently waiting on the object's monitor. If multiple threads are waiting, one of them will be chosen.
+- **`notifyAll()`**: Wakes up all threads that are currently waiting on the object's monitor.
+
+These methods can only be called from within a synchronized context, as they rely on the thread holding the lock on the object.
+
+#### **Example: Producer-Consumer Problem Using `wait()` and `notify()`**
+
+The Producer-Consumer problem is a classic synchronization problem where multiple threads are working on a shared resource. One thread (the producer) generates data and stores it in a shared buffer, while another thread (the consumer) consumes that data. The synchronization challenge arises because both threads must operate on the same buffer but cannot do so concurrently.
+
+- The producer needs to wait if the buffer is full.
+- The consumer needs to wait if the buffer is empty.
+- Both threads must notify each other when the buffer has space or data available.
+
+#### **Solution Using `wait()` and `notify()`**
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Buffer {
+    private final int MAX_SIZE = 10;
+    private final Queue<Integer> buffer = new LinkedList<>();
+
+    // Method to produce items and add them to the buffer
+    public synchronized void produce(int item) throws InterruptedException {
+        while (buffer.size() == MAX_SIZE) {
+            // If the buffer is full, wait for space to become available
+            wait();
+        }
+        buffer.add(item);
+        System.out.println("Produced: " + item);
+        // Notify the consumer that data is available
+        notify();
+    }
+
+    // Method to consume items from the buffer
+    public synchronized int consume() throws InterruptedException {
+        while (buffer.isEmpty()) {
+            // If the buffer is empty, wait for data to be produced
+            wait();
+        }
+        int item = buffer.poll();
+        System.out.println("Consumed: " + item);
+        // Notify the producer that space is available
+        notify();
+        return item;
+    }
+}
+
+class Producer extends Thread {
+    private final Buffer buffer;
+
+    public Producer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    @Override
+    public void run() {
+        try {
+            for (int i = 0; i < 20; i++) {
+                buffer.produce(i);
+                Thread.sleep(100); // Simulate time taken to produce an item
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Consumer extends Thread {
+    private final Buffer buffer;
+
+    public Consumer(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    @Override
+    public void run() {
+        try {
+            for (int i = 0; i < 20; i++) {
+                buffer.consume();
+                Thread.sleep(150); // Simulate time taken to consume an item
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class ProducerConsumerExample {
+    public static void main(String[] args) {
+        Buffer buffer = new Buffer();
+        Thread producer = new Producer(buffer);
+        Thread consumer = new Consumer(buffer);
+        
+        producer.start();
+        consumer.start();
+    }
+}
+```
+
+#### **Explanation**:
+- **Buffer**: A shared buffer between the producer and consumer. It has a maximum capacity (`MAX_SIZE`) and a queue to store items.
+- **`produce()`**: The producer adds an item to the buffer if there is space. If the buffer is full, it calls `wait()` to pause until there is space.
+- **`consume()`**: The consumer removes an item from the buffer if it is not empty. If the buffer is empty, it calls `wait()` to pause until there is data to consume.
+- **`notify()`**: After adding or removing an item, both threads call `notify()` to wake up the other thread if it is waiting.
+- **Producer and Consumer Threads**: These threads simulate the actions of producing and consuming items in the buffer.
+
+#### **Key Points**:
+- **Producer-Consumer Problem**: The problem is solved by ensuring that threads wait when necessary (if the buffer is full or empty) and notify other threads when space or data becomes available.
+- **`wait()` and `notify()`**: These methods provide a way for threads to wait for conditions to be met (such as space in the buffer) and then signal other threads when those conditions are met.
+- **Synchronized Methods**: The `produce()` and `consume()` methods are synchronized to ensure mutual exclusion when accessing the shared buffer.
+
+---
+
+### **Conclusion**
+
+Thread synchronization and inter-thread communication are essential for creating thread-safe applications that work in a multi-threaded environment. The `wait()`, `notify()`, and `notifyAll()` methods allow threads to communicate and coordinate their activities, ensuring that resources are accessed safely and efficiently.
+
+The **Producer-Consumer problem** is a classic example where proper synchronization ensures that multiple threads can work together without conflicts, and Java's synchronization mechanisms provide a straightforward way to implement such patterns effectively.
 
 ---
 
