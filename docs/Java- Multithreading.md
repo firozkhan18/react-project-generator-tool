@@ -1506,7 +1506,7 @@ stateDiagram-v2
     RUNNING --> DEAD: run() Completes or stop() Called
 ```
 
- ![Desktop Screenshot](images/Thread-LifeCycle.svg)
+ ![Desktop Screenshot](../images/Thread-LifeCycle.svg)
  
 ### Explanation of States:
 
