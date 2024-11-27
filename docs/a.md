@@ -70,10 +70,22 @@ A **thread** is the smallest unit of execution within a process. When a process 
 - **Example:**
   In a Java program, if you create multiple threads to perform tasks in parallel, these threads will share the process's resources (like memory), but each thread will execute a part of the program independently.
 
+### Threads in a Process
+
+A **thread** is a lightweight process, or more accurately, the smallest unit of execution within a process. A thread is responsible for executing a sequence of instructions. 
+
+Every time a process is created, it starts with a **main thread**, which is the first thread that runs. From this main thread, additional threads can be spawned to perform tasks concurrently.
+
   **Key Points About a Thread**:
   1. **Lightweight Process:** A thread is often referred to as a "lightweight process" because it exists within a process and shares its resources but runs independently.
   2. **Smallest Unit of Execution:** A thread is a sequence of instructions that the CPU executes. Each thread executes independently but shares the process’s resources (such as memory and open files).
   3. **Concurrency:** Multiple threads in a process can run in parallel, making the program more efficient by utilizing multiple CPU cores.
+
+### Thread Characteristics
+
+- A thread is the smallest sequence of instructions that can be independently executed by the CPU.
+- A single process can have multiple threads, each executing a different sequence of instructions concurrently.
+- Threads share the resources of the process they belong to, such as memory, but each thread has its own **execution stack**.
 
 ### Example of Threads in Java:
 You can create a simple multithreading program in Java. Here’s an example where we print the current thread’s name using `Thread.currentThread().getName()`:
@@ -89,6 +101,38 @@ public class MultiThreadingLearning {
 
 - When you compile and run this Java program, the **main thread** will execute the code and print the thread's name.
 - However, if you create additional threads using the `Thread` class, each thread will have its own execution path within the process.
+
+### Compilation
+
+First, you would compile the class:
+
+```bash
+javac MultiThreadingLearning.java
+```
+
+This generates the bytecode that the JVM can execute.
+
+### Execution
+
+When you run the program using:
+
+```bash
+java MultiThreadingLearning
+```
+
+The JVM starts a process to run the program, and the **main thread** starts executing the `main` method. In this case, it simply prints the name of the current thread (which is typically "main" for the main thread).
+
+### Example of Threads in Java
+
+Let's consider a basic Java class that demonstrates threading. Below is an example Java class:
+
+```java
+public class MultiThreadingLearning {
+    public static void main(String[] args) {
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
 
 ### Thread Creation Example:
 To create multiple threads and see how they work concurrently, you might do something like this:
@@ -123,54 +167,6 @@ public class MultiThreadingExample {
 | **Concurrency**         | Multiple processes can run concurrently, each having its own resources. | Multiple threads within the same process can run concurrently. |
 | **Resource Sharing**    | Does not share resources with other processes. | Shares resources like memory, file handles, etc. with other threads in the same process. |
 
-
-## What is a Thread?
-
-Now that we understand what a process is, let's explore **threads**.
-
-### Threads in a Process
-
-A **thread** is a lightweight process, or more accurately, the smallest unit of execution within a process. A thread is responsible for executing a sequence of instructions. 
-
-Every time a process is created, it starts with a **main thread**, which is the first thread that runs. From this main thread, additional threads can be spawned to perform tasks concurrently.
-
-### Thread Characteristics
-
-- A thread is the smallest sequence of instructions that can be independently executed by the CPU.
-- A single process can have multiple threads, each executing a different sequence of instructions concurrently.
-- Threads share the resources of the process they belong to, such as memory, but each thread has its own **execution stack**.
-
-### Example of Threads in Java
-
-Let's consider a basic Java class that demonstrates threading. Below is an example Java class:
-
-```java
-public class MultiThreadingLearning {
-    public static void main(String[] args) {
-        System.out.println(Thread.currentThread().getName());
-    }
-}
-```
-
-### Compilation
-
-First, you would compile the class:
-
-```bash
-javac MultiThreadingLearning.java
-```
-
-This generates the bytecode that the JVM can execute.
-
-### Execution
-
-When you run the program using:
-
-```bash
-java MultiThreadingLearning
-```
-
-The JVM starts a process to run the program, and the **main thread** starts executing the `main` method. In this case, it simply prints the name of the current thread (which is typically "main" for the main thread).
 
 ### Multiple Threads in Action
 
