@@ -1584,7 +1584,7 @@ Next, we will discuss **Thread Synchronization** and how to manage shared resour
 
 ---
 
-### **5. Basics of Threads - Part 3: Advanced Thread Management**
+### 5. Basics of Threads - Part 3: Advanced Thread Management
 - **Producer-Consumer Problem - Solution Discussion**
   Detailed explanation of solving the problem using proper synchronization techniques.
 
@@ -1603,11 +1603,7 @@ Next, we will discuss **Thread Synchronization** and how to manage shared resour
 
 Here’s the section on **Advanced Thread Management** in detail:
 
----
-
-### **5. Basics of Threads - Part 3: Advanced Thread Management**
-
-#### **Producer-Consumer Problem - Solution Discussion**
+#### 5.1. Producer-Consumer Problem - Solution Discussion
 
 The **Producer-Consumer Problem** is a classic synchronization problem where two threads (the producer and the consumer) share a common buffer. The producer adds items to the buffer, while the consumer removes items. The key challenge is managing access to the buffer, ensuring the producer doesn’t add items when it’s full, and the consumer doesn’t remove items when it’s empty.
 
@@ -1645,7 +1641,7 @@ class Buffer {
 
 ---
 
-#### **Deprecated Methods**  
+#### 5.2. Deprecated Methods 
 Java provides some methods for thread management that are now deprecated due to potential risks like **deadlocks**, **resource leaks**, and lack of proper thread synchronization. These methods are:
 
 - **`stop()`**: Forces a thread to terminate, but doesn’t release the resources it holds, which can lead to inconsistent states or deadlocks.
@@ -1670,7 +1666,7 @@ Thread thread = new Thread(() -> {
 
 ---
 
-#### **Thread Joining**
+#### 5.3. Thread Joining
 
 - **`join()` Method**: Allows one thread to wait for another to finish before continuing its own execution.
 - It’s a way to ensure that the main thread or any other thread doesn't proceed until a specific thread has completed its execution.
@@ -1719,7 +1715,7 @@ class SharedResource {
 
 ---
 
-#### **Thread Priority and Daemon Threads**
+#### 5.4. Thread Priority and Daemon Threads
 
 ##### **Thread Priority**:
 - **Thread priority** determines the relative importance of a thread when the JVM scheduler assigns CPU time.
@@ -1772,10 +1768,9 @@ This advanced thread management gives you the tools to effectively control and s
 
 **Thread Pools** are a fundamental part of multithreading in Java, allowing for efficient management of multiple threads by reusing a fixed number of threads instead of creating and destroying them repeatedly. This is especially useful when you need to perform multiple concurrent tasks, as it improves performance by reducing the overhead of thread creation.
 
- - **Executor Framework**: Manages thread execution, improves resource management.
- - **`ThreadPoolExecutor`**: Implementation of thread pools with flexible configurations.
-
 ##### **Executor Framework**
+
+Manages thread execution, improves resource management.
 
 - The **Executor Framework** in Java, introduced in Java 5, provides a higher-level replacement for working directly with threads. It decouples task submission from the mechanics of how each task will be executed.
   
@@ -1789,6 +1784,8 @@ This advanced thread management gives you the tools to effectively control and s
 - Task submission is simplified through interfaces like `ExecutorService.submit()` and `ExecutorService.invokeAll()`.
 
 ##### **`ThreadPoolExecutor`**
+
+Implementation of thread pools with flexible configurations.
 
 The **`ThreadPoolExecutor`** is the most commonly used implementation of the Executor framework. It provides greater flexibility and fine control over the thread pool configuration.
 
