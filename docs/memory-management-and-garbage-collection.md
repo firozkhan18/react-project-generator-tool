@@ -159,7 +159,7 @@ flowchart TD
     B --> E[Heap Memory]
     E --> F[Young Generation]
     F --> G[Eden Space]
-    F --> H[Survivor Spaces (S0 & S1)]
+    F --> H[Survivor Spaces - S0 & S1]
     E --> I[Old Generation]
     E --> J[Metaspace]
     J --> K[Class Metadata & Reflection]
