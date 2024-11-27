@@ -1018,77 +1018,6 @@ Multi-threading allows a **single process** to perform multiple operations simul
   
 However, each thread also has its own **stack** (for local variables and function calls) and **program counter** (which tracks the thread's position in the code).
 
-### **Difference Between Multitasking and Multithreading**:
-
-- **Multitasking** refers to running **multiple processes** at the same time. Each process has its own memory space (heap, stack, data segments) and doesn’t share resources with other processes. 
-  - **Example**: Running a web browser and a text editor simultaneously are two different processes. The operating system switches between them (context switching), but they do not share memory resources.
-
-- **Multithreading**, on the other hand, refers to running **multiple threads** within a single process. These threads share the same memory space and resources (code, data segments, heap), but each thread can perform its own tasks independently.
-  - **Example**: A word processor might have one thread for handling user input, another for saving files, and another for background spell-checking. All of these threads run within the same process and share memory resources.
-
-### 4. **Multi-threading vs. Multi-tasking**
-- **Multi-tasking** involves running multiple **independent processes** concurrently, where each process has its own memory and resources. The OS switches between processes to give the illusion of parallel execution, but these processes **don’t share memory** (e.g., processes A and B don’t share resources).
-  
-- **Multi-threading** occurs within a **single process**. Multiple threads share the same memory resources (e.g., heap and code segments), but each thread has its own execution context (such as stack, program counter, and register values). This allows for more efficient resource use within a single application.
-
-To summarize:
-- **Multi-tasking**: Different processes (independent), **no shared resources**.
-- **Multi-threading**: Multiple threads within a **single process**, **shared resources**.
-- 
-### **Visualization of Multithreading vs Multitasking**:
-
-- **Multitasking**: 
-   - Multiple **processes** running concurrently, with each process having its own memory space.
-   - Context switching happens between processes, and the OS manages which process runs on the CPU at any given time.
-   
-- **Multithreading**: 
-   - Multiple **threads** run within a single process and share memory space. 
-   - Threads within a process can be scheduled to run in parallel (if multiple CPU cores are available), or the OS can use context switching for thread scheduling if there's only one CPU core.
-
-### **Context Switching and Multithreading**:
-- **Context switching** is used to switch between threads when only one CPU core is available. The OS saves the state of the currently running thread (its register values, program counter, etc.) and loads the state of another thread, allowing that thread to continue execution.
-- This context switching gives the **illusion of parallel execution**, even though the threads are actually time-shared on a single CPU core.
-- If multiple CPU cores are available, then **true parallelism** can occur, with each thread running on a different core simultaneously, eliminating the need for context switching.
-
-### 5. **How Context Switching Works in Multi-threading**
-Context switching is a critical aspect of multi-threading, particularly when the system has only one CPU core (or even multiple cores, where threads might still need to share CPU time). Here's how context switching works:
-
-1. **Time Slice**: The OS allocates a small amount of time (called a **time slice**) for each thread to execute. When the time slice expires, the OS performs a context switch to give the next thread a chance to run.
-  
-2. **Saving the State**: During context switching, the CPU saves the **state** of the currently running thread (its registers, program counter, etc.) into its **thread context** (a special data structure).
-   - For example, when **Thread 1** finishes its time slice, the CPU saves its state (registers, program counter, stack data).
-  
-3. **Loading the State**: The OS then loads the **state** of the next thread (say **Thread 2**), restoring its context, and the CPU continues executing from where **Thread 2** left off.
-  
-4. **Context Switch**: This process of saving and restoring the state is called a **context switch**. This enables threads to "pause" and later resume execution from the exact point they were interrupted.
-
-   - **Multi-core CPUs**: On a multi-core CPU, multiple threads can be executed **truly in parallel**, so context switching is only required if threads need to be run on the same core. However, if there are more threads than cores, context switching is still necessary.
-
-### **Summary**:
-- **Multithreading** is a programming technique where multiple threads share the same memory resources but can execute different parts of a program concurrently, improving performance and responsiveness.
-- **Benefits**: Improved performance via parallelism, better resource utilization, and faster response times.
-- **Challenges**: Concurrency issues, synchronization overhead, and difficulty in debugging.
-- **Multitasking vs Multithreading**: Multitasking involves running multiple processes independently, while multithreading involves multiple threads within a single process that share resources but run independently.
-
-### 6. **Summary: Key Concepts**
-- **Multi-threading** allows for concurrent execution of tasks within a single process, improving performance and responsiveness by utilizing multiple CPU cores.
-- Threads share resources like **heap memory** and **code segments**, but have their own execution contexts (e.g., program counter, stack, and registers).
-- **Context switching** allows threads to take turns using the CPU, and in a **multi-core system**, true parallelism can occur, where multiple threads are executed simultaneously without switching.
-- Challenges in multi-threading include issues like **deadlock**, **data inconsistency**, and the complexity of debugging.
-- **Multi-threading** shares resources between threads in the same process, whereas **multi-tasking** involves different processes with separate resources.
-  
-### 1.5. Multithreading in Java
-
-### 1. **Multi-threading Overview**
-Multi-threading allows a **single process** to perform multiple operations simultaneously by using **multiple threads**. This helps improve **performance**, especially in systems with **multi-core processors**, by allowing different threads to run on different cores simultaneously.
-
-- **Threads share common resources** such as:
-  - **Code segment** (same program code, i.e., the instructions).
-  - **Heap memory** (for dynamically allocated memory, shared between threads).
-  - **Data segment** (for global and static variables).
-  
-However, each thread also has its own **stack** (for local variables and function calls) and **program counter** (which tracks the thread's position in the code).
-
 ### **Multithreading Definition**:
 
 Multithreading allows a program to perform **multiple operations at the same time**. Rather than running tasks sequentially, multithreading enables a program to break down the tasks into smaller operations (threads) and execute them simultaneously (or in parallel, depending on the number of CPUs/cores).
@@ -1158,7 +1087,7 @@ While multi-threading offers many benefits, there are challenges associated with
 To summarize:
 - **Multi-tasking**: Different processes (independent), **no shared resources**.
 - **Multi-threading**: Multiple threads within a **single process**, **shared resources**.
-- 
+
 ### **Visualization of Multithreading vs Multitasking**:
 
 - **Multitasking**: 
@@ -1257,11 +1186,9 @@ You mentioned that you'd discuss **how to create threads in Java** next. Here’
 ### 2. Java Memory Model of Process and Thread
 - Understanding the **Java Memory Model (JMM)** is crucial in multithreading because it defines how variables are read/written and how threads interact with shared memory.
 
-# Java Memory Model (JMM) of Process and Thread
-
 Understanding the **Java Memory Model (JMM)** is essential when dealing with **multithreading** in Java because it defines how **variables** are read and written and how **threads** interact with shared memory. The JMM explains how different threads can see the same data differently due to caching, and how synchronization mechanisms (like `synchronized` blocks and `volatile` variables) ensure proper visibility and ordering of actions across threads.
 
-## Key Concepts of Java Memory Model (JMM)
+### Key Concepts of Java Memory Model (JMM)
 
 ### 1. **Main Memory and Working Memory**
 The JMM defines two kinds of memory for each thread:
