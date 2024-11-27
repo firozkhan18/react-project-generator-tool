@@ -238,7 +238,7 @@
 
 ---
 
-### **11. Parallel Streams**
+### 11. Parallel Streams
 - Parallel streams are a feature of the Java Streams API that allows for parallel processing of data. We will provide examples of how to use parallel streams to improve performance.
 
 ---
@@ -261,42 +261,42 @@
 
 ---
 
-### **13. Common Concurrency Issues and Solutions**
-- **Deadlocks**:  
+### 13. Common Concurrency Issues and Solutions
+- ### Deadlocks
   Discusses techniques for detecting and preventing deadlocks.
   
-- **Starvation**:  
+- ### Starvation  
   Occurs when a thread is perpetually denied access to resources.
   
-- **Livelocks**:  
+- ### Livelocks
   Discusses situations where threads are actively changing states but make no progress.
   
-- **Race Conditions**:  
+- ### Race Conditions
   Occurs when multiple threads access shared data without proper synchronization, leading to unexpected results.
 
-- **Strategies for Avoiding Concurrency Issues**:  
+- ### Strategies for Avoiding Concurrency Issues
   Deadlock avoidance, proper synchronization, and thread-safe design.
 
 ---
 
-### **14. Java 9+ Features**
-- **Reactive Programming with Flow API**:  
+### 14. Java 9+ Features
+- ### Reactive Programming with Flow API
   New in Java 9, the Flow API supports building reactive applications.
   
-- **CompletableFuture Enhancements**:  
+- ### CompletableFuture Enhancements
   Java 9 introduced several improvements to `CompletableFuture`.
 
-- **Process API Updates**:  
+- ### Process API Updates
   New methods in the Process API to manage operating system processes more efficiently.
 
 ---
 
-### **15. Java 11+ Features**
-- **Local-Variable Type Inference (`var` keyword)**:  
+### 15. Java 11+ Features
+- ### Local-Variable Type Inference (`var` keyword)
   A simplification in how variables are declared in Java.
 
-- **Enhancements in `Optional` class**:  
+- ### Enhancements in `Optional` class
   New utility methods to handle absent values.
 
-- **New Methods in the String class relevant to concurrency**:  
+- ### New Methods in the String class relevant to concurrency
   Improvements that enhance thread-safe string handling.
