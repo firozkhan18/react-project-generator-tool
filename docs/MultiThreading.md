@@ -109,11 +109,11 @@ It looks like you've outlined a comprehensive set of topics related to **multith
 
 ---
 
-### **1. Introduction to Multithreading**
+### 1. Introduction to Multithreading
 - **Definition of Multithreading**  
   Multithreading is a concurrent execution technique where multiple threads run independently but share resources, allowing for better utilization of CPU.
 
-- **Benefits of Multithreading**
+- **1.2 Benefits of Multithreading**
   - **Improved Performance**: By performing tasks in parallel.
   - **Better Resource Utilization**: Especially in multi-core systems.
   - **Increased Responsiveness**: Useful in GUI applications or real-time systems.
@@ -132,7 +132,7 @@ It looks like you've outlined a comprehensive set of topics related to **multith
 
 ---
 
-### **2. Java Memory Model of Process and Thread**
+### 2. Java Memory Model of Process and Thread
 - Understanding the **Java Memory Model (JMM)** is crucial in multithreading because it defines how variables are read/written and how threads interact with shared memory.
 
 ---
