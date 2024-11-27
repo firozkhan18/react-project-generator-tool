@@ -119,8 +119,211 @@
   - **Debugging Complexity**: Multithreaded programs can be harder to debug due to non-deterministic behavior.
 
 - **Processes vs Threads**  
-  - **Process**: An independent program running in its own memory space.
-  - **Thread**: A lightweight process that shares memory space with other threads within the same process.
+
+### 1. **Processes in Java**
+A **process** in Java refers to a program that is executed by the operating system. Each process runs independently, has its own memory space, and interacts with the operating system to perform tasks. Java provides several mechanisms to create and manage processes, such as the `ProcessBuilder` class and the `Runtime` class.
+
+#### Key Points about Processes:
+- A **process** is a separate execution unit that runs in its own address space.
+- Processes are isolated from each other, meaning one process cannot directly access the memory of another process.
+- Processes communicate with each other through inter-process communication (IPC) mechanisms, such as pipes, sockets, or shared files.
+
+#### Managing Processes in Java:
+Java provides two main classes to manage processes:
+- **`Runtime` class**: This class allows the execution of system-level commands and launching external programs.
+- **`ProcessBuilder` class**: A more flexible and powerful way to create and manage processes. It allows setting environment variables, working directory, and redirecting I/O streams.
+
+##### Example: Running an External Process
+
+```java
+import java.io.*;
+
+public class RunExternalProcess {
+    public static void main(String[] args) {
+        try {
+            // Creating a process to run the 'ls' command on UNIX-based systems
+            Process process = Runtime.getRuntime().exec("ls");
+
+            // Reading the output of the process
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // Wait for the process to exit
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+In this example:
+- `exec("ls")` runs the `ls` command (on Unix/Linux/Mac).
+- The output of the process is read from its `InputStream`.
+
+### 2. **Threads in Java**
+A **thread** is a smaller unit of a process. Threads within the same process share the same memory space, making communication between them easier and more efficient than between processes. Java provides robust support for multithreading, allowing you to write concurrent programs that can perform multiple tasks simultaneously.
+
+#### Key Points about Threads:
+- Threads are lightweight and execute concurrently within a single process.
+- Threads within the same process share resources like memory, file descriptors, etc.
+- Java provides built-in mechanisms to create and manage threads.
+
+#### Creating and Managing Threads in Java:
+There are two main ways to create a thread in Java:
+1. **By Extending the `Thread` class**.
+2. **By Implementing the `Runnable` interface**.
+
+##### 1. **Using the `Thread` class**
+You can create a thread by extending the `Thread` class and overriding the `run()` method.
+
+```java
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is running...");
+    }
+}
+
+public class ThreadExample {
+    public static void main(String[] args) {
+        // Creating and starting the thread
+        MyThread thread = new MyThread();
+        thread.start(); // This invokes the run() method
+    }
+}
+```
+
+In this example:
+- `MyThread` extends `Thread` and overrides the `run()` method.
+- The `start()` method is called to begin the execution of the thread.
+
+##### 2. **Using the `Runnable` interface**
+Alternatively, you can create a thread by implementing the `Runnable` interface. This method is preferred when the class already extends another class (because Java doesn't support multiple inheritance).
+
+```java
+class MyRunnable implements Runnable {
+    public void run() {
+        System.out.println("Thread is running...");
+    }
+}
+
+public class ThreadExample {
+    public static void main(String[] args) {
+        // Creating a Runnable object and passing it to a Thread
+        MyRunnable myRunnable = new MyRunnable();
+        Thread thread = new Thread(myRunnable);
+        thread.start(); // This invokes the run() method of MyRunnable
+    }
+}
+```
+
+In this example:
+- `MyRunnable` implements `Runnable` and overrides the `run()` method.
+- A new `Thread` is created, passing the `Runnable` object to its constructor.
+
+#### Managing Threads Using the `Executor` Framework
+For managing multiple threads, especially in complex applications, Java provides the `Executor` framework, which simplifies thread management and provides a higher level of abstraction for thread pooling.
+
+##### Example: Using an ExecutorService
+```java
+import java.util.concurrent.*;
+
+class MyTask implements Runnable {
+    public void run() {
+        System.out.println("Task is running...");
+    }
+}
+
+public class ExecutorExample {
+    public static void main(String[] args) {
+        // Creating a thread pool with 2 threads
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        // Submitting tasks to the thread pool
+        executorService.submit(new MyTask());
+        executorService.submit(new MyTask());
+
+        // Shutdown the executor after tasks are complete
+        executorService.shutdown();
+    }
+}
+```
+
+In this example:
+- `ExecutorService` manages a pool of worker threads and executes tasks in parallel.
+- `Executors.newFixedThreadPool(2)` creates a pool of 2 threads.
+- `submit()` is used to submit tasks to the executor.
+
+### Thread Lifecycle in Java
+The lifecycle of a thread can be in one of the following states:
+1. **New:** A thread is in this state when it is created but has not yet started.
+2. **Runnable:** A thread is in this state when the `start()` method has been invoked but it hasn't yet been scheduled for execution by the CPU.
+3. **Blocked:** A thread is blocked when it is waiting for a lock or resource that is being used by another thread.
+4. **Waiting:** A thread is in this state when it is waiting indefinitely for another thread to perform a particular action (e.g., using `Object.wait()`).
+5. **Timed Waiting:** A thread is in this state when it is waiting for a specified period (e.g., using `Thread.sleep()`).
+6. **Terminated:** A thread enters this state when it has finished executing, either normally or due to an exception.
+
+### Thread Synchronization in Java
+Threads can access shared resources, which can lead to concurrency issues (e.g., data corruption). To solve this, Java provides synchronization mechanisms to ensure that only one thread can access a resource at a time.
+
+#### Using `synchronized` block:
+```java
+class Counter {
+    private int count = 0;
+
+    // Synchronized method
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class SynchronizedExample {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        
+        // Create two threads that access the same shared object
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+        
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Start both threads
+        t1.start();
+        t2.start();
+
+        // Wait for both threads to finish
+        t1.join();
+        t2.join();
+
+        // Print the final result
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+```
+
+In this example:
+- The `increment()` method is synchronized to ensure only one thread can access it at a time.
+- `join()` is used to wait for both threads to finish before printing the final count.
+
+### Conclusion
+- **Process**: An independent program running in its own memory space.
+- **Processes** are independent execution units with their own memory space, and in Java, you can manage them using `Runtime` and `ProcessBuilder`.
+- **Threads** are lightweight units of execution within a process, sharing the same memory space (i.e.  A lightweight process that shares memory space with other threads within the same process.). Java provides mechanisms like the `Thread` class, `Runnable` interface, and the `Executor` framework for managing threads.
+- **Thread synchronization** is essential to avoid concurrency issues when multiple threads access shared resources.
 
 - **Multithreading in Java**
   Java provides a robust multithreading model, including built-in thread management, synchronization mechanisms, and concurrency utilities through the `java.util.concurrent` package.
