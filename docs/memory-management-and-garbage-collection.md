@@ -183,7 +183,12 @@ flowchart TD
     AB --> AC[Swapping Between RAM and Disk]
 
     classDef heap fill:#f9f,stroke:#333,stroke-width:2px;
-    class E, F, G, H, I, J heap;
+    class E heap;
+    class F heap;
+    class G heap;
+    class H heap;
+    class I heap;
+    class J heap;
 
     classDef gc fill:#ccf,stroke:#333,stroke-width:2px;
     class L, M, O, Q gc;
