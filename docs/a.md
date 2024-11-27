@@ -407,7 +407,7 @@ graph TD
     A[Main.java] -->|Java Compilation| B[Main.class - Bytecode]
     B -->|Java Execution| C[Process Created]
     C --> D[JVM Instance Allocated]
-    D --> E[Memory Allocated (Heap, Stack, Code Segment)]
+    D --> E[Memory Allocated - Heap, Stack, Code Segment]
     D --> F[JVM Converts Bytecode to Machine Code - Interpreter/JIT]
     
     F --> G[Code Segment: Machine Code]
@@ -420,7 +420,7 @@ graph TD
     end
 
     G -->|Execution Managed by CPU| I[CPU Executes Code]
-    I -->|Uses| J[Register (Stores Intermediate Results)]
+    I -->|Uses| J[Register - Stores Intermediate Results]
     I -->|Uses| K[Program Counter - PC Updates]
 
     C -->|JVM Creates Threads| L[Main Thread, Thread 1, Thread 2]
@@ -526,7 +526,7 @@ graph TD
     end
 
     G -->|Execution Managed by CPU| I[CPU Executes Code]
-    I -->|Uses| J[Register (Stores Intermediate Results)]
+    I -->|Uses| J[Register - Stores Intermediate Results]
     I -->|Uses| K[Program Counter - PC Updates]
 
     C -->|JVM Creates Threads| L[Main Thread, Thread 1, Thread 2]
