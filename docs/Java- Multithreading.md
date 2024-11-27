@@ -1492,21 +1492,7 @@ During its lifetime, a thread can be in the following states:
 
 Here's a diagram representing the thread life cycle based on the provided details:
 
-```mermaid
-stateDiagram-v2
-    [*] --> NEW: Create Thread Instance
-    NEW --> RUNNABLE: Call start()
-    RUNNABLE --> RUNNING: Thread Scheduler Assigns Processor
-    RUNNING --> TIMED_WAITING: Call sleep(time), join(time), or wait(time)
-    TIMED_WAITING --> RUNNABLE: Event Occurs
-    RUNNING --> WAITING: Call join(), wait(), or suspend()
-    WAITING --> RUNNABLE: Event Occurs
-    RUNNING --> BLOCKED: Call notify() or notifyAll() (waiting for lock)
-    BLOCKED --> RUNNABLE: Acquires Lock
-    RUNNING --> DEAD: run() Completes or stop() Called
-```
-
- ![Desktop Screenshot](../images/Thread-LifeCycle.svg)
+![Desktop Screenshot](../images/Thread-LifeCycle.svg)
  
 ### Explanation of States:
 
