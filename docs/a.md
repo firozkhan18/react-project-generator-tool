@@ -1,4 +1,111 @@
-Sure! Let's break down the concepts of **processes** and **threads** with respect to how they're related and different, based on the context you've shared.
+---
+
+### **Table of Contents**
+
+#### **1. [Introduction to Multithreading](#introduction-to-multithreading)**
+- [1.1. Definition of Multithreading](#definition-of-multithreading)
+- [1.2. Benefits of Multithreading](#benefits-of-multithreading)
+- [1.3. Challenges of Multithreading](#challenges-of-multithreading)
+- [1.4. Processes vs Threads](#processes-vs-threads)
+- [1.5. Multithreading in Java](#multithreading-in-java)
+
+#### **2. [Java Memory Model of Process and Thread](#java-memory-model-of-process-and-thread)**
+
+#### **3. [Basics of Threads - Part 1: Creating Threads](#basics-of-threads-part-1-creating-threads)**
+- [3.1. Creating Threads](#creating-threads)
+- [3.2. Extending the `Thread` Class](#extending-the-thread-class)
+- [3.3. Implementing the `Runnable` Interface](#implementing-the-runnable-interface)
+- [3.4. Thread Lifecycle](#thread-lifecycle)
+  - [3.4.1. New](#new)
+  - [3.4.2. Runnable](#runnable)
+  - [3.4.3. Blocked](#blocked)
+  - [3.4.4. Waiting](#waiting)
+  - [3.4.5. Timed Waiting](#timed-waiting)
+  - [3.4.6. Terminated](#terminated)
+
+#### **4. [Basics of Threads - Part 2: Inter-Thread Communication and Synchronization](#basics-of-threads-part-2-inter-thread-communication-and-synchronization)**
+- [4.1. Synchronization and Thread Safety](#synchronization-and-thread-safety)
+- [4.2. Synchronized Methods and Blocks](#synchronized-methods-and-blocks)
+- [4.3. Inter-Thread Communication](#inter-thread-communication)
+  - [4.3.1. `wait()`](#wait)
+  - [4.3.2. `notify()` and `notifyAll()`](#notify-and-notifyall)
+- [4.4. Producer-Consumer Problem (Assignment)](#producer-consumer-problem-assignment)
+
+#### **5. [Basics of Threads - Part 3: Advanced Thread Management](#basics-of-threads-part-3-advanced-thread-management)**
+- [5.1. Producer-Consumer Problem - Solution Discussion](#producer-consumer-problem-solution-discussion)
+- [5.2. Deprecated Methods: `stop()`, `suspend()`, and `resume()`](#deprecated-methods-stop-suspend-and-resume)
+- [5.3. Thread Joining](#thread-joining)
+- [5.4. `volatile` Keyword](#volatile-keyword)
+- [5.5. Thread Priority and Daemon Threads](#thread-priority-and-daemon-threads)
+
+#### **6. [Advanced Multithreading Topics](#advanced-multithreading-topics)**
+- [6.1. Thread Pools](#thread-pools)
+  - [6.1.1. Executor Framework](#executor-framework)
+  - [6.1.2. `ThreadPoolExecutor`](#threadpoolexecutor)
+- [6.2. `Callable` and `Future`](#callable-and-future)
+- [6.3. Fork/Join Framework](#forkjoin-framework)
+- [6.4. ThreadLocal in Multithreading](#threadlocal-in-multithreading)
+
+#### **7. [Concurrency Utilities](#concurrency-utilities)**
+- [7.1. Overview of `java.util.concurrent` Package](#overview-of-javautilconcurrent-package)
+- [7.2. Executors and ExecutorService](#executors-and-executorservice)
+- [7.3. `Callable` and `Future`](#callable-and-future-1)
+- [7.4. CompletableFuture](#completablefuture)
+- [7.5. ScheduledExecutorService](#scheduledexecutorservice)
+- [7.6. CountDownLatch, CyclicBarrier, Phaser, and Exchanger](#countdownlatch-cyclicbarrier-phaser-and-exchanger)
+
+#### **8. [Concurrent Collections](#concurrent-collections)**
+- [8.1. ConcurrentHashMap](#concurrenthashmap)
+- [8.2. ConcurrentLinkedQueue and ConcurrentLinkedDeque](#concurrentlinkedqueue-and-concurrentlinkeddeque)
+- [8.3. CopyOnWriteArrayList](#copyonwritearraylist)
+- [8.4. BlockingQueue Interface](#blockingqueue-interface)
+  - [8.4.1. ArrayBlockingQueue](#arrayblockingqueue)
+  - [8.4.2. LinkedBlockingQueue](#linkedblockingqueue)
+  - [8.4.3. PriorityBlockingQueue](#priorityblockingqueue)
+
+#### **9. [Atomic Variables](#atomic-variables)**
+- [9.1. AtomicInteger, AtomicLong, AtomicBoolean](#atomicinteger-atomiclong-atomicboolean)
+- [9.2. AtomicReference and AtomicReferenceArray](#atomicreference-and-atomicreferencearray)
+- [9.3. Compare-and-Swap Operations](#compare-and-swap-operations)
+
+#### **10. [Locks and Semaphores](#locks-and-semaphores)**
+- [10.1. ReentrantLock](#reentrantlock)
+- [10.2. ReadWriteLock](#readwritelock)
+- [10.3. StampedLock](#stampedlock)
+- [10.4. Semaphores](#semaphores)
+- [10.5. Lock and Condition Interface](#lock-and-condition-interface)
+
+#### **11. [Parallel Streams](#parallel-streams)**
+- [11.1. Introduction to Parallel Streams](#introduction-to-parallel-streams)
+- [11.2. Working with Parallel Streams](#working-with-parallel-streams)
+
+#### **12. [Best Practices and Patterns](#best-practices-and-patterns)**
+- [12.1. Thread Safety Best Practices](#thread-safety-best-practices)
+- [12.2. Immutable Objects](#immutable-objects)
+- [12.3. ThreadLocal Usage](#threadlocal-usage)
+- [12.4. Double-Checked Locking and its Issues](#double-checked-locking-and-its-issues)
+- [12.5. Concurrency Design Patterns](#concurrency-design-patterns)
+
+#### **13. [Common Concurrency Issues and Solutions](#common-concurrency-issues-and-solutions)**
+- [13.1. Deadlocks](#deadlocks)
+- [13.2. Starvation](#starvation)
+- [13.3. Livelocks](#livelocks)
+- [13.4. Race Conditions](#race-conditions)
+- [13.5. Strategies for Avoiding Concurrency Issues](#strategies-for-avoiding-concurrency-issues)
+
+#### **14. [Java 9+ Features](#java-9-features)**
+- [14.1. Reactive Programming with Flow API](#reactive-programming-with-flow-api)
+- [14.2. CompletableFuture Enhancements](#completablefuture-enhancements)
+- [14.3. Process API Updates](#process-api-updates)
+
+#### **15. [Java 11+ Features](#java-11-features)**
+- [15.1. Local-Variable Type Inference (`var` keyword)](#local-variable-type-inference-var-keyword)
+- [15.2. Enhancements in `Optional` Class](#enhancements-in-optional-class)
+- [15.3. New Methods in the String Class Relevant to Concurrency](#new-methods-in-the-string-class-relevant-to-concurrency)
+
+---
+
+Concepts of **processes** and **threads** with respect to how they're related and different, based on the context you've shared.
 
 ### What is a **Process**?
 A **process** is an instance of a program that is being executed. It represents the environment in which the program runs and includes its code, data, and resources required for execution (like memory, file handles, and other system resources).
