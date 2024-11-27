@@ -600,7 +600,7 @@ In your example, when you run the `MultiThreadLearning` Java program, the JVM cr
 
 ---
 
-### The **internal architecture of processes, threads, and memory management** in Java. 
+### Internal architecture of processes, threads, and memory management** in Java. 
 
 The concepts you've mentioned—such as **code segments**, **data segments**, **heap memory**, **stack memory**, **registers**, and **program counters**—are critical for understanding how Java programs are executed on the JVM and how these resources are managed by the operating system and CPU.
 
@@ -887,7 +887,7 @@ This diagram provides a visual flow from code compilation, process creation, thr
 
 ---
 
-### **context switching**, **parallel execution**, and how the various components interact within the process.
+### **Context switching**, **parallel execution**, and how the various components interact within the process.
 
 ### Key Concepts Recap:
 
