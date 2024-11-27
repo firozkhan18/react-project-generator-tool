@@ -3729,9 +3729,7 @@ The Java Memory Model (JMM) defines how Java threads interact with memory, ensur
 
 - **Multithreading** allows concurrent execution of tasks, improving performance, responsiveness, and resource utilization in applications.
 - **Threads** share memory space within a process, making them more lightweight compared to independent processes. However, they also introduce challenges such as race conditions and synchronization overhead.
-- In **Java
-
-**, multithreading can be implemented through the `Thread` class or the `Runnable` interface, with the `ExecutorService` framework providing a higher-level API for managing threads.
+- In **Java**, multithreading can be implemented through the `Thread` class or the `Runnable` interface, with the `ExecutorService` framework providing a higher-level API for managing threads.
 - The **Java Memory Model (JMM)** defines how threads interact with memory, ensuring consistent behavior through visibility, atomicity, and ordering rules, supported by synchronization mechanisms.
 
 Multithreading, when used correctly, is a powerful tool to enhance the performance and responsiveness of Java applications, but it requires careful management to avoid concurrency issues and ensure safe execution.
