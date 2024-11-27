@@ -546,7 +546,7 @@ graph TD
     end
 
     G -->|Execution Managed by CPU| I[CPU Executes Code]
-    I -->|Uses| J[Register (Stores Intermediate Results)]
+    I -->|Uses| J[Register - Stores Intermediate Results]
     I -->|Uses| K[Program Counter - PC Updates]
 
     C -->|JVM Creates Threads| L[Main Thread, Thread 1, Thread 2]
