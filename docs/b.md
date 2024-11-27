@@ -1,6 +1,3 @@
-Here is your content converted to Markdown:
-
----
 
 # Understanding Processes and Threads in Java
 
