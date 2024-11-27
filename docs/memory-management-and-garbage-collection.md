@@ -159,7 +159,7 @@ flowchart TD
     B --> E[Heap Memory]
     E --> F[Young Generation]
     F --> G[Eden Space]
-    F --> H[Survivor Spaces - S0 & S1]
+    F --> H[Survivor Spaces - S0 and S1]
     E --> I[Old Generation]
     E --> J[Metaspace]
     J --> K[Class Metadata & Reflection]
@@ -183,17 +183,16 @@ flowchart TD
     AB --> AC[Swapping Between RAM and Disk]
 
     classDef heap fill:#f9f,stroke:#333,stroke-width:2px;
-    class E, F, G, H, I, J;
+    class E, F, G, H, I, J heap;
 
     classDef gc fill:#ccf,stroke:#333,stroke-width:2px;
-    class L, M, O, Q;
+    class L, M, O, Q gc;
 
     classDef stack fill:#bbf,stroke:#333,stroke-width:2px;
-    class C, D;
+    class C, D stack;
 
     classDef virtualMemory fill:#fdd,stroke:#333,stroke-width:2px;
-    class W, X, Y, Z, AA, AB, AC;
-
+    class W, X, Y, Z, AA, AB, AC virtualMemory;
 ```
 
 ### Breakdown of the Diagram:
