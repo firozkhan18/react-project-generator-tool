@@ -1,7 +1,3 @@
-Here is your content converted to Markdown:
-
----
-
 # Understanding Processes and Threads in Java
 
 Let's take a look at how processes and threads differ and how they are related.
