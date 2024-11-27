@@ -1765,7 +1765,7 @@ This advanced thread management gives you the tools to effectively control and s
 
 ---
 
-### **6. Some Advanced Topics**
+### 6. Some Advanced Topics
 - **Thread Pools**  
   - **Executor Framework**: Manages thread execution, improves resource management.
   - **`ThreadPoolExecutor`**: Implementation of thread pools with flexible configurations.
@@ -1779,9 +1779,7 @@ This advanced thread management gives you the tools to effectively control and s
 - **ThreadLocal in Multithreading**:  
   Ensures that each thread has its own independent copy of a variable, preventing conflicts.
 
-### **6. Some Advanced Topics**
-
-#### **Thread Pools**
+#### 6.1. Thread Pools
 
 **Thread Pools** are a fundamental part of multithreading in Java, allowing for efficient management of multiple threads by reusing a fixed number of threads instead of creating and destroying them repeatedly. This is especially useful when you need to perform multiple concurrent tasks, as it improves performance by reducing the overhead of thread creation.
 
@@ -1844,7 +1842,7 @@ In this example:
 
 ---
 
-#### **`Callable` and `Future`**
+#### 6.2. `Callable` and `Future`**
 
 While **`Runnable`** only defines a task to execute and does not return a result, **`Callable`** is a more powerful alternative that allows tasks to return results and handle exceptions.
 
@@ -1888,7 +1886,7 @@ In this example:
 
 ---
 
-#### **Fork/Join Framework**
+#### 6.3. Fork/Join Framework
 
 The **Fork/Join Framework**, introduced in Java 7, is designed to help with **parallelizing divide-and-conquer** tasks. This framework is especially useful for tasks that can be recursively divided into smaller subtasks.
 
@@ -1953,7 +1951,7 @@ In this example:
 
 ---
 
-#### **ThreadLocal in Multithreading**
+#### 6.4. ThreadLocal in Multithreading
 
 **`ThreadLocal`** provides a simple mechanism to ensure that each thread has its own independent copy of a variable. This is particularly useful in multithreading to avoid conflicts between threads that may be sharing the same resources, such as variables or objects.
 
@@ -2002,7 +2000,7 @@ These advanced topics provide more robust solutions for managing multithreading 
 
 ---
 
-### **7. Concurrency Utilities**
+### 7. Concurrency Utilities
 - **`java.util.concurrent` Package**  
   This package provides a range of tools for managing concurrency:
   - **Executors and ExecutorService**: Manage a pool of threads.
@@ -2011,11 +2009,9 @@ These advanced topics provide more robust solutions for managing multithreading 
   - **ScheduledExecutorService**: Schedule tasks with fixed-rate or fixed-delay execution.
   - **CountDownLatch**, **CyclicBarrier**, **Phaser**, **Exchanger**: Used for synchronization between threads.
 
-### **7. Concurrency Utilities**
-
 Java provides a robust set of utilities in the **`java.util.concurrent`** package that simplify the development of concurrent applications. These utilities offer enhanced control over thread management, synchronization, and task execution, making it easier to implement complex concurrency scenarios in Java.
 
-#### **1. Executors and `ExecutorService`**
+#### 7.1. Executors and `ExecutorService`
 
 - **Executor** and **ExecutorService** provide a higher-level mechanism for managing and controlling thread execution. Instead of directly managing threads, you submit tasks to an executor that handles the creation and execution of threads for you.
   
@@ -2063,7 +2059,7 @@ In this example, two tasks are submitted to a fixed thread pool, and the results
 
 ---
 
-#### **2. `Callable` and `Future`**
+#### 7.2. `Callable` and `Future`
 
 - **`Callable`** is similar to `Runnable`, but it can return a result and throw checked exceptions. This makes it more flexible for asynchronous tasks that need to produce a result or handle exceptions.
 - **`Future`** represents the result of an asynchronous computation. You can use `Future.get()` to block the current thread and wait for the result of the task.
@@ -2098,7 +2094,7 @@ In this example, the task returns an integer after sleeping for 2 seconds. The m
 
 ---
 
-#### **3. `CompletableFuture`**
+#### 7.3. `CompletableFuture`
 
 - **`CompletableFuture`** is a more advanced version of `Future`. It allows you to handle asynchronous computation in a more flexible and powerful way, supporting non-blocking tasks, chaining of asynchronous operations, and better error handling.
 - You can compose multiple asynchronous tasks, handle results as they arrive, and combine them into a larger workflow using methods like `thenApply()`, `thenAccept()`, and `exceptionally()`.
@@ -2136,7 +2132,7 @@ In this example, the result is first multiplied by 2, then further transformed i
 
 ---
 
-#### **4. `ScheduledExecutorService`**
+#### 7.4. `ScheduledExecutorService`
 
 - **`ScheduledExecutorService`** is an extension of `ExecutorService` that can schedule tasks to run after a fixed delay or at a fixed rate. It’s ideal for running recurring tasks or tasks that need to start after a delay.
 
@@ -2170,7 +2166,7 @@ In this example, the task will execute every 2 seconds with a fixed delay betwee
 
 ---
 
-#### **5. Synchronization Utilities**
+#### 7.5. Synchronization Utilities
 
 - **`CountDownLatch`**: A synchronization aid that allows one or more threads to wait until a set of operations in other threads are completed. It is initialized with a count, and threads are blocked until the count reaches zero.
 
@@ -2225,20 +2221,18 @@ These utilities make working with concurrency in Java more manageable, enabling 
 
 ---
 
-### **8. Concurrent Collections**
+### 8. Concurrent Collections
 - **Concurrent Collections** (already discussed during Collections topic):
   - **ConcurrentHashMap**
   - **ConcurrentLinkedQueue and ConcurrentLinkedDeque**
   - **CopyOnWriteArrayList**
   - **BlockingQueue**: e.g., `ArrayBlockingQueue`, `LinkedBlockingQueue`, and `PriorityBlockingQueue`
 
-### **8. Concurrent Collections**
-
 Java provides a set of **Concurrent Collections** that are specifically designed to handle multi-threaded environments. These collections ensure thread-safe operations, minimizing synchronization overhead, and providing higher performance compared to traditional synchronized collections. Some of the most commonly used concurrent collections are:
 
 ---
 
-#### **1. `ConcurrentHashMap`**
+#### 8.1. `ConcurrentHashMap`
 
 - **`ConcurrentHashMap`** is a thread-safe, high-performance implementation of the `Map` interface. It allows concurrent access to the map by multiple threads while maintaining good performance through partitioning and fine-grained locking.
   
@@ -2285,7 +2279,7 @@ public class ConcurrentHashMapExample {
 
 ---
 
-#### **2. `ConcurrentLinkedQueue` and `ConcurrentLinkedDeque`**
+#### 8.2. `ConcurrentLinkedQueue` and `ConcurrentLinkedDeque`
 
 - **`ConcurrentLinkedQueue`** is an implementation of a **non-blocking queue** based on **linked nodes**. It supports thread-safe, lock-free operations for adding and removing elements.
   
@@ -2333,7 +2327,7 @@ public class ConcurrentQueueExample {
 
 ---
 
-#### **3. `CopyOnWriteArrayList`**
+#### 8.3. `CopyOnWriteArrayList`
 
 - **`CopyOnWriteArrayList`** is a thread-safe implementation of the `List` interface. It creates a **copy** of the underlying array whenever a modification is made (e.g., adding or removing an element). This provides thread-safety for iteration operations, but it can incur higher overhead for frequent modifications.
 
@@ -2384,7 +2378,7 @@ public class CopyOnWriteArrayListExample {
 
 ---
 
-#### **4. `BlockingQueue`**
+#### 8.4. `BlockingQueue`
 
 A **`BlockingQueue`** is a special kind of queue that supports operations that block the caller until the operation can be successfully completed. It’s typically used in **producer-consumer** scenarios, where one thread inserts elements into the queue, and another thread removes them.
 
@@ -2455,7 +2449,7 @@ These concurrent collections enable developers to easily build scalable, thread-
 
 ---
 
-### **9. Atomic Variables**
+### 9. Atomic Variables
 - **Atomic Variables**:  
   These variables provide atomic operations on single variables, preventing race conditions:
   - **AtomicInteger**, **AtomicLong**, **AtomicBoolean**
@@ -2464,13 +2458,12 @@ These concurrent collections enable developers to easily build scalable, thread-
 - **Compare-and-Swap Operations**:  
   Low-level atomic operations for thread-safe variable updates.
 
-### **9. Atomic Variables**
 
 In multithreaded environments, managing shared data between threads without causing **race conditions** is a significant challenge. **Atomic variables** help solve this problem by ensuring that operations on variables are performed atomically, meaning no other thread can interfere during the execution of the operation. These variables provide a way to update shared variables in a thread-safe manner without using synchronization blocks, making the code more efficient and scalable.
 
 ---
 
-#### **1. Atomic Variables**
+#### 9.1. Atomic Variables
 
 Java provides a set of classes in the **`java.util.concurrent.atomic`** package that implements **atomic operations**. These classes include various types of atomic variables that work for different data types, such as integers, booleans, long values, and object references.
 
@@ -2484,7 +2477,7 @@ These classes internally use **low-level machine operations** (such as **Compare
 
 ---
 
-#### **2. Compare-and-Swap (CAS) Operations**
+#### 9.2. Compare-and-Swap (CAS) Operations
 
 The key feature behind atomic variables is the **Compare-and-Swap** (CAS) operation. CAS is a low-level atomic operation that compares the current value of a variable with an expected value and, if they are equal, swaps the current value with a new one.
 
@@ -2495,7 +2488,7 @@ CAS is the foundation for the atomic classes in Java. It ensures that updates to
 
 ---
 
-#### **3. Example: AtomicInteger**
+#### 9.3. Example: AtomicInteger
 
 The `AtomicInteger` class allows you to perform atomic operations like `increment()`, `decrement()`, and `add()` on integers.
 
@@ -2544,7 +2537,7 @@ public class AtomicIntegerExample {
 
 ---
 
-#### **4. Example: AtomicBoolean**
+#### 9.4. Example: AtomicBoolean
 
 The `AtomicBoolean` class is used for managing a boolean value atomically. It’s often used in situations where you need to manage flags between threads.
 
@@ -2589,7 +2582,7 @@ public class AtomicBooleanExample {
 
 ---
 
-#### **5. Example: AtomicReference**
+#### 9.5. Example: AtomicReference
 
 The `AtomicReference` class allows atomic operations on object references. This is particularly useful when you need to safely update references to mutable objects in multithreaded environments.
 
@@ -2644,7 +2637,7 @@ public class AtomicReferenceExample {
 
 ---
 
-#### **6. Key Benefits of Atomic Variables**
+#### 9.6. Key Benefits of Atomic Variables
 
 - **Atomicity**: The operations on atomic variables are guaranteed to be atomic, meaning they cannot be interrupted by other threads.
 - **Performance**: Using atomic variables avoids the need for synchronized blocks, leading to better performance and less contention.
@@ -2659,18 +2652,17 @@ Atomic variables in Java, such as `AtomicInteger`, `AtomicLong`, `AtomicBoolean`
 
 ---
 
-### **10. Locks and Semaphores**
+### 10. Locks and Semaphores
 - **ReentrantLock**: A lock that allows a thread to re-acquire the lock it already holds.
 - **ReadWriteLock**: Provides separate locks for read and write operations.
 - **StampedLock**: A more advanced lock with better performance characteristics.
 - **Semaphores**: Controls access to a resource pool.
 - **Lock and Condition Interface**: A more flexible approach to managing thread synchronization compared to `synchronized`.
 
-### **10. Locks and Semaphores**
 
 In concurrent programming, thread synchronization is crucial to ensure that multiple threads do not interfere with each other while accessing shared resources. Java provides a variety of mechanisms for managing synchronization, each suited for different use cases. **Locks** and **semaphores** are fundamental tools for handling concurrency and avoiding issues like race conditions and deadlocks.
 
-#### **1. ReentrantLock**
+#### 10.1. ReentrantLock
 
 - **ReentrantLock** is a part of the `java.util.concurrent.locks` package and provides more flexibility and control over synchronization than the `synchronized` keyword.
 - It is **reentrant**, meaning that the thread holding the lock can acquire the same lock multiple times without causing a deadlock. The lock is released only after it has been unlocked the same number of times it was locked.
@@ -2715,7 +2707,7 @@ public class ReentrantLockExample {
 
 ---
 
-#### **2. ReadWriteLock**
+#### 10.2. ReadWriteLock
 
 - **ReadWriteLock** provides a mechanism that allows multiple threads to read a resource concurrently while ensuring exclusive access for threads that write to the resource.
 - This is useful when there are many more reads than writes, as it improves performance by allowing concurrent read operations.
@@ -2768,7 +2760,7 @@ public class ReadWriteLockExample {
 
 ---
 
-#### **3. StampedLock**
+#### 10.3. StampedLock
 
 - **StampedLock** is a more advanced lock introduced in Java 8. It provides better performance for situations where a resource needs to be read frequently and occasionally written to.
 - It is similar to `ReadWriteLock`, but it offers **optimistic locking**, which allows threads to attempt to acquire a lock without blocking. If they fail, they can retry or back off.
@@ -2833,7 +2825,7 @@ public class StampedLockExample {
 
 ---
 
-#### **4. Semaphores**
+#### 10.4. Semaphores
 
 - **Semaphore** is a synchronization primitive that controls access to a shared resource by limiting the number of threads that can access the resource at the same time.
 - A semaphore is initialized with a certain number of "permits". Threads can acquire permits before accessing the resource, and release permits when they are done.
@@ -2874,7 +2866,7 @@ public class SemaphoreExample {
 
 ---
 
-#### **5. Lock and Condition Interface**
+#### 10.5. Lock and Condition Interface
 
 - The **Lock** and **Condition** interfaces are part of the `java.util.concurrent.locks` package and offer a more flexible approach to managing thread synchronization compared to the built-in `synchronized` blocks and `wait()`/`notify()` methods.
 - **Lock** provides more control over acquiring and releasing locks.
@@ -2956,13 +2948,11 @@ Each of these tools serves different concurrency scenarios and should be chosen 
 ### 11. Parallel Streams
 - Parallel streams are a feature of the Java Streams API that allows for parallel processing of data. We will provide examples of how to use parallel streams to improve performance.
 
-### 11. Parallel Streams
-
 Parallel streams in Java are part of the **Java Streams API**, which was introduced in Java 8. They allow you to process data in parallel by utilizing multiple threads, thus improving the performance of certain operations, especially on large collections.
 
 ---
 
-#### **1. How Parallel Streams Work**
+#### 11.1. How Parallel Streams Work
 
 A **parallel stream** divides the data in the stream into smaller chunks, which can then be processed in parallel by multiple threads, typically managed by the **ForkJoinPool**. This provides a way to harness the power of multi-core processors for parallel computing.
 
@@ -2970,7 +2960,7 @@ By default, parallel streams use the common **ForkJoinPool**, but you can also c
 
 ---
 
-#### **2. Parallel Streams Syntax**
+#### 11.2. Parallel Streams Syntax
 
 You can create a parallel stream by simply calling `.parallelStream()` on a collection:
 
@@ -2988,7 +2978,7 @@ In the parallel stream, the processing of elements can happen in parallel, i.e.,
 
 ---
 
-#### **3. Performance Benefits of Parallel Streams**
+#### 11.3. Performance Benefits of Parallel Streams
 
 Parallel streams can significantly improve the performance of CPU-intensive tasks. For example, in large datasets or computationally expensive operations, parallel streams can utilize all available CPU cores to divide the task into smaller sub-tasks and execute them concurrently.
 
@@ -3004,7 +2994,7 @@ In this example, instead of processing the list sequentially, the stream is divi
 
 ---
 
-#### **4. When to Use Parallel Streams**
+#### 11.4. When to Use Parallel Streams
 
 Although parallel streams can improve performance, they are not always the best option. Here are some scenarios where parallel streams might be beneficial:
 
@@ -3018,7 +3008,7 @@ However, parallel streams might not offer benefits for:
 
 ---
 
-#### **5. Example of Parallel Stream for Sorting**
+#### 11.5. Example of Parallel Stream for Sorting
 
 Here’s an example of using parallel streams to sort a list of numbers:
 
@@ -3031,7 +3021,7 @@ This example shows how sorting operations can benefit from parallelism when work
 
 ---
 
-#### **6. Combining Sequential and Parallel Operations**
+#### 11.6. Combining Sequential and Parallel Operations
 
 You can mix sequential and parallel operations in a stream pipeline. For instance, you might process part of the stream in parallel and the other part sequentially, depending on the complexity of the operations.
 
@@ -3050,14 +3040,14 @@ In this case, the stream operates in parallel for the filtering and mapping oper
 
 ---
 
-#### **7. Common Pitfalls with Parallel Streams**
+#### 11.7. Common Pitfalls with Parallel Streams
 
 - **Thread Safety**: Be cautious when using parallel streams with shared mutable state. If you modify shared variables within a parallel stream, it can lead to race conditions. Make sure the operations you perform are **stateless** or that shared variables are handled correctly (e.g., using `synchronized` blocks or thread-safe collections).
 - **Unpredictable Results**: The order of execution in parallel streams is not guaranteed, so the order of results might not be the same as when using sequential streams. If order matters, use `.forEachOrdered()`.
 
 ---
 
-#### **8. Example of Thread Safety with Parallel Streams**
+#### 11.8. Example of Thread Safety with Parallel Streams
 
 If you use shared variables or collections in a parallel stream, make sure to synchronize or use thread-safe structures. Here’s an example of using a `ConcurrentHashMap` safely within a parallel stream:
 
@@ -3083,7 +3073,7 @@ In this example, the `ConcurrentHashMap` allows safe concurrent updates.
 
 ---
 
-### **12. Best Practices and Patterns**
+### 12. Best Practices and Patterns
 - **Thread Safety Best Practices**:  
   Use synchronization correctly, prefer immutability where possible, and be aware of concurrency pitfalls.
 
@@ -3100,13 +3090,13 @@ In this example, the `ConcurrentHashMap` allows safe concurrent updates.
   Design patterns such as **Thread Pool** and **Producer-Consumer**.
 
 
-### **12. Best Practices and Patterns in Multithreading**
+### 12. Best Practices and Patterns in Multithreading
 
 Effective management of threads in Java can help avoid common pitfalls and improve both performance and maintainability. Here are some **best practices** and **design patterns** for working with threads and concurrency:
 
 ---
 
-#### **1. Thread Safety Best Practices**
+#### 12.1. Thread Safety Best Practices
 
 - **Minimize Shared State**:  
   Whenever possible, minimize or eliminate shared state between threads. This reduces the need for synchronization and prevents issues such as race conditions.
@@ -3124,7 +3114,7 @@ Effective management of threads in Java can help avoid common pitfalls and impro
   
 ---
 
-#### **2. Immutable Objects**
+#### 12.2. Immutable Objects
 
 - **Immutability for Thread Safety**:  
   Immutable objects are inherently thread-safe because their state cannot be changed after they are created. For example, **Strings** and **Wrapper classes** (`Integer`, `Double`, etc.) in Java are immutable.
@@ -3160,7 +3150,7 @@ Effective management of threads in Java can help avoid common pitfalls and impro
 
 ---
 
-#### **3. ThreadLocal Usage**
+#### 12.3. ThreadLocal Usage
 
 - **ThreadLocal**:  
   `ThreadLocal` provides a mechanism to store data that is specific to the current thread. Each thread accessing a `ThreadLocal` variable gets its own independent copy, preventing data corruption caused by concurrent access.
@@ -3198,7 +3188,7 @@ Effective management of threads in Java can help avoid common pitfalls and impro
 
 ---
 
-#### **4. Double-Checked Locking**
+#### 12.4. Double-Checked Locking
 
 - **Double-Checked Locking Pattern**:  
   This pattern is used to reduce the performance overhead of acquiring a lock in situations where the lock is rarely needed. The idea is to check a condition before entering the synchronized block, and then check it again inside the block.
@@ -3230,7 +3220,7 @@ Effective management of threads in Java can help avoid common pitfalls and impro
 
 ---
 
-#### **5. Concurrency Design Patterns**
+#### 12.5. Concurrency Design Patterns
 
 - **Thread Pool Pattern**:  
   The thread pool design pattern allows you to reuse a fixed number of threads to execute multiple tasks. This is particularly useful when you have a large number of tasks but don’t want to create a new thread for each task, which can be inefficient.
@@ -3308,28 +3298,12 @@ By following these best practices and design patterns, you can avoid common conc
 ---
 
 ### 13. Common Concurrency Issues and Solutions
-- ### Deadlocks
-  Discusses techniques for detecting and preventing deadlocks.
-  
-- ### Starvation  
-  Occurs when a thread is perpetually denied access to resources.
-  
-- ### Livelocks
-  Discusses situations where threads are actively changing states but make no progress.
-  
-- ### Race Conditions
-  Occurs when multiple threads access shared data without proper synchronization, leading to unexpected results.
-
-- ### Strategies for Avoiding Concurrency Issues
-  Deadlock avoidance, proper synchronization, and thread-safe design.
-
-### **13. Common Concurrency Issues and Solutions**
 
 Concurrency is essential for efficient multi-threaded applications, but it comes with its own set of challenges. When not managed properly, concurrent execution can lead to issues like **deadlocks**, **starvation**, **livelocks**, and **race conditions**. Below is a discussion of these issues and strategies for mitigating them.
 
 ---
 
-#### **1. Deadlocks**
+#### 13.1. Deadlocks
 - **Definition**:  
   A **deadlock** occurs when two or more threads are blocked forever because they are each waiting on the other to release resources. This situation leads to a standstill where no thread can proceed, potentially freezing parts of the application.
 
@@ -3387,7 +3361,7 @@ Concurrency is essential for efficient multi-threaded applications, but it comes
 
 ---
 
-#### **2. Starvation**
+#### 13.2. Starvation
 - **Definition**:  
   **Starvation** occurs when a thread is perpetually denied access to resources because other threads with higher priority or more favorable conditions continue to acquire the resources, leaving the starved thread unable to make progress.
 
@@ -3413,7 +3387,7 @@ Concurrency is essential for efficient multi-threaded applications, but it comes
 
 ---
 
-#### **3. Livelocks**
+#### 13.3. Livelocks
 - **Definition**:  
   A **livelock** occurs when threads are actively performing actions but are unable to make progress. Unlike deadlocks where threads are blocked, in a livelock, threads continuously change states in response to each other but are unable to complete their work.
 
@@ -3436,7 +3410,7 @@ Concurrency is essential for efficient multi-threaded applications, but it comes
 
 ---
 
-#### **4. Race Conditions**
+#### 13.4. Race Conditions
 - **Definition**:  
   A **race condition** occurs when multiple threads access shared data concurrently and the final result depends on the non-deterministic order in which the threads execute. This leads to unpredictable behavior, as the data is modified by multiple threads simultaneously.
 
@@ -3481,7 +3455,7 @@ Concurrency is essential for efficient multi-threaded applications, but it comes
 
 ---
 
-#### **5. Strategies for Avoiding Concurrency Issues**
+#### 13.5. Strategies for Avoiding Concurrency Issues
 
 To avoid common concurrency issues such as deadlocks, starvation, livelocks, and race conditions, the following strategies should be adopted:
 
@@ -3505,27 +3479,13 @@ To avoid common concurrency issues such as deadlocks, starvation, livelocks, and
 
 ---
 
-By understanding these common concurrency issues and adopting proper strategies for managing them, you can build more robust, scalable, and thread-safe applications in Java.
-
----
-
 ### 14. Java 9+ Features
-- ### 14.1. Reactive Programming with Flow API
-  New in Java 9, the Flow API supports building reactive applications.
-  
-- ### 14.2. CompletableFuture Enhancements
-  Java 9 introduced several improvements to `CompletableFuture`.
-
-- ### 14.3. Process API Updates
-  New methods in the Process API to manage operating system processes more efficiently.
-
-### **14. Java 9+ Features**
 
 Java 9 and later versions introduced several important features, particularly for managing concurrency and improving performance. These include enhancements in **reactive programming**, **future management**, and the **Process API**. Below are some key features added in Java 9+.
 
 ---
 
-#### **14.1. Reactive Programming with Flow API (Java 9)**
+#### 14.1. Reactive Programming with Flow API (Java 9)
 
 Java 9 introduced the **Flow API**, a new reactive programming library that facilitates the development of asynchronous, non-blocking, and event-driven applications. The API is designed to handle streams of data that can be processed asynchronously, making it ideal for scalable systems.
 
@@ -3617,7 +3577,7 @@ This example shows how a `Publisher` can send data to a `Subscriber`. The subscr
 
 ---
 
-#### **14.2. CompletableFuture Enhancements (Java 9)**
+#### 14.2. CompletableFuture Enhancements (Java 9)
 
 Java 9 introduced several enhancements to the `CompletableFuture` class to make working with asynchronous tasks more powerful and flexible. These improvements simplify the management of complex asynchronous workflows.
 
@@ -3660,7 +3620,7 @@ In this example, the `orTimeout()` method ensures that if the task takes longer 
 
 ---
 
-#### **14.3. Process API Updates (Java 9)**
+#### 14.3. Process API Updates (Java 9)
 
 The **Process API** in Java 9 introduced several new methods to better manage operating system processes. These updates make it easier to interact with system processes, manage their state, and retrieve additional information about them.
 
@@ -3714,22 +3674,10 @@ These features significantly improve the ease of handling concurrent tasks, buil
 ---
 
 ### 15. Java 11+ Features
-- ### 15.1. Local-Variable Type Inference (`var` keyword)
-  A simplification in how variables are declared in Java.
-
-- ### 15.2. Enhancements in `Optional` class
-  New utility methods to handle absent values.
-
-- ### 15.3. New Methods in the String class relevant to concurrency
-  Improvements that enhance thread-safe string handling.
-
-### **15. Java 11+ Features**
 
 Java 11 and later versions introduced several enhancements that streamline development, improve performance, and provide better handling of concurrency-related tasks. Key features in Java 11 and beyond include **local-variable type inference**, **enhanced `Optional` class**, and **new methods in the `String` class** for thread-safe operations.
 
----
-
-#### **15.1. Local-Variable Type Inference (`var` keyword)**
+#### 15.1. Local-Variable Type Inference (`var` keyword)
 
 Introduced in Java 10, the `var` keyword continues to be supported in Java 11 and later versions. It simplifies the declaration of local variables by allowing the compiler to infer the type of a variable based on its initializer expression. This reduces boilerplate code and improves readability.
 
@@ -3758,7 +3706,7 @@ In this example, `var` helps avoid explicitly specifying the types (`String` and
 
 ---
 
-#### **15.2. Enhancements in `Optional` Class**
+#### 15.2. Enhancements in `Optional` Class
 
 Java 11 introduced several new utility methods to the `Optional` class, improving its ability to handle optional values and reduce `NullPointerExceptions` more effectively. The main enhancements make `Optional` a more powerful tool for dealing with optional values in concurrent environments, particularly for avoiding null-related bugs.
 
@@ -3798,7 +3746,7 @@ These enhancements help reduce boilerplate code, and they provide a safer and mo
 
 ---
 
-#### **15.3. New Methods in the String Class Relevant to Concurrency**
+#### 15.3. New Methods in the String Class Relevant to Concurrency
 
 Java 11 introduced several enhancements in the `String` class that are particularly useful for multi-threaded applications, especially where string handling can be a source of performance issues. These improvements allow better memory management and thread-safety when working with strings.
 
