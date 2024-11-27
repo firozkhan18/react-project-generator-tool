@@ -1321,10 +1321,6 @@ You mentioned that you'd discuss **how to create threads in Java** next. Here’
 
 ---
 
-Certainly! Here's the complete explanation, clubbing everything into a single markdown:
-
----
-
 # Understanding Multi-threading, Context Switching, and Java Threading
 
 ### 1. **Multi-threading Overview**
