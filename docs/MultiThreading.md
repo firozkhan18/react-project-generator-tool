@@ -280,23 +280,23 @@
 ---
 
 ### 14. Java 9+ Features
-- ### Reactive Programming with Flow API
+- ### 14.1. Reactive Programming with Flow API
   New in Java 9, the Flow API supports building reactive applications.
   
-- ### CompletableFuture Enhancements
+- ### 14.2. CompletableFuture Enhancements
   Java 9 introduced several improvements to `CompletableFuture`.
 
-- ### Process API Updates
+- ### 14.3. Process API Updates
   New methods in the Process API to manage operating system processes more efficiently.
 
 ---
 
 ### 15. Java 11+ Features
-- ### Local-Variable Type Inference (`var` keyword)
+- ### 15.1. Local-Variable Type Inference (`var` keyword)
   A simplification in how variables are declared in Java.
 
-- ### Enhancements in `Optional` class
+- ### 15.2. Enhancements in `Optional` class
   New utility methods to handle absent values.
 
-- ### New Methods in the String class relevant to concurrency
+- ### 15.3. New Methods in the String class relevant to concurrency
   Improvements that enhance thread-safe string handling.
