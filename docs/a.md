@@ -1,12 +1,12 @@
 
 ### **Table of Contents**
 
-#### **1. [Introduction to Multithreading](#introduction-to-multithreading)**
-- [1.1. Definition of Multithreading](#definition-of-multithreading)
-- [1.2. Benefits of Multithreading](#benefits-of-multithreading)
-- [1.3. Challenges of Multithreading](#challenges-of-multithreading)
-- [1.4. Processes vs Threads](#processes-vs-threads)
-- [1.5. Multithreading in Java](#multithreading-in-java)
+#### **1. [Introduction to Multithreading](#1-introduction-to-multithreading)**
+- [1.1. Definition of Multithreading](#11-definition-of-multithreading)
+- [1.2. Benefits of Multithreading](#12-benefits-of-multithreading)
+- [1.3. Challenges of Multithreading](#13-challenges-of-multithreading)
+- [1.4. Processes vs Threads](#14-processes-vs-threads)
+- [1.5. Multithreading in Java](#15-multithreading-in-java)
 
 #### **2. [Java Memory Model of Process and Thread](#java-memory-model-of-process-and-thread)**
 
