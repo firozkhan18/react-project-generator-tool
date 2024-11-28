@@ -906,6 +906,305 @@ abstract class Animal {
   
 ---
 
+### Stream API Enhancements in Java 8
+
+Java 8 introduced the **Stream API**, which brought a powerful and expressive way to handle sequences of elements in a functional style. The Stream API allows for processing collections (such as lists, sets, or other data structures) in a declarative and parallel manner. This makes code more concise, readable, and potentially more efficient by leveraging parallelism.
+
+Here’s a breakdown of the key **Stream API enhancements** introduced in Java 8:
+
+### 1. **Stream Interface Overview**
+The `Stream` interface is the core of the Stream API and provides several key methods that allow for functional-style operations on data. A stream represents a sequence of elements that can be processed in a variety of ways, such as filtering, mapping, or reducing.
+
+The **Stream interface** defines several methods, including:
+- **`filter()`**: Filters elements based on a condition.
+- **`map()`**: Transforms elements into other types.
+- **`reduce()`**: Combines elements into a single result.
+- **`forEach()`**: Performs an action for each element.
+- **`collect()`**: Collects the results into a different type (e.g., a List or a Set).
+- **`sorted()`**: Sorts elements.
+- **`distinct()`**: Removes duplicates.
+- **`limit()`**: Limits the number of elements.
+
+### 2. **Key Methods in Stream API**
+
+#### a) **`filter()`**
+The `filter()` method is used to **exclude** elements that don't match a given predicate.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+List<Integer> evenNumbers = numbers.stream()
+                                    .filter(n -> n % 2 == 0)  // Filter even numbers
+                                    .collect(Collectors.toList());
+
+System.out.println(evenNumbers);  // [2, 4, 6]
+```
+
+#### b) **`map()`**
+The `map()` method transforms each element in the stream based on the provided function.
+
+```java
+List<String> words = Arrays.asList("Java", "Stream", "API");
+List<Integer> wordLengths = words.stream()
+                                 .map(String::length)  // Map each word to its length
+                                 .collect(Collectors.toList());
+
+System.out.println(wordLengths);  // [4, 6, 3]
+```
+
+#### c) **`reduce()`**
+The `reduce()` method is used to **aggregate** elements into a single result by repeatedly applying a binary operator (e.g., sum, max, concatenation).
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+int sum = numbers.stream()
+                 .reduce(0, Integer::sum);  // Sum the numbers
+
+System.out.println(sum);  // 15
+```
+
+#### d) **`forEach()`**
+The `forEach()` method is a terminal operation that performs an action on each element.
+
+```java
+List<String> names = Arrays.asList("John", "Jane", "Doe");
+names.stream()
+     .forEach(System.out::println);
+```
+
+#### e) **`collect()`**
+The `collect()` method is a **terminal operation** that transforms the elements of the stream into a different form, usually a collection.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+List<Integer> squaredNumbers = numbers.stream()
+                                      .map(n -> n * n)
+                                      .collect(Collectors.toList());
+
+System.out.println(squaredNumbers);  // [1, 4, 9, 16, 25]
+```
+
+### 3. **Intermediate vs Terminal Operations**
+- **Intermediate operations** return a new stream and are **lazy**. They are only executed when a terminal operation is invoked. Examples: `filter()`, `map()`, `distinct()`.
+- **Terminal operations** produce a result (e.g., collection, single value) and are **eager**. They trigger the processing of the stream. Examples: `collect()`, `reduce()`, `forEach()`.
+
+### 4. **Lazy Evaluation**
+Stream operations are **lazy** by default, meaning that intermediate operations (like `filter()`, `map()`) are not executed until a terminal operation is invoked. This enables **efficient processing** and **short-circuiting**.
+
+For example, calling `filter()` or `map()` on a stream won’t process any elements until a terminal operation like `collect()` or `forEach()` is executed.
+
+### 5. **Parallel Streams**
+Java 8 allows you to process streams in parallel, utilizing multi-core processors for better performance.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+int sum = numbers.parallelStream()
+                 .filter(n -> n % 2 == 0)
+                 .mapToInt(Integer::intValue)
+                 .sum();
+
+System.out.println(sum);  // Output: 12 (sum of even numbers: 2 + 4 + 6)
+```
+
+### 6. **Common Operations on Streams**
+
+#### a) **`sorted()`**
+Sorts the elements of the stream.
+
+```java
+List<Integer> numbers = Arrays.asList(5, 3, 8, 1);
+List<Integer> sortedNumbers = numbers.stream()
+                                     .sorted()
+                                     .collect(Collectors.toList());
+
+System.out.println(sortedNumbers);  // [1, 3, 5, 8]
+```
+
+#### b) **`distinct()`**
+Removes duplicate elements from the stream.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+List<Integer> distinctNumbers = numbers.stream()
+                                       .distinct()
+                                       .collect(Collectors.toList());
+
+System.out.println(distinctNumbers);  // [1, 2, 3, 4, 5]
+```
+
+#### c) **`limit()`**
+Limits the number of elements in the stream.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+List<Integer> limitedNumbers = numbers.stream()
+                                      .limit(3)
+                                      .collect(Collectors.toList());
+
+System.out.println(limitedNumbers);  // [1, 2, 3]
+```
+
+#### d) **`skip()`**
+Skips the first `n` elements of the stream.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+List<Integer> skippedNumbers = numbers.stream()
+                                      .skip(2)
+                                      .collect(Collectors.toList());
+
+System.out.println(skippedNumbers);  // [3, 4, 5]
+```
+
+### 7. **Collectors**
+The **`Collectors`** class provides various methods that help in collecting the results of stream operations, such as grouping, joining, and reducing.
+
+#### a) **`Collectors.toList()`**
+Collects the elements of the stream into a `List`.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+List<Integer> list = numbers.stream().collect(Collectors.toList());
+```
+
+#### b) **`Collectors.toSet()`**
+Collects the elements into a `Set`, eliminating duplicates.
+
+```java
+Set<Integer> uniqueNumbers = numbers.stream().collect(Collectors.toSet());
+```
+
+#### c) **`Collectors.joining()`**
+Concatenates elements into a single string.
+
+```java
+List<String> words = Arrays.asList("Java", "Stream", "API");
+String sentence = words.stream().collect(Collectors.joining(" "));
+System.out.println(sentence);  // "Java Stream API"
+```
+
+#### d) **`Collectors.groupingBy()`**
+Groups elements by a classifier function.
+
+```java
+List<String> words = Arrays.asList("apple", "banana", "cherry", "avocado");
+Map<Integer, List<String>> groupedByLength = words.stream()
+                                                  .collect(Collectors.groupingBy(String::length));
+
+System.out.println(groupedByLength);  // {5=[apple, avocado], 6=[banana], 7=[cherry]}
+```
+
+#### e) **`Collectors.partitioningBy()`**
+Partitions elements into two groups based on a predicate.
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+Map<Boolean, List<Integer>> partitioned = numbers.stream()
+                                                .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+
+System.out.println(partitioned);  // {false=[1, 3, 5], true=[2, 4]}
+```
+
+### 8. **Method References**
+Java 8 introduced **method references**, which provide a shorthand for lambda expressions that call a method.
+
+```java
+List<String> words = Arrays.asList("java", "stream", "api");
+words.stream()
+     .map(String::toUpperCase)  // Using method reference instead of lambda
+     .forEach(System.out::println);
+```
+
+### 9. **Optional Class**
+Java 8 also introduced the **`Optional`** class to handle nullable values in a functional way. While not directly part of the Stream API, it is commonly used with streams to prevent `NullPointerException`.
+
+```java
+Optional<String> result = Optional.ofNullable("Hello");
+result.ifPresent(System.out::println);  // Prints "Hello"
+```
+
+### 10. **Stream Pipelines**
+A **Stream pipeline** is a sequence of operations (like `map()`, `filter()`, `reduce()`) that process data.
+
+ The Stream API allows you to build complex pipelines in a readable and declarative way.
+
+```java
+List<String> words = Arrays.asList("Java", "Stream", "API");
+int totalLength = words.stream()
+                       .filter(w -> w.length() > 3)
+                       .mapToInt(String::length)
+                       .sum();
+
+System.out.println(totalLength);  // 14 (length of "Stream" + "Java" + "API")
+```
+
+### Conclusion:
+Java 8's **Stream API** revolutionized how developers work with collections by enabling functional programming patterns like **map**, **filter**, **reduce**, and **collect**. It allows for concise, parallelized, and more readable code while making full use of modern multi-core processors.
+
+- **Streams** allow for declarative data processing with operations like `filter()`, `map()`, `reduce()`, and `collect()`.
+- **Collectors** enable complex aggregation, grouping, and joining operations.
+- **Parallel Streams** allow for multi-core optimizations without changing the core logic.
+- **Lazy Evaluation** ensures performance optimizations through short-circuiting.
+
+Here's a **diagram** that visually represents a simple **Stream API pipeline** in Java, showing the flow of operations like `filter()`, `map()`, and `collect()`. This will give you a high-level view of how elements flow through a stream.
+
+### Mermaid Diagram for a Stream API Pipeline:
+
+```mermaid
+graph TD
+    A[Start] --> B[Source Collection - List/Set]
+    B --> C[stream]
+
+    C --> D[filter - Filter Elements]
+    D --> E[map - Transform Elements]
+    E --> F[collect - Collect to List]
+    F --> G[End]
+
+    B -->|Initial Data| C
+    D -->|Filtered Data| E
+    E -->|Mapped Data| F
+```
+
+### Explanation of the Diagram:
+- **Start**: Represents the starting point of the Stream API operation.
+- **Source Collection (List/Set)**: This is the data source, like a `List` or `Set` from which we create a stream.
+- **stream()**: This method is called on the source collection to create a stream.
+- **filter()**: Filters the stream based on some condition (e.g., even numbers, non-null values).
+- **map()**: Transforms the elements of the stream (e.g., doubling numbers, converting strings to uppercase).
+- **collect()**: Collects the processed stream into a new collection, such as a `List` or `Set`.
+
+### Example Code that Matches the Diagram:
+
+```java
+import java.util.*;
+import java.util.stream.*;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        List<Integer> result = numbers.stream()
+                                      .filter(n -> n % 2 == 0)  // Filter even numbers
+                                      .map(n -> n * n)          // Square each number
+                                      .collect(Collectors.toList()); // Collect into a List
+
+        System.out.println(result);  // Output: [4, 16, 36, 64, 100]
+    }
+}
+```
+
+This code filters even numbers, squares them, and collects the results into a list. The diagram above represents the sequence of operations in the Stream API pipeline.
+
+### Mermaid Diagram Workflow:
+1. **Start**: Execution starts.
+2. **Source Collection**: The stream is created from a source collection (`List`, `Set`, etc.).
+3. **filter()**: Filters elements based on a condition (e.g., only even numbers).
+4. **map()**: Transforms elements, such as squaring each even number.
+5. **collect()**: The result is collected into a new collection (a list in this case).
+6. **End**: The result is available.
+
+This simple example captures the essence of how a stream pipeline processes elements.
+
+---
 In **Java 8**, the **Concurrency API** saw several important updates and additions that significantly enhanced the way multithreading and parallel processing are handled. These improvements aimed to make concurrency easier to manage, more efficient, and more scalable. Some of the major updates introduced in Java 8 and beyond include new classes, methods, and concepts for better thread management, parallelism, and synchronization.
 
 Here’s an overview of the key new features and enhancements in the **Concurrency API** introduced in **Java 8 and later**, along with their uses and purposes:
