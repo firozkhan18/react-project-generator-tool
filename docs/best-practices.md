@@ -133,12 +133,12 @@ Here's the **flow diagram** based on the flow you described:
 
 ```mermaid
 graph TD
-    A[JVM (Thread Scheduler)]
+    A[JVM - Thread Scheduler]
     B[Virtual Thread 1]
     C[Virtual Thread 2]
     D[Virtual Thread 3]
     E[Resource Pool]
-    F[Garbage Collector (GC)]
+    F[Garbage Collector - GC]
     
     A --> B
     A --> C
