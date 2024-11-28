@@ -697,7 +697,7 @@ public class MetaspaceDemo {
 
 ```mermaid
 graph LR
-    A[PermGen (Fixed Size)] --> B[Heap Memory]
+    A[PermGen - Fixed Size] --> B[Heap Memory]
     A --> C[Class Metadata]
     A --> D[Static Variables]
     A --> E[Runtime Constant Pool]
