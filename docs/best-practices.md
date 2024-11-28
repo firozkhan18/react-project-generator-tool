@@ -209,11 +209,10 @@ graph TD
    - **Platform Threads**: Best suited for applications where the number of concurrent threads is limited, and the tasks are CPU-bound or require native OS interaction.
    - **Virtual Threads**: Ideal for IO-bound tasks or highly concurrent applications, as they allow you to manage thousands or even millions of concurrent tasks without overwhelming the OS.
 
----
-
 This comparison illustrates how virtual threads optimize the management of threads in Java by offloading scheduling to the JVM, allowing for more efficient and scalable concurrency.
 
 ---
+
 To achieve improvements in throughput, latency, scaling, and performance, it's important to focus on different strategies tailored to each area. Here's how you can address each aspect:
 
 ### 1. **Throughput (Work Done in a Given Time)**
@@ -285,9 +284,9 @@ To achieve improvements in throughput, latency, scaling, and performance, it's i
 
 ---
 
-To provide a complete explanation of **garbage collection memory management**, how it works, and how it helps prevent **memory leaks**, I will walk through the process, including the **algorithms** used, and represent the flow using a **Mermaid diagram**.
-
 ### **Memory Management and Garbage Collection Overview**
+
+To provide a complete explanation of **garbage collection memory management**, how it works, and how it helps prevent **memory leaks**, Let's walk through the process, including the **algorithms** used, and represent the flow using a **flow diagram**.
 
 1. **Heap Memory Allocation**:
    - When objects are created in a program, they are stored in the **heap** memory. 
