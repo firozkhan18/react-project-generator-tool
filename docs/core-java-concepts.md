@@ -359,6 +359,254 @@ In summary, interfaces are essential for writing **modular**, **extensible**, an
 
 ---
 
+In **Java 8** and **Java 9**, significant changes were made to **interfaces**, particularly with the introduction of **default methods** and **static methods**. These changes blur the lines between **abstract classes** and **interfaces**, but there are still key differences between the two. Below is a detailed explanation of the distinction between **abstract classes** and **interfaces** in Java 8, Java 9, and beyond:
+
+### **Key Differences between Abstract Classes and Interfaces**
+
+#### **1. Purpose and Use**
+
+- **Abstract Class**:
+  - **Purpose**: An abstract class is meant to represent a base class that shares common behavior for all subclasses, but it may also leave some methods unimplemented for subclasses to define.
+  - **Use**: You use an abstract class when you want to provide a **partial implementation** (some methods implemented) and enforce subclasses to implement the remaining methods.
+
+- **Interface**:
+  - **Purpose**: An interface is used to define a contract for behavior, which can be implemented by any class. Interfaces focus on providing abstract behaviors (methods) that any implementing class must define.
+  - **Use**: You use an interface to define a **common set of methods** that can be implemented by any class, regardless of the class hierarchy.
+
+#### **2. Method Implementation**
+
+- **Abstract Class**:
+  - Can have both **abstract methods** (methods without a body) and **concrete methods** (methods with a body).
+  - Abstract classes allow the implementation of some methods while forcing subclasses to implement others.
+  
+  ```java
+  abstract class Animal {
+      abstract void sound();  // Abstract method, no body
+
+      void breathe() {  // Concrete method
+          System.out.println("Breathing...");
+      }
+  }
+  ```
+
+- **Interface** (Java 8 and beyond):
+  - Before Java 8, interfaces could only contain abstract methods.
+  - In **Java 8**, **default methods** and **static methods** were introduced.
+    - **Default methods**: Methods in interfaces with a body, allowing interface developers to add behavior without breaking implementing classes.
+    - **Static methods**: Like in regular classes, static methods can also be defined in interfaces.
+  
+  ```java
+  interface Animal {
+      void sound();  // Abstract method, no body
+
+      default void breathe() {  // Default method, with a body
+          System.out.println("Breathing...");
+      }
+  }
+  ```
+
+#### **3. Multiple Inheritance**
+
+- **Abstract Class**:
+  - In Java, a class can **extend only one abstract class**. Java does not support multiple inheritance for classes, meaning a class can inherit from only one abstract class.
+  
+  ```java
+  abstract class Animal {
+      abstract void sound();
+  }
+
+  class Dog extends Animal {
+      void sound() {
+          System.out.println("Bark");
+      }
+  }
+  ```
+
+- **Interface**:
+  - **Java allows multiple inheritance of interfaces**. A class can implement multiple interfaces, which is a powerful feature to add functionality from different sources.
+  
+  ```java
+  interface Animal {
+      void sound();
+  }
+
+  interface Swimmer {
+      void swim();
+  }
+
+  class Dolphin implements Animal, Swimmer {
+      public void sound() {
+          System.out.println("Click");
+      }
+      
+      public void swim() {
+          System.out.println("Swimming...");
+      }
+  }
+  ```
+
+#### **4. Fields and Variables**
+
+- **Abstract Class**:
+  - Can have **instance variables** (fields) that can be **final** or **non-final**.
+  - These fields can have **any access modifier** (e.g., `private`, `protected`, `public`).
+
+  ```java
+  abstract class Animal {
+      protected String name;  // Instance variable
+      
+      abstract void sound();
+  }
+  ```
+
+- **Interface**:
+  - All fields in an interface are **implicitly `public`, `static`, and `final`**.
+  - You cannot have instance variables in an interface (i.e., no non-static fields).
+
+  ```java
+  interface Animal {
+      String species = "Mammal";  // Implicitly public, static, final
+      void sound();
+  }
+  ```
+
+#### **5. Constructor**
+
+- **Abstract Class**:
+  - Can have a **constructor** that can be invoked by its subclasses.
+  
+  ```java
+  abstract class Animal {
+      Animal() {
+          System.out.println("Animal created");
+      }
+      
+      abstract void sound();
+  }
+  ```
+
+- **Interface**:
+  - **Interfaces cannot have constructors** because they cannot be instantiated directly.
+
+#### **6. Accessibility of Methods**
+
+- **Abstract Class**:
+  - Methods in an abstract class can have any access modifier, such as **`public`**, **`protected`**, or **`private`**.
+  
+  ```java
+  abstract class Animal {
+      public abstract void sound();  // Public method
+      private void breathe() {       // Private method
+          System.out.println("Breathing...");
+      }
+  }
+  ```
+
+- **Interface**:
+  - In an interface, methods are **implicitly public**. However, with Java 9 and beyond, **private methods** are allowed in interfaces (as helper methods).
+
+  ```java
+  interface Animal {
+      void sound();  // Implicitly public
+
+      private void breathe() {   // Java 9+ allows private methods in interfaces
+          System.out.println("Breathing...");
+      }
+  }
+  ```
+
+---
+
+### **Java 8 and 9: Changes in Interfaces**
+
+#### **Java 8: Introduction of Default Methods**
+
+Before Java 8, interfaces were strictly **abstract**, meaning they could only contain abstract methods. Starting from **Java 8**, interfaces can contain:
+- **Default Methods**: Methods with a body, allowing new functionality to be added to interfaces without breaking existing implementations.
+- **Static Methods**: Static methods that can be called without an instance of the implementing class.
+
+#### **Example of Default and Static Methods in an Interface**:
+
+```java
+interface Animal {
+    // Abstract method
+    void sound();
+    
+    // Default method
+    default void breathe() {
+        System.out.println("Breathing...");
+    }
+    
+    // Static method
+    static void info() {
+        System.out.println("Animal info");
+    }
+}
+
+class Dog implements Animal {
+    @Override
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.sound();   // Calls implemented method
+        dog.breathe(); // Calls default method
+        
+        Animal.info(); // Calls static method in interface
+    }
+}
+```
+
+#### **Java 9: Private Methods in Interfaces**
+
+Java 9 introduced **private methods** in interfaces, allowing you to encapsulate helper methods within the interface.
+
+```java
+interface Animal {
+    void sound();
+    
+    default void breathe() {
+        System.out.println("Breathing...");
+        internalHelperMethod();  // Private method can be used
+    }
+
+    private void internalHelperMethod() {
+        System.out.println("Helper method");
+    }
+}
+```
+
+---
+
+### **Comparison of Abstract Classes and Interfaces in Java 8 and 9**
+
+| **Feature**               | **Abstract Class**                                | **Interface (Java 8+)**                              |
+|---------------------------|--------------------------------------------------|-----------------------------------------------------|
+| **Methods**               | Can have both abstract and concrete methods.      | Can have abstract, default, and static methods.     |
+| **Fields**                | Can have instance variables (non-static).        | Only static and final fields.                       |
+| **Constructor**           | Can have constructors.                           | Cannot have constructors.                           |
+| **Inheritance**           | A class can inherit from one abstract class.     | A class can implement multiple interfaces.          |
+| **Access Modifiers**      | Methods can have any access modifier.            | Methods are implicitly `public`. Private methods allowed in Java 9. |
+| **Multiple Inheritance**  | Not allowed (single inheritance).                | Multiple inheritance is allowed.                    |
+| **Static Methods**        | Can have static methods.                         | Can have static methods (Java 8+).                  |
+| **Default Methods**       | Not allowed.                                     | Default methods allowed (Java 8+).                  |
+
+---
+
+### **Conclusion**
+
+- **Abstract Classes**: Best used when you need a **base class** with some shared behavior and the ability to leave some methods for subclasses to implement. You can have **state** (instance variables) and **constructors**.
+  
+- **Interfaces (Java 8 and 9)**: Interfaces now provide **default methods**, which allow them to have behavior without breaking existing code. They are ideal for **defining contracts** that multiple classes can implement, especially when you need **multiple inheritance**.
+
+The **distinction** has become more blurred, especially with **default methods** and **static methods** in interfaces, but the decision between using an abstract class or an interface should still depend on whether you need to share common functionality (abstract class) or define a contract (interface).
+
+---
+
 ## Final Keyword in Java
 
 In Java, the `final` keyword is used to define constants, prevent method overriding, and prevent inheritance. It can be applied to variables, methods, and classes, and it plays a crucial role in various programming scenarios.
