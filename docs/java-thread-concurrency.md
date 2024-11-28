@@ -2305,6 +2305,8 @@ In this example, the task will execute every 2 seconds with a fixed delay betwee
 
 #### 7.5. Synchronization Utilities
 
+#### 7.6. CountDownLatch, CyclicBarrier, Phaser, and Exchanger
+
 - **`CountDownLatch`**: A synchronization aid that allows one or more threads to wait until a set of operations in other threads are completed. It is initialized with a count, and threads are blocked until the count reaches zero.
 
 **Example Using `CountDownLatch`:**
