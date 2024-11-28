@@ -583,3 +583,373 @@ graph LR
 - **Memory Leak Prevention**: Techniques include **dereferencing**, **using weak references**, **avoiding circular references**, and **proper resource management** to prevent memory leaks.
 
 These diagrams and examples illustrate how Java manages threads and memory, and how proper memory management can prevent common issues like memory leaks.
+
+---
+
+### **Permanent Generation vs Metaspace in Java**
+
+In Java, **Permanent Generation** and **Metaspace** are two concepts related to the **JVM memory management** specifically dealing with **class metadata** storage. These areas hold data related to the JVM's internal structure and the loaded classes, such as class definitions, method definitions, and other metadata. However, they differ in how they are managed in memory and how they impact performance and memory usage.
+
+### **1. Permanent Generation (PermGen)**
+
+#### **Definition**:
+- **Permanent Generation** (often referred to as **PermGen**) was a part of the heap memory in earlier versions of Java (before Java 8).
+- It was specifically reserved for **class metadata**, which included:
+  - **Class definitions**
+  - **Method definitions**
+  - **Static variables**
+  - **JVM internals** (e.g., garbage collection metadata)
+  - **Runtime constant pool**
+  
+#### **Characteristics**:
+- **Fixed Size**: The size of the **PermGen** was fixed at the JVM startup, and you could control it using the `-XX:PermSize` and `-XX:MaxPermSize` flags.
+- **Memory Exhaustion**: PermGen could lead to **OutOfMemoryError** if the memory for class metadata ran out, especially in applications that dynamically loaded/unloaded classes (such as in servlet containers or application servers).
+- **GC Management**: The **Garbage Collector** was responsible for cleaning up class metadata in PermGen, but it wasn’t as efficient as the heap garbage collection process.
+
+#### **Issues**:
+- The main problem with **PermGen** was that its memory was **fixed** and difficult to resize dynamically, making it prone to **OutOfMemoryErrors** when large applications with many dynamic class loads (like using reflection or in web applications) ran out of space.
+
+#### **Example**:
+- In earlier versions of Java, you would use flags like:
+  ```bash
+  -XX:PermSize=64m -XX:MaxPermSize=128m
+  ```
+
+#### **Example Use Case**:
+- **Web Servers** like Apache Tomcat or application servers like JBoss, which dynamically load and unload classes, faced issues with PermGen space running out.
+
+---
+
+### **2. Metaspace (Introduced in Java 8)**
+
+#### **Definition**:
+- **Metaspace** was introduced in **Java 8** as a replacement for **PermGen**.
+- Instead of being a part of the heap, **Metaspace** is located outside the heap and holds the same class metadata as **PermGen**, but with a **significantly improved design**.
+
+#### **Characteristics**:
+- **Dynamic Sizing**: Unlike **PermGen**, the size of **Metaspace** is **dynamic**. It grows automatically as needed, only limited by the available system memory.
+  - If Metaspace memory is running low, it can expand as long as the system has free memory.
+  - You can control the initial size and maximum size of Metaspace using JVM flags like `-XX:MetaspaceSize` and `-XX:MaxMetaspaceSize`.
+  
+- **No Fixed Size Limit**: Since Metaspace resides outside the heap, it does not suffer from fixed size limitations as **PermGen** did. This significantly reduces the chances of **OutOfMemoryError** related to class metadata.
+  
+- **Memory Management**: The garbage collection of Metaspace is managed by the JVM itself, and it does not require special management like PermGen.
+  
+#### **Memory Usage**:
+- **Metaspace** uses **native memory** (not JVM heap space). This allows Java applications to avoid the memory bottlenecks associated with heap memory allocation.
+  
+#### **Example**:
+- In **Java 8** and beyond, you can configure Metaspace size using the following flags:
+  ```bash
+  -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=512m
+  ```
+- By default, **Metaspace** will automatically grow until the system's available memory is exhausted.
+
+#### **Example Use Case**:
+- **Dynamic Class Loading**: Web servers and frameworks that dynamically load and unload classes (such as **Tomcat** or **Spring Framework**) benefit from the dynamic sizing of **Metaspace** to avoid the risk of memory overflow.
+  
+---
+
+### **Comparison: Permanent Generation (PermGen) vs Metaspace**
+
+| Feature                     | **Permanent Generation (PermGen)**                               | **Metaspace**                                                   |
+|-----------------------------|------------------------------------------------------------------|---------------------------------------------------------------|
+| **Location in Memory**      | Inside the JVM heap.                                            | Outside the JVM heap, uses native memory.                      |
+| **Memory Management**       | Fixed size; can cause **OutOfMemoryError** if full.             | Dynamic size; grows as needed, constrained by system memory.    |
+| **GC Behavior**             | Garbage collection only for class metadata. Can lead to issues. | Managed by the JVM, collects and resizes as needed.            |
+| **Size Configuration**      | Configured using `-XX:PermSize` and `-XX:MaxPermSize`.           | Configured using `-XX:MetaspaceSize` and `-XX:MaxMetaspaceSize`. |
+| **Memory Exhaustion**       | Can cause **OutOfMemoryError** due to fixed memory size.        | Less likely to cause **OutOfMemoryError** due to dynamic sizing. |
+| **JVM Versions Supported**  | Java 7 and earlier.                                             | Java 8 and beyond.                                              |
+| **Use Cases**               | Dynamic class loading/unloading (web servers, frameworks).      | Dynamic class loading/unloading with better memory management. |
+
+---
+
+### **Metaspace Example Code**:
+
+```java
+public class MetaspaceDemo {
+    public static void main(String[] args) {
+        System.out.println("Metaspace Example");
+
+        // Example of dynamically loading classes at runtime
+        for (int i = 0; i < 1000; i++) {
+            String className = "Class" + i;
+            try {
+                // Dynamically load classes (simulation)
+                Class<?> clazz = Class.forName(className);
+                System.out.println("Class Loaded: " + clazz.getName());
+            } catch (ClassNotFoundException e) {
+                // Handle exception if class doesn't exist
+                System.out.println("Class not found: " + className);
+            }
+        }
+    }
+}
+```
+
+**Explanation**:
+- This code simulates dynamically loading classes. In **Java 8** and beyond, these classes are loaded into the **Metaspace**.
+- Since Metaspace is dynamic, it will grow as needed, avoiding the problems seen with **PermGen**.
+
+---
+
+### **Mermaid Diagram: PermGen vs Metaspace**
+
+```mermaid
+graph LR
+    A[PermGen (Fixed Size)] --> B[Heap Memory]
+    A --> C[Class Metadata]
+    A --> D[Static Variables]
+    A --> E[Runtime Constant Pool]
+    B --> F[OutOfMemoryError due to PermGen overflow]
+    F --> G[GC Attempts to free PermGen]
+
+    subgraph Metaspace
+        M[Dynamic Sizing] --> N[Native Memory]
+        M --> O[Class Metadata]
+        M --> P[Runtime Constant Pool]
+        M --> Q[No OutOfMemoryError]
+    end
+
+    Metaspace --> R[No GC Issues with Dynamic Sizing]
+```
+
+**Explanation**:
+- **PermGen** has a **fixed size** inside the **heap memory** and can cause **OutOfMemoryError** if exceeded.
+- **Metaspace**, introduced in **Java 8**, is dynamically sized, located outside the heap, and uses **native memory**. It eliminates issues like **OutOfMemoryError** related to class metadata.
+
+---
+
+### **Conclusion**
+
+- **Permanent Generation** (PermGen) was replaced by **Metaspace** in Java 8 for improved memory management.
+- **Metaspace** offers dynamic resizing, reducing the chances of **OutOfMemoryError** and provides better handling of memory for class metadata and other JVM internals.
+- In **Java 8 and beyond**, the shift to **Metaspace** offers more flexibility in memory usage, particularly for dynamic applications that load and unload many classes during runtime.
+
+---
+
+### **Java 21 Thread Concept**
+
+In **Java 21**, the thread concept follows the general principles of thread management in Java, but with some updates and optimizations, especially with the introduction of **virtual threads** and enhancements for concurrency. The key components of thread management and how threads are handled in **Java 21** are summarized below.
+
+#### **Thread Types in Java 21**
+
+Java 21 introduces several advancements in thread management, including:
+
+1. **Traditional Threads**:
+   - Managed by the **JVM thread scheduler** and typically mapped to operating system threads.
+   - These are **platform threads** and are ideal for blocking or CPU-intensive tasks.
+
+2. **Virtual Threads**:
+   - Introduced as part of **Project Loom** in Java 19 and 20, **Virtual Threads** are a lightweight, scalable approach to concurrency.
+   - Virtual threads are **managed by the JVM**, not the OS, allowing thousands or even millions of threads to be created with minimal overhead.
+   - Virtual threads are designed for **IO-bound** operations or high-concurrency scenarios, where you need to run many threads but don't want to be limited by OS thread management.
+
+---
+
+#### **Java 21 Thread Lifecycle**
+
+1. **Creating and Starting Threads**:
+   - Threads can be created by extending the `Thread` class or implementing the `Runnable` interface.
+   - In Java 21, you can create virtual threads using the `Thread.ofVirtual().start()` API, which helps to easily manage lightweight threads.
+
+2. **Managing Thread States**:
+   - A thread in Java can exist in various states like **New**, **Runnable**, **Blocked**, **Waiting**, **Timed Waiting**, and **Terminated**.
+   
+3. **Concurrency and Synchronization**:
+   - **ExecutorService** is often used to manage thread pools efficiently, especially for virtual threads.
+   - Java 21 has optimizations for managing large numbers of threads with **ExecutorService** and **VirtualThreadExecutor**.
+
+---
+
+### **Java 21 Example of Virtual Thread**
+
+```java
+public class VirtualThreadExample {
+    public static void main(String[] args) {
+        // Creating a virtual thread
+        Thread virtualThread = Thread.ofVirtual().start(() -> {
+            System.out.println("This is a virtual thread running!");
+        });
+
+        // Wait for the virtual thread to finish
+        try {
+            virtualThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+**Explanation**:
+- `Thread.ofVirtual().start()` creates a virtual thread that runs the given task in a very lightweight manner.
+- Virtual threads are suitable for high-concurrency tasks like handling many client requests.
+
+---
+
+### **Java 21 Thread Management Diagram**
+
+```mermaid
+graph TD
+    A[Thread Creation] --> B[Thread Types]
+    B --> C[Platform Thread (Traditional)]
+    B --> D[Virtual Thread (Lightweight)]
+    C --> E[CPU-bound Tasks]
+    D --> F[IO-bound Tasks]
+    D --> G[High Concurrency]
+    E --> H[Operating System Managed]
+    F --> I[JVM Managed, Low Overhead]
+    G --> J[Executor Service]
+    I --> K[Thread Pool]
+```
+
+---
+
+### **Garbage Collection in Java 21**
+
+Garbage collection (GC) is a key part of memory management in Java. **Java 21** continues to use a combination of GC algorithms for managing memory efficiently. The primary algorithms are:
+
+1. **G1 Garbage Collector**:
+   - **G1 GC** is the default GC in Java and is designed for applications that prioritize **low latency**.
+   - It divides the heap into **regions** and collects **young** and **old generations** concurrently.
+
+2. **Z Garbage Collector (ZGC)**:
+   - **ZGC** is a **low-latency** garbage collector designed for applications that require very low pause times and can handle large heaps.
+
+3. **Shenandoah Garbage Collector**:
+   - Similar to ZGC, it is designed to offer low pause times, making it suitable for applications that require high availability.
+
+4. **Serial Garbage Collector**:
+   - A simple, single-threaded garbage collector, typically used for small applications or environments with limited resources.
+
+#### **Garbage Collection Process**:
+
+1. **Marking Phase**:
+   - **GC** marks all reachable objects in the heap.
+   
+2. **Sweeping Phase**:
+   - Unreachable objects are cleared from the heap, freeing up memory.
+
+3. **Compacting Phase**:
+   - Objects in memory are compacted to reduce fragmentation and ensure efficient memory usage.
+
+---
+
+### **Java 21 Memory Management and Garbage Collection Example**
+
+```java
+public class GCExample {
+    public static void main(String[] args) {
+        // Creating objects to simulate memory allocation
+        for (int i = 0; i < 1000; i++) {
+            MyClass obj = new MyClass(i);
+        }
+
+        // Suggesting garbage collection (not guaranteed)
+        System.gc();
+
+        System.out.println("Garbage collection triggered!");
+    }
+}
+
+class MyClass {
+    int value;
+
+    public MyClass(int value) {
+        this.value = value;
+    }
+
+    @Override
+    protected void finalize() {
+        // Called during garbage collection
+        System.out.println("Finalizing object with value: " + value);
+    }
+}
+```
+
+**Explanation**:
+- The program creates multiple instances of `MyClass`, triggering the **garbage collector**.
+- The `System.gc()` call suggests the JVM perform garbage collection, though it is not guaranteed.
+- The `finalize()` method in `MyClass` is invoked when the object is collected.
+
+---
+
+### **Memory Leak Prevention Techniques**
+
+Memory leaks in Java can occur when objects are retained in memory unnecessarily. Java has a **garbage collector**, but developers still need to take steps to avoid memory leaks. Some common techniques include:
+
+1. **Dereferencing Objects**:
+   - Set objects to `null` after use to make them eligible for garbage collection.
+   
+2. **Weak References**:
+   - Use **`WeakReference`** for objects that can be collected when there are no strong references pointing to them.
+
+3. **Closing Resources Properly**:
+   - Always close **resources** (like file streams, database connections) using `try-with-resources` or in a `finally` block to prevent resource leaks.
+
+4. **Avoiding Circular References**:
+   - Avoid situations where objects refer to each other, as it can prevent the garbage collector from cleaning them up.
+
+---
+
+### **Memory Leak Prevention Example in Java**
+
+```java
+import java.lang.ref.WeakReference;
+
+public class MemoryLeakExample {
+    public static void main(String[] args) {
+        // Creating a strong reference and a weak reference
+        MyClass strongRef = new MyClass();
+        WeakReference<MyClass> weakRef = new WeakReference<>(strongRef);
+
+        // Dereferencing the strong reference
+        strongRef = null;
+
+        // At this point, the object is eligible for GC, and weakRef will be cleared
+        System.out.println("Weak Reference Object: " + weakRef.get()); // Should be null if GC occurred
+    }
+}
+
+class MyClass {
+    // Some fields and methods
+}
+```
+
+**Explanation**:
+- The `WeakReference` is used to allow the object to be garbage collected once there are no strong references to it.
+- After dereferencing `strongRef`, the object is eligible for garbage collection.
+
+---
+
+### **Memory Management and Leak Prevention Diagram**
+
+```mermaid
+graph LR
+    A[Memory Management] --> B[Garbage Collection]
+    B --> C[Mark Phase]
+    B --> D[Sweep Phase]
+    B --> E[Compaction Phase]
+    A --> F[Memory Leak Prevention]
+    F --> G[Dereferencing Objects]
+    F --> H[Using Weak References]
+    F --> I[Proper Resource Management]
+    F --> J[Avoid Circular References]
+    G --> K[Set objects to null]
+    H --> L[WeakReference]
+    I --> M[try-with-resources]
+```
+
+**Explanation**:
+- The memory management process consists of **garbage collection** and **memory leak prevention** techniques.
+- **Garbage collection** includes phases like **marking**, **sweeping**, and **compacting** memory.
+- **Memory leak prevention** includes techniques like **dereferencing objects**, **using weak references**, and **avoiding circular references**.
+
+---
+
+### **Conclusion**
+
+- **Java 21** introduces significant improvements in **thread management** with the inclusion of **virtual threads**, allowing for **high concurrency** with low overhead.
+- Java's **garbage collection** and **memory management** in **Java 21** have been enhanced for better performance, with multiple collectors available like **G1**, **ZGC**, and **Shenandoah**.
+- Developers need to actively avoid memory leaks by using techniques like **dereferencing**, **weak references**, and **proper resource management** to ensure that Java applications run efficiently.
