@@ -4154,3 +4154,154 @@ public class SemaphoreExample {
 
 - **Semaphores** are a powerful synchronization tool that help manage concurrency in multithreaded or distributed systems. 
 - They provide a mechanism for controlling access to shared resources and can be used to prevent race conditions, manage resource pools, and coordinate thread behavior.
+
+---
+
+### Semaphore in Java
+
+In Java, semaphores are implemented using the `Semaphore` class from the `java.util.concurrent` package. This class allows you to manage access to shared resources in a multithreaded environment. The `Semaphore` class provides both binary semaphores (mutexes) and counting semaphores for handling various concurrency scenarios.
+
+### **Key Concepts of Semaphore in Java**
+1. **Binary Semaphore (Mutex)**: This type of semaphore can only have two states (0 and 1). It is useful for ensuring mutual exclusion, where only one thread can access a resource at a time.
+2. **Counting Semaphore**: This type allows the semaphore to take any non-negative integer value and is used to manage access to a pool of resources (e.g., a set of database connections or printers).
+
+### **Java Semaphore API**
+
+The `Semaphore` class has the following key methods:
+
+- **`acquire()`**: This method is used to acquire a permit. If no permit is available, the thread will block until a permit becomes available.
+- **`release()`**: This method releases a permit, increasing the number of available permits. If any threads are waiting for a permit, one of them will be unblocked.
+- **`availablePermits()`**: Returns the number of permits that are currently available.
+- **`tryAcquire()`**: Attempts to acquire a permit without blocking the thread. It returns `true` if the permit is acquired, and `false` if it cannot be acquired immediately.
+
+### **Example 1: Binary Semaphore (Mutex)**
+
+This example demonstrates a **binary semaphore**, where only one thread can access a resource at a time.
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class BinarySemaphoreExample {
+    // A binary semaphore (1 permit available)
+    private static Semaphore semaphore = new Semaphore(1);
+
+    public static void main(String[] args) {
+        // Create multiple threads that will try to access the critical section
+        for (int i = 0; i < 5; i++) {
+            new Thread(new Task(), "Thread-" + i).start();
+        }
+    }
+
+    static class Task implements Runnable {
+        @Override
+        public void run() {
+            try {
+                // Acquire the semaphore (this blocks if the semaphore is already acquired)
+                semaphore.acquire();
+                System.out.println(Thread.currentThread().getName() + " acquired the semaphore.");
+
+                // Simulate work by sleeping for 2 seconds
+                Thread.sleep(2000); // Simulate work
+
+                System.out.println(Thread.currentThread().getName() + " releasing the semaphore.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                // Always release the semaphore in the finally block to ensure it's released even if an exception occurs
+                semaphore.release();
+            }
+        }
+    }
+}
+```
+
+### **Explanation of the Binary Semaphore Example**:
+1. **Semaphore Initialization**:  
+   We create a `Semaphore` with **1 permit**, which makes it behave as a binary semaphore (only one thread can acquire it at a time).
+   
+2. **Acquire (Wait Operation)**:  
+   When a thread wants to access the critical section, it calls `semaphore.acquire()`. If the semaphore's value is greater than 0 (meaning a permit is available), the thread can enter the critical section and the semaphore's value is decremented (set to 0). If no permits are available (i.e., the value is 0), the thread is blocked until a permit is released.
+
+3. **Release (Signal Operation)**:  
+   After the thread is done using the resource, it calls `semaphore.release()`, which increments the semaphore's value (making a permit available for another thread).
+
+### **Example 2: Counting Semaphore (Multiple Resources)**
+
+This example demonstrates a **counting semaphore**, where multiple threads can access the shared resource, but no more than a fixed number of threads can access it simultaneously.
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class CountingSemaphoreExample {
+    // A semaphore with 3 permits, allowing 3 threads to access the resource simultaneously
+    private static Semaphore semaphore = new Semaphore(3);
+
+    public static void main(String[] args) {
+        // Create 5 threads, simulating multiple threads trying to access the resource
+        for (int i = 0; i < 5; i++) {
+            new Thread(new Task(), "Thread-" + i).start();
+        }
+    }
+
+    static class Task implements Runnable {
+        @Override
+        public void run() {
+            try {
+                // Acquire a permit (this will block if all 3 permits are in use)
+                System.out.println(Thread.currentThread().getName() + " is waiting to acquire a permit...");
+                semaphore.acquire();
+                System.out.println(Thread.currentThread().getName() + " acquired a permit.");
+
+                // Simulate work with the resource
+                Thread.sleep(2000); // Simulate using the resource
+
+                System.out.println(Thread.currentThread().getName() + " is releasing the permit.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                // Release the semaphore, making a permit available for other threads
+                semaphore.release();
+            }
+        }
+    }
+}
+```
+
+### **Explanation of the Counting Semaphore Example**:
+1. **Semaphore Initialization**:  
+   We initialize a `Semaphore` with **3 permits**, meaning that at most 3 threads can access the shared resource simultaneously. Other threads will have to wait for a permit if all the permits are in use.
+
+2. **Acquire (Wait Operation)**:  
+   When a thread wants to access the resource, it calls `semaphore.acquire()`. If there are available permits (i.e., the semaphore's value is greater than 0), the thread can proceed and the semaphore's value is decremented. If no permits are available (i.e., the semaphore's value is 0), the thread will block until a permit is released.
+
+3. **Release (Signal Operation)**:  
+   After the thread finishes using the resource, it calls `semaphore.release()`, which increments the semaphore's value and potentially unblocks another thread that is waiting for a permit.
+
+### **Common Use Cases for Semaphores in Java**
+
+1. **Thread Synchronization**:  
+   Semaphores are used to manage the access of multiple threads to shared resources in multithreaded applications. For example, limiting the number of concurrent database connections or file accesses.
+
+2. **Producer-Consumer Problem**:  
+   Semaphores can be used to manage the communication between producer and consumer threads. The producer puts items in a shared buffer, and the consumer takes them out. Semaphores ensure that producers do not exceed the buffer size and consumers do not try to consume from an empty buffer.
+
+3. **Managing Limited Resources**:  
+   When you have a limited number of resources (e.g., a limited number of threads, database connections, or printers), semaphores ensure that no more than the allowed number of threads can access those resources at the same time.
+
+### **Advantages of Using Semaphores**
+
+- **Efficient Resource Management**: Semaphores help efficiently manage the usage of limited resources in concurrent environments.
+- **Blocking and Waiting**: They provide a mechanism for threads to wait for resources to become available without continuously polling or wasting CPU time.
+- **Deadlock Prevention**: Proper usage of semaphores can prevent situations where multiple threads are deadlocked, waiting on each other to release resources.
+
+### **Disadvantages of Using Semaphores**
+
+- **Complexity**: Incorrectly using semaphores can lead to complex bugs such as deadlocks, starvation, or race conditions.
+- **Starvation**: If one thread continually acquires a semaphore while others are waiting, some threads may never get a chance to execute (starvation).
+- **Deadlocks**: If multiple semaphores are acquired in an incorrect order, it can lead to a deadlock, where threads are stuck waiting on each other.
+
+### **Conclusion**
+
+- **Semaphores** are a powerful synchronization tool in Java that allow you to manage access to shared resources in a concurrent environment. 
+- The `Semaphore` class in `java.util.concurrent` provides both **binary semaphores** (for mutual exclusion) and **counting semaphores** (for managing pools of resources).
+- When used correctly, semaphores can help you avoid race conditions, deadlocks, and resource contention in multi-threaded applications.
