@@ -378,3 +378,208 @@ graph TD
 This process and strategy help maintain the efficiency of the system and avoid unnecessary resource usage, preventing memory leaks in long-running applications.
 
 By focusing on these strategies, you can significantly enhance the throughput, latency, scaling, and overall performance of your system.
+
+---
+
+### **Types of Threads in Java**
+
+In Java, there are primarily **two types of threads** based on how they are created and managed:
+1. **User Threads (Application Threads)**
+2. **Daemon Threads**
+
+#### **1. User Threads (Application Threads)**
+
+- **Definition**: User threads are the threads that are created and controlled by the application. These threads run as long as the program is running.
+- **Lifecycle**: The application (main thread) waits for the user threads to finish before terminating. If there are any user threads running, the JVM will wait for them to complete execution.
+- **Example Use Case**: Typically, user threads are used for tasks like reading data from a file, processing data, or interacting with a database.
+
+##### **Java Example (User Thread)**
+
+```java
+class UserThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("User thread running...");
+        try {
+            Thread.sleep(1000); // Simulating task execution
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+        System.out.println("User thread finished.");
+    }
+
+    public static void main(String[] args) {
+        UserThread thread1 = new UserThread();
+        thread1.start(); // Start user thread
+    }
+}
+```
+
+**Explanation**:
+- The `UserThread` class extends `Thread` and overrides the `run()` method.
+- When the thread is started using `thread1.start()`, the `run()` method is executed. The main thread waits for this user thread to finish.
+
+#### **2. Daemon Threads**
+
+- **Definition**: Daemon threads are background threads that provide services to user threads. They are typically used for tasks such as garbage collection, background cleanup, etc.
+- **Lifecycle**: Daemon threads are not essential to the completion of the program. The JVM terminates daemon threads as soon as all user threads finish. Hence, they run in the background and don’t prevent the application from terminating.
+- **Example Use Case**: Daemon threads are used for background tasks like garbage collection or monitoring tasks.
+
+##### **Java Example (Daemon Thread)**
+
+```java
+class DaemonThread extends Thread {
+    @Override
+    public void run() {
+        while (true) {
+            System.out.println("Daemon thread running...");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        DaemonThread thread2 = new DaemonThread();
+        thread2.setDaemon(true); // Set the thread as daemon
+        thread2.start(); // Start daemon thread
+
+        try {
+            Thread.sleep(2000); // Simulate main thread work
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("Main thread finished.");
+    }
+}
+```
+
+**Explanation**:
+- The `DaemonThread` runs in the background printing "Daemon thread running..." every 500ms.
+- The `setDaemon(true)` method makes the thread a daemon thread.
+- The JVM will terminate the daemon thread once the main thread finishes its execution.
+
+### **Thread Communication (Inter-Thread Communication)**
+
+In Java, threads can communicate with each other using **inter-thread communication** via:
+1. **wait()**
+2. **notify()**
+3. **notifyAll()**
+
+The communication occurs on an object lock. A thread can signal another thread to wake up or proceed based on specific conditions.
+
+#### **Mermaid Diagram for Inter-Thread Communication**
+
+```mermaid
+sequenceDiagram
+    participant A as Thread A (Waiting)
+    participant B as Thread B (Notifying)
+    A->>A: wait()
+    B->>A: notify()
+    A->>A: Proceed after receiving signal
+```
+
+**Explanation**:
+- **Thread A** is waiting for a signal to proceed using the `wait()` method.
+- **Thread B** sends a notification using `notify()` to wake up **Thread A**.
+- After being notified, **Thread A** continues its execution.
+
+### **Memory Management Algorithms in Java**
+
+Java uses **automatic memory management** (garbage collection) to manage memory, which involves several algorithms to reclaim memory. These include:
+
+#### **1. Mark-and-Sweep Algorithm**
+- **Definition**: This is one of the most fundamental garbage collection algorithms. It works in two phases:
+  - **Mark Phase**: The garbage collector marks all reachable objects.
+  - **Sweep Phase**: It removes all unmarked objects and reclaims their memory.
+
+#### **2. Generational Garbage Collection**
+- **Definition**: Objects in the heap are divided into generations based on their age:
+  - **Young Generation** (new objects)
+  - **Old Generation** (long-lived objects)
+  - **Permanent Generation** (metadata)
+- The idea is that most objects die young, so the young generation is collected more frequently and efficiently.
+  
+#### **3. Reference Counting**
+- **Definition**: Each object keeps a count of how many references are pointing to it. When the count reaches zero, the object is eligible for collection.
+- This method can be inefficient due to **circular references**, where two objects refer to each other but are not reachable by any external references.
+
+#### **4. Copying Collectors (e.g., Scavenge)**:
+- **Definition**: The heap is divided into two halves. Objects are copied from one half to another, and the garbage collector reclaims memory by eliminating objects that are no longer referenced.
+- This method also compacts memory, reducing fragmentation.
+
+### **Memory Leak Prevention Techniques in Java**
+
+Memory leaks can happen when the program unintentionally retains references to objects, preventing the garbage collector from reclaiming their memory. The following techniques help prevent memory leaks:
+
+1. **Proper Dereferencing**:
+   - Ensure that objects no longer needed are dereferenced explicitly (set references to `null`).
+   
+2. **Use of Weak References**:
+   - Use `WeakReference` for objects that can be collected if no strong references exist. This is useful for caches, listeners, etc.
+
+3. **Avoid Circular References**:
+   - Circular references can prevent garbage collection. In particular, static references that are never cleared can lead to memory leaks.
+
+4. **Proper Resource Management**:
+   - Ensure resources (like database connections, file streams) are properly closed after use. Using `try-with-resources` in Java helps ensure that resources are closed automatically.
+
+### **Java Example: Memory Leak Prevention**
+
+```java
+import java.lang.ref.WeakReference;
+
+class MemoryLeakDemo {
+    public static void main(String[] args) {
+        // Example of WeakReference to avoid memory leak
+        Object strongRef = new Object();
+        WeakReference<Object> weakRef = new WeakReference<>(strongRef);
+
+        // Dereference the object
+        strongRef = null;
+
+        // At this point, the object is eligible for GC
+        System.out.println("Weak Reference Object: " + weakRef.get());
+    }
+}
+```
+
+**Explanation**:
+- A `WeakReference` allows an object to be garbage collected when there are no strong references pointing to it.
+- The object referenced by `strongRef` is dereferenced, and the `WeakReference` helps prevent a memory leak by allowing the object to be collected.
+
+### **Mermaid Diagram for Memory Management Algorithms**
+
+```mermaid
+graph LR
+    A[Mark Phase] --> B[Sweep Phase]
+    A --> C[Generational Garbage Collection]
+    C --> D[Young Generation]
+    C --> E[Old Generation]
+    C --> F[Permanent Generation]
+    D --> G[Frequent Garbage Collection]
+    E --> H[Less Frequent Garbage Collection]
+    F --> I[Metadata Cleanup]
+
+    subgraph "Memory Leak Prevention"
+        J[Proper Dereferencing]
+        K[Weak References]
+        L[Avoid Circular References]
+        M[Proper Resource Management]
+    end
+
+    J --> L
+    K --> M
+```
+
+### **Summary**
+
+- **Thread Types**: Java supports **User Threads** for application tasks and **Daemon Threads** for background services. Daemon threads run until all user threads finish.
+- **Inter-Thread Communication**: Java provides `wait()`, `notify()`, and `notifyAll()` for communication between threads.
+- **Memory Management Algorithms**: Java uses algorithms like **Mark-and-Sweep**, **Generational Garbage Collection**, and **Reference Counting** to manage memory. It uses **Copying Collectors** for efficient memory management.
+- **Memory Leak Prevention**: Techniques include **dereferencing**, **using weak references**, **avoiding circular references**, and **proper resource management** to prevent memory leaks.
+
+These diagrams and examples illustrate how Java manages threads and memory, and how proper memory management can prevent common issues like memory leaks.
