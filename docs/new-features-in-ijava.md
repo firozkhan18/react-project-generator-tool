@@ -4368,3 +4368,1006 @@ Here’s a comprehensive table listing the key methods available in the differen
 - **`Deque`**: A **double-ended queue** with methods to add or remove from both ends (e.g., `addFirst()`, `removeFirst()`, `addLast()
 - **`ConcurrentLinkedQueue`**: Non-blocking, thread-safe, and efficient for concurrent access.
 - **`LinkedBlockingQueue`**: A blocking queue that supports both fair and non-fair thread synchronization.
+
+---
+
+### `ReentrantLock` in Java
+
+`ReentrantLock` is a part of the `java.util.concurrent.locks` package and provides a more powerful and flexible locking mechanism than the traditional `synchronized` block. It allows greater control over thread synchronization, including features such as try-lock, timed lock, and the ability to interrupt a thread that is waiting for a lock.
+
+#### Key Features of `ReentrantLock`:
+1. **Reentrancy**: A thread that already holds a `ReentrantLock` can acquire the lock again without blocking itself. This is useful to avoid deadlocks when calling a synchronized method from within another synchronized method.
+2. **Fairness**: A `ReentrantLock` can be constructed to support fairness, meaning that the lock will grant access to the longest-waiting thread (FIFO order), rather than giving the lock to the thread that is ready to acquire it.
+3. **Non-blocking Try Locking**: You can attempt to acquire the lock without blocking indefinitely. This is useful when you want to try locking and perform other operations if the lock is not immediately available.
+4. **Interruptible Locking**: `ReentrantLock` allows threads to be interrupted while waiting for a lock, unlike `synchronized`, which is non-interruptible.
+5. **Multiple Condition Variables**: A `ReentrantLock` allows for multiple `Condition` variables (which work similarly to `Object.wait()`/`notify()`), allowing more complex synchronization patterns than `synchronized`.
+
+#### Key Methods of `ReentrantLock`:
+
+1. **`lock()`**:
+   - Acquires the lock. If the lock is already held by another thread, the current thread will block until it can acquire the lock.
+   - This method is equivalent to entering a `synchronized` block.
+
+   ```java
+   lock.lock(); // Acquires the lock
+   try {
+       // Critical section
+   } finally {
+       lock.unlock(); // Always unlock in the finally block
+   }
+   ```
+
+2. **`unlock()`**:
+   - Releases the lock. This must be called from the thread that acquired the lock. Failing to call `unlock()` can lead to a deadlock situation.
+   
+   ```java
+   lock.unlock(); // Releases the lock
+   ```
+
+3. **`tryLock()`**:
+   - Attempts to acquire the lock without blocking. If the lock is not available, it returns `false` immediately.
+   - Can be used when you don’t want to block indefinitely.
+   
+   ```java
+   if (lock.tryLock()) {
+       try {
+           // Critical section
+       } finally {
+           lock.unlock();
+       }
+   }
+   ```
+
+4. **`tryLock(long time, TimeUnit unit)`**:
+   - Attempts to acquire the lock within a specified time. If the lock is not available, the method will block for the given time before returning `false`.
+   
+   ```java
+   if (lock.tryLock(100, TimeUnit.MILLISECONDS)) {
+       try {
+           // Critical section
+       } finally {
+           lock.unlock();
+       }
+   }
+   ```
+
+5. **`lockInterruptibly()`**:
+   - Acquires the lock, but allows the thread to be interrupted while waiting for the lock. If the thread is interrupted while waiting, it throws an `InterruptedException`.
+   
+   ```java
+   try {
+       lock.lockInterruptibly();
+       try {
+           // Critical section
+       } finally {
+           lock.unlock();
+       }
+   } catch (InterruptedException e) {
+       // Handle interruption
+   }
+   ```
+
+6. **`newCondition()`**:
+   - Creates a new `Condition` object that can be used for advanced synchronization. Conditions are used for coordinating threads, similar to `Object.wait()`/`notify()`.
+   
+   ```java
+   Condition condition = lock.newCondition();
+   ```
+
+7. **`isLocked()`**:
+   - Returns `true` if the lock is currently held by any thread, or `false` if the lock is available.
+   
+   ```java
+   boolean isLocked = lock.isLocked();
+   ```
+
+8. **`isHeldByCurrentThread()`**:
+   - Returns `true` if the current thread holds the lock, otherwise returns `false`.
+   
+   ```java
+   boolean isHeld = lock.isHeldByCurrentThread();
+   ```
+
+9. **`hasQueuedThreads()`**:
+   - Returns `true` if there are threads waiting for the lock.
+   
+   ```java
+   boolean hasQueued = lock.hasQueuedThreads();
+   ```
+
+10. **`getQueueLength()`**:
+    - Returns the number of threads waiting for the lock.
+    
+    ```java
+    int queueLength = lock.getQueueLength();
+    ```
+
+### Example Usage
+
+```java
+import java.util.concurrent.locks.ReentrantLock;
+
+public class ReentrantLockExample {
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void safeMethod() {
+        lock.lock();
+        try {
+            // Critical section: safely modify shared resources
+            System.out.println("In safeMethod - " + Thread.currentThread().getName());
+        } finally {
+            lock.unlock(); // Always unlock to avoid deadlock
+        }
+    }
+
+    public static void main(String[] args) {
+        ReentrantLockExample example = new ReentrantLockExample();
+        
+        // Create multiple threads that will use the lock
+        Thread thread1 = new Thread(example::safeMethod, "Thread 1");
+        Thread thread2 = new Thread(example::safeMethod, "Thread 2");
+
+        thread1.start();
+        thread2.start();
+    }
+}
+```
+
+### Advantages of `ReentrantLock` Over `synchronized`:
+1. **Interruptibility**: `ReentrantLock` allows threads to be interrupted while waiting for a lock (which `synchronized` does not).
+2. **Try-lock functionality**: With `tryLock()`, threads can attempt to acquire a lock without blocking indefinitely, which gives greater control in concurrent applications.
+3. **Fairness**: `ReentrantLock` can be configured to use a fair locking policy (FIFO ordering for acquiring the lock).
+4. **Multiple Condition Variables**: `ReentrantLock` allows the use of multiple `Condition` objects for more complex synchronization patterns.
+
+### When to Use `ReentrantLock`:
+- **Complex synchronization**: If you need greater flexibility or want to avoid blocking indefinitely.
+- **High concurrency**: When you need efficient and non-blocking operations in multi-threaded applications.
+- **Advanced patterns**: For scenarios like multiple threads waiting on specific conditions or when trying to implement custom concurrency patterns.
+
+### When to Use `synchronized` Instead:
+- **Simple cases**: If you only need to protect a block of code with mutual exclusion and don’t need the extra functionality offered by `ReentrantLock`.
+- **Less complex**: For straightforward synchronization tasks, `synchronized` is simpler to use and doesn’t require manual lock management.
+
+---
+
+### `ReadWriteLock` in Java
+
+`ReadWriteLock` is a **synchronization mechanism** that allows multiple threads to read shared data concurrently but ensures that only one thread can write to the data at a time. It provides a way to increase performance in multi-threaded applications when reads are more frequent than writes.
+
+The `ReadWriteLock` interface defines two locks:
+1. **Read Lock** (`readLock()`): Multiple threads can acquire the read lock concurrently, allowing them to read the shared data simultaneously, as long as no thread is writing.
+2. **Write Lock** (`writeLock()`): Only one thread can acquire the write lock at a time, and while the write lock is held, no other thread can acquire the read or write lock.
+
+This lock type is particularly useful in scenarios where read operations are frequent and write operations are rare, improving performance by allowing parallel reads.
+
+### Key Features of `ReadWriteLock`:
+- **Read-Write Separation**: It separates read and write operations, allowing greater concurrency by permitting multiple readers while ensuring exclusive access for writers.
+- **Exclusive Write Lock**: A thread must obtain an exclusive write lock to modify the shared data, ensuring data consistency.
+- **Concurrent Read Locks**: Multiple threads can acquire the read lock concurrently, as long as no thread holds the write lock.
+
+### Key Methods of `ReadWriteLock`:
+
+1. **`readLock()`**:
+   - Returns the lock used for **reading**. Multiple threads can acquire the read lock simultaneously, as long as no thread holds the write lock.
+   
+   ```java
+   ReadWriteLock lock = new ReentrantReadWriteLock();
+   lock.readLock().lock();
+   try {
+       // Critical section for reading
+   } finally {
+       lock.readLock().unlock();
+   }
+   ```
+
+2. **`writeLock()`**:
+   - Returns the lock used for **writing**. Only one thread can acquire the write lock at a time. If a thread holds the write lock, no other thread can acquire either the read or the write lock.
+   
+   ```java
+   lock.writeLock().lock();
+   try {
+       // Critical section for writing
+   } finally {
+       lock.writeLock().unlock();
+   }
+   ```
+
+### `ReentrantReadWriteLock` (Implementation of `ReadWriteLock`)
+
+The most commonly used implementation of `ReadWriteLock` is the `ReentrantReadWriteLock` class, which provides a read-write lock with **reentrancy**. Reentrancy means that a thread can acquire a lock multiple times, as long as it releases the lock the same number of times.
+
+`ReentrantReadWriteLock` also allows for **fairness**:
+- **Fair lock**: Ensures that threads waiting for the lock are granted the lock in the order they requested it (FIFO order).
+- **Non-fair lock** (default): A thread can acquire the lock without checking if there are waiting threads, which may result in a thread getting the lock sooner than others.
+
+### Key Methods in `ReentrantReadWriteLock`:
+
+1. **`readLock()`**: 
+   - Returns the `ReadLock` object, used for acquiring read locks.
+   
+   ```java
+   ReadLock readLock = lock.readLock();
+   ```
+
+2. **`writeLock()`**: 
+   - Returns the `WriteLock` object, used for acquiring write locks.
+   
+   ```java
+   WriteLock writeLock = lock.writeLock();
+   ```
+
+3. **`getReadLockCount()`**:
+   - Returns the number of active read locks held by threads. 
+   - Useful for debugging or monitoring lock usage.
+
+4. **`isWriteLocked()`**:
+   - Returns `true` if the write lock is currently held by any thread.
+
+5. **`isWriteLockedByCurrentThread()`**:
+   - Returns `true` if the current thread holds the write lock.
+
+6. **`getReadLockCount()`**:
+   - Returns the number of read locks currently held by threads.
+
+7. **`isReadLocked()`**:
+   - Returns `true` if the read lock is held by any thread.
+
+8. **`isReadLockedByCurrentThread()`**:
+   - Returns `true` if the current thread holds the read lock.
+
+### Example: Using `ReadWriteLock` in a Shared Resource Scenario
+
+```java
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class SharedData {
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private int data;
+
+    public int readData() {
+        lock.readLock().lock(); // Acquire read lock
+        try {
+            // Simulate reading shared data
+            return data;
+        } finally {
+            lock.readLock().unlock(); // Release read lock
+        }
+    }
+
+    public void writeData(int newData) {
+        lock.writeLock().lock(); // Acquire write lock
+        try {
+            // Simulate writing shared data
+            this.data = newData;
+        } finally {
+            lock.writeLock().unlock(); // Release write lock
+        }
+    }
+
+    public static void main(String[] args) {
+        SharedData sharedData = new SharedData();
+
+        // Thread 1: Reading data
+        Thread reader1 = new Thread(() -> {
+            System.out.println("Reader1: " + sharedData.readData());
+        });
+
+        // Thread 2: Writing data
+        Thread writer = new Thread(() -> {
+            sharedData.writeData(42);
+            System.out.println("Writer: Data written.");
+        });
+
+        // Thread 3: Reading data
+        Thread reader2 = new Thread(() -> {
+            System.out.println("Reader2: " + sharedData.readData());
+        });
+
+        reader1.start();
+        writer.start();
+        reader2.start();
+    }
+}
+```
+
+### Explanation of the Example:
+- **Read Lock**: `reader1` and `reader2` both acquire the read lock to access the `data`. Since there is no write lock held, they can read concurrently.
+- **Write Lock**: `writer` acquires the write lock before writing the `data`. When the writer is writing, no other thread can acquire either a read or write lock.
+
+### When to Use `ReadWriteLock`:
+- **High-concurrency read-heavy scenarios**: When there are many threads that need to read shared data frequently, and fewer threads that need to modify the data, `ReadWriteLock` can improve performance by allowing concurrent reads.
+- **Shared resource management**: Use `ReadWriteLock` when you need to synchronize access to a resource that is mostly read and rarely written to.
+
+### When to Avoid `ReadWriteLock`:
+- **Low-concurrency**: If the application has a small number of threads or if write operations are frequent, `ReadWriteLock` may introduce unnecessary complexity and overhead.
+- **Simple scenarios**: For simpler use cases where only mutual exclusion is needed, the standard `synchronized` block or `ReentrantLock` might be easier to implement and understand.
+
+---
+
+### Summary of `ReadWriteLock`:
+- **`ReadWriteLock`** allows multiple threads to **read** shared data simultaneously but requires **exclusive access** for writing.
+- It provides two locks: a **read lock** and a **write lock**.
+- **`ReentrantReadWriteLock`** is the most common implementation and provides features such as reentrancy and optional fairness.
+- Best used in **read-heavy applications** where reads happen more often than writes.
+
+### `StampedLock` in Java
+
+`StampedLock` is a part of the `java.util.concurrent.locks` package and provides a sophisticated locking mechanism that is designed to improve performance and scalability in read-heavy concurrency scenarios, particularly when compared to traditional locks like `ReentrantLock` and `ReadWriteLock`.
+
+The key feature of `StampedLock` is the ability to use **optimistic locking** in addition to traditional read and write locks. This allows for greater concurrency while still ensuring data consistency, especially in cases where read operations are more frequent than write operations.
+
+### Key Features of `StampedLock`:
+
+1. **Optimistic Read**:
+   - Optimistic read allows threads to **read without acquiring a lock** and only later verify if the data was modified during their read. If the data was modified, the read operation is retried with the regular read lock. This improves concurrency for read-heavy workloads.
+   
+2. **Exclusive Write Lock**:
+   - Like `ReentrantLock`, `StampedLock` provides an exclusive **write lock**. Only one thread can hold the write lock at a time, and while it holds the write lock, no other thread can hold either a read or a write lock.
+
+3. **Stamped Locking**:
+   - `StampedLock` uses a **stamp** as a lightweight ticket that represents the lock state. The stamp is returned when a lock is acquired (read or write) and is used to unlock or validate optimistic read access.
+   
+4. **No Deadlock**:
+   - `StampedLock` avoids the problem of deadlock by not blocking threads during lock acquisition, especially during optimistic reads. If a thread cannot obtain the lock in optimistic mode, it falls back to acquiring a regular read or write lock.
+
+5. **Improved Scalability**:
+   - `StampedLock` is designed to be more **scalable** than `ReadWriteLock`, especially when the number of readers is much higher than the number of writers. It allows for increased concurrency while maintaining thread safety.
+
+### Key Methods of `StampedLock`:
+
+1. **`readLock()`**:
+   - Acquires a **read lock** and returns a **stamp**. If the lock is already held by another thread for reading or writing, the calling thread will block until the lock is available.
+
+   ```java
+   long stamp = lock.readLock(); // Acquires read lock and returns a stamp
+   try {
+       // Critical section for reading
+   } finally {
+       lock.unlockRead(stamp); // Release read lock
+   }
+   ```
+
+2. **`writeLock()`**:
+   - Acquires an **exclusive write lock** and returns a **stamp**. Only one thread can hold the write lock at a time. While the write lock is held, no other thread can acquire either a read or write lock.
+
+   ```java
+   long stamp = lock.writeLock(); // Acquires write lock and returns a stamp
+   try {
+       // Critical section for writing
+   } finally {
+       lock.unlockWrite(stamp); // Release write lock
+   }
+   ```
+
+3. **`tryOptimisticRead()`**:
+   - Attempts to acquire an **optimistic read lock** without blocking. It returns a **stamp** if the lock is successfully acquired, but the caller must check whether the data was modified during the optimistic read (by validating the stamp). If the data was modified, the thread must retry using a regular read lock.
+
+   ```java
+   long stamp = lock.tryOptimisticRead(); // Acquires optimistic read lock (non-blocking)
+   try {
+       // Read data optimistically
+   } finally {
+       // Validate if data was modified, otherwise unlock read
+       if (!lock.validate(stamp)) {
+           // Fallback to regular read lock if validation failed
+           stamp = lock.readLock();
+           try {
+               // Critical section for reading
+           } finally {
+               lock.unlockRead(stamp);
+           }
+       }
+   }
+   ```
+
+4. **`validate(long stamp)`**:
+   - Validates whether the data has been modified since acquiring the **optimistic read lock** (i.e., whether the stamp is still valid). This is used after calling `tryOptimisticRead()`. If the data was modified by another thread, the method returns `false`.
+
+   ```java
+   if (lock.validate(stamp)) {
+       // Data was not modified, continue with the optimistic read
+   } else {
+       // Data was modified, acquire a regular read lock
+   }
+   ```
+
+5. **`unlockRead(long stamp)`**:
+   - Releases the **read lock** acquired with the `readLock()` or `tryOptimisticRead()`. This method requires the stamp returned when the lock was acquired.
+
+   ```java
+   lock.unlockRead(stamp); // Release read lock
+   ```
+
+6. **`unlockWrite(long stamp)`**:
+   - Releases the **write lock** acquired with the `writeLock()`. This method requires the stamp returned when the write lock was acquired.
+
+   ```java
+   lock.unlockWrite(stamp); // Release write lock
+   ```
+
+7. **`isWriteLocked()`**:
+   - Returns `true` if the **write lock** is currently held by any thread.
+
+8. **`isReadLocked()`**:
+   - Returns `true` if any thread holds the **read lock**.
+
+9. **`getWriteLockCount()`**:
+   - Returns the number of threads currently holding the **write lock**. This is generally 0 or 1.
+
+10. **`getReadLockCount()`**:
+    - Returns the number of threads currently holding the **read lock**.
+
+### Example: Using `StampedLock` for Read-Write Synchronization
+
+```java
+import java.util.concurrent.locks.StampedLock;
+
+public class SharedResource {
+    private final StampedLock lock = new StampedLock();
+    private int data;
+
+    // Read operation using optimistic locking
+    public int readData() {
+        long stamp = lock.tryOptimisticRead();
+        int value = data; // Optimistically read the data
+        if (!lock.validate(stamp)) {
+            // If data was modified, fallback to a regular read lock
+            stamp = lock.readLock();
+            try {
+                value = data; // Read data with a regular read lock
+            } finally {
+                lock.unlockRead(stamp);
+            }
+        }
+        return value;
+    }
+
+    // Write operation
+    public void writeData(int newData) {
+        long stamp = lock.writeLock();
+        try {
+            data = newData; // Write data
+        } finally {
+            lock.unlockWrite(stamp);
+        }
+    }
+
+    public static void main(String[] args) {
+        SharedResource sharedResource = new SharedResource();
+
+        // Thread 1: Read data
+        Thread reader1 = new Thread(() -> {
+            System.out.println("Reader1: " + sharedResource.readData());
+        });
+
+        // Thread 2: Write data
+        Thread writer = new Thread(() -> {
+            sharedResource.writeData(42);
+            System.out.println("Writer: Data written.");
+        });
+
+        // Thread 3: Read data
+        Thread reader2 = new Thread(() -> {
+            System.out.println("Reader2: " + sharedResource.readData());
+        });
+
+        reader1.start();
+        writer.start();
+        reader2.start();
+    }
+}
+```
+
+### Explanation of the Example:
+- **Optimistic Read**: `reader1` and `reader2` first attempt to acquire the optimistic read lock with `tryOptimisticRead()`. If the data is not modified during the read, they continue without blocking. If the data was modified, they fall back to acquiring a regular read lock.
+- **Write Operation**: `writer` acquires the exclusive write lock to modify the `data`.
+
+### Advantages of `StampedLock`:
+
+1. **Optimistic Locking**: Allows for high concurrency by enabling threads to read without acquiring a lock, reducing contention when reads are frequent.
+2. **Better Scalability**: In scenarios where there are many readers and fewer writers, `StampedLock` allows higher throughput and lower contention compared to `ReadWriteLock`.
+3. **Reduced Contention for Read Locks**: Since multiple threads can hold the read lock simultaneously, read-heavy applications benefit from greater scalability.
+
+### When to Use `StampedLock`:
+
+- **High-concurrency, read-heavy workloads**: When you have many threads reading data and few threads writing, `StampedLock` can provide better performance by allowing optimistic reading and reducing lock contention.
+- **Situations requiring both read and write locks**: If you need both read and write locks, and want to improve the concurrency of the reads while still ensuring data consistency during writes.
+
+### When Not to Use `StampedLock`:
+
+- **Simple synchronization needs**: If the application is simple and does not require complex read-write locking, using `ReentrantLock` or `ReadWriteLock` might be easier and sufficient.
+- **Short-lived data**: If the critical section is small, or there are not many threads accessing the shared resource, the overhead of managing stamps may not justify the performance gains.
+
+---
+
+### Summary of `StampedLock`:
+- `StampedLock` provides an advanced locking mechanism with **optimistic reading**, **exclusive writing**, and **lightweight stamps**.
+- It improves performance in **read-heavy, high-concurrency** scenarios by allowing multiple readers to access shared data concurrently and falling back to traditional locks when needed.
+- Useful in applications where **read operations** dominate over **write operations**, but still require exclusive access for writing to ensure consistency.
+
+---
+### `Semaphore` in Java
+
+A **`Semaphore`** is a synchronization primitive that is used to control access to a shared resource by multiple threads in a concurrent system. It maintains a set of permits, which are used to determine how many threads can access the resource simultaneously. When a thread wants to access the shared resource, it must acquire a permit; if no permits are available, the thread will be blocked until a permit is released.
+
+Semaphores are widely used in scenarios where a limited number of resources (e.g., database connections, file handles, threads) need to be shared among many threads. They are a key tool in controlling **resource contention** and **concurrency**.
+
+### Key Features of `Semaphore`:
+
+1. **Permit Count**:
+   - The semaphore maintains a count of available permits. Each thread that wants to access a resource decrements the count, and when it's done, it increments the count by releasing the permit.
+   
+2. **Blocking**:
+   - If a thread tries to acquire a permit but none are available (i.e., the semaphore count is zero), the thread will be blocked until a permit is released by another thread.
+
+3. **Fairness**:
+   - Semaphores can be configured to **fair** or **non-fair**:
+     - **Fair Semaphore**: Guarantees that threads acquire permits in the order they requested them (FIFO order).
+     - **Non-fair Semaphore** (default): The semaphore does not guarantee that threads will acquire permits in the order they requested. A thread may acquire a permit out of order, potentially causing starvation for other threads.
+
+### Key Methods of `Semaphore`:
+
+1. **`acquire()`**:
+   - Attempts to acquire a permit. If no permits are available, the calling thread will be blocked until a permit becomes available.
+   ```java
+   semaphore.acquire();
+   ```
+
+2. **`acquire(int permits)`**:
+   - Attempts to acquire multiple permits at once. If the requested number of permits is not available, the thread will be blocked until enough permits are released.
+   ```java
+   semaphore.acquire(2);  // Acquires 2 permits
+   ```
+
+3. **`release()`**:
+   - Releases a permit, making it available for other threads to acquire. If any threads are blocked waiting for a permit, one of them will be unblocked.
+   ```java
+   semaphore.release();
+   ```
+
+4. **`release(int permits)`**:
+   - Releases multiple permits at once.
+   ```java
+   semaphore.release(3);  // Releases 3 permits
+   ```
+
+5. **`availablePermits()`**:
+   - Returns the number of available permits in the semaphore.
+   ```java
+   int available = semaphore.availablePermits();
+   ```
+
+6. **`tryAcquire()`**:
+   - Attempts to acquire a permit without blocking. Returns `true` if the permit was successfully acquired, or `false` if no permits are available.
+   ```java
+   boolean acquired = semaphore.tryAcquire();
+   ```
+
+7. **`tryAcquire(long timeout, TimeUnit unit)`**:
+   - Tries to acquire a permit within a given timeout. Returns `true` if the permit was acquired before the timeout expired, or `false` if the timeout expired before a permit was available.
+   ```java
+   boolean acquired = semaphore.tryAcquire(1, TimeUnit.SECONDS);
+   ```
+
+### Example Usage of `Semaphore`:
+
+Here's an example demonstrating how a semaphore can be used to control access to a limited resource, such as a pool of database connections:
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreExample {
+    private static final Semaphore semaphore = new Semaphore(3); // Only 3 threads can access the resource simultaneously
+
+    public static void main(String[] args) {
+        // Create and start multiple threads
+        for (int i = 0; i < 10; i++) {
+            new Thread(new Task(i)).start();
+        }
+    }
+
+    static class Task implements Runnable {
+        private final int taskId;
+
+        public Task(int taskId) {
+            this.taskId = taskId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // Acquire a permit to access the resource
+                System.out.println("Task " + taskId + " is waiting for a permit.");
+                semaphore.acquire();
+                System.out.println("Task " + taskId + " has acquired a permit.");
+
+                // Simulate some work (e.g., accessing the shared resource)
+                Thread.sleep(2000);
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                // Release the permit
+                System.out.println("Task " + taskId + " is releasing a permit.");
+                semaphore.release();
+            }
+        }
+    }
+}
+```
+
+### Explanation of the Example:
+- **Semaphore Initialization**: We create a semaphore with 3 permits (`new Semaphore(3)`), which means only three threads can access the shared resource at any given time.
+- **Task Execution**: Each task (represented by a thread) attempts to acquire a permit to access the shared resource. If the semaphore has available permits, the task will proceed and simulate some work (by sleeping for 2 seconds).
+- **Releasing Permits**: After the task is done, it releases the permit, allowing other threads to acquire it.
+
+### Output (example):
+```
+Task 0 is waiting for a permit.
+Task 1 is waiting for a permit.
+Task 2 is waiting for a permit.
+Task 0 has acquired a permit.
+Task 1 has acquired a permit.
+Task 2 has acquired a permit.
+Task 0 is releasing a permit.
+Task 3 is waiting for a permit.
+Task 0 has released a permit.
+Task 3 has acquired a permit.
+Task 1 is releasing a permit.
+Task 1 has released a permit.
+Task 4 is waiting for a permit.
+...
+```
+
+In this example, only 3 tasks can acquire permits and access the resource simultaneously. Other tasks must wait for a permit to become available.
+
+### Types of Semaphores:
+
+1. **Binary Semaphore**:
+   - A binary semaphore is a special case where the semaphore only has two states: 0 or 1. It behaves like a **mutex** (binary lock) and is often used for **mutual exclusion** in critical sections.
+
+   ```java
+   Semaphore binarySemaphore = new Semaphore(1); // Only 1 permit available (like a mutex)
+   ```
+
+2. **Counting Semaphore**:
+   - A counting semaphore allows any number of threads (up to the number of available permits) to acquire the semaphore. It is typically used to control access to a **limited number of resources**.
+   
+   ```java
+   Semaphore countingSemaphore = new Semaphore(5); // Allows up to 5 threads to access a resource
+   ```
+
+### Semaphore vs `ReentrantLock` / `ReadWriteLock`:
+
+- **`Semaphore`**: Primarily used to manage a pool of resources. It controls the number of threads that can access a particular resource. If a thread can't acquire a permit, it is blocked until one becomes available. Semaphores are often used when the number of threads needs to be limited in certain operations, like controlling access to a limited resource (e.g., database connections).
+  
+- **`ReentrantLock`**: Provides exclusive locking for critical sections but does not manage a pool of resources. It is often used when a section of code should only be accessed by one thread at a time, ensuring mutual exclusion.
+
+- **`ReadWriteLock`**: Useful for scenarios where read operations are frequent and write operations are rare. A `ReadWriteLock` allows multiple threads to read concurrently but ensures that only one thread can write at a time. It doesn't limit the number of threads that can access the resource, but rather differentiates between reading and writing.
+
+### When to Use `Semaphore`:
+
+- **Limited resource management**: When you have a limited number of resources (e.g., a fixed-size connection pool or thread pool) and you want to limit the number of threads that can access those resources concurrently.
+  
+- **Managing thread concurrency**: When you need to control the number of threads accessing certain parts of code or shared resources (e.g., controlling access to a service with limited capacity).
+  
+- **Synchronization of concurrent processes**: In scenarios where you want to coordinate the execution of multiple threads, especially when tasks must wait for others to release resources.
+
+### When Not to Use `Semaphore`:
+
+- **Mutual exclusion (mutex)**: For simple mutual exclusion scenarios where only one thread should execute a critical section at a time, a `ReentrantLock` or synchronized block is simpler.
+  
+- **Complex read-write scenarios**: If you need to optimize for scenarios where multiple readers are allowed but writers must be exclusive, a `ReadWriteLock` is a better choice.
+
+### Summary:
+
+- **`Semaphore`** is a powerful synchronization tool that limits access to a resource by multiple threads, controlling how many threads can access it at the same time.
+- It can be **fair** (FIFO order) or **non-fair**, and you can use it for both counting and binary purposes.
+- It's especially useful when you need to manage a **limited pool of resources** or **control the number of concurrent threads** accessing a particular section of code.
+
+### `CountDownLatch` in Java
+
+A **`CountDownLatch`** is a synchronization aid that allows one or more threads to wait until a set of operations being performed by other threads completes. It is often used when you want a group of threads to wait for a certain event or for the completion of certain tasks before proceeding. The `CountDownLatch` starts with a specified **count** (a positive integer) and each call to `countDown()` decrements this count. When the count reaches zero, any thread waiting on the latch (via `await()`) will be released.
+
+### Key Features of `CountDownLatch`:
+- **Count-based synchronization**: The latch holds a count, which starts from a specified number. Each time an event (like the completion of a task) occurs, the count is decremented by calling `countDown()`.
+- **Waiting threads**: Threads can wait for the latch to reach zero using the `await()` method. Once the count reaches zero, all waiting threads are released.
+- **Single-use**: A `CountDownLatch` can only be used once. After the count reaches zero, it cannot be reset or reused. If you need a reusable synchronization mechanism, consider using other constructs like `CyclicBarrier` or `Semaphore`.
+
+### Key Methods of `CountDownLatch`:
+
+1. **`await()`**:
+   - Makes the current thread wait until the count reaches zero. If the count is already zero when `await()` is called, the thread does not block and proceeds immediately.
+   - This method can throw `InterruptedException` if the thread waiting on the latch is interrupted.
+   
+   ```java
+   latch.await();  // Wait until count reaches 0
+   ```
+
+2. **`countDown()`**:
+   - Decrements the count of the latch by 1. When the count reaches zero, all threads waiting on `await()` will be released. If the count is already zero, calling `countDown()` has no effect.
+   
+   ```java
+   latch.countDown();  // Decrements the latch's count
+   ```
+
+3. **`getCount()`**:
+   - Returns the current count of the latch, which reflects how many `countDown()` calls are remaining before the latch will release the waiting threads.
+   
+   ```java
+   long count = latch.getCount();  // Get the current count
+   ```
+
+### Example of Using `CountDownLatch`:
+
+Imagine a scenario where you want to start a task only after several threads have finished their initialization work. You could use a `CountDownLatch` to ensure that the main thread waits until all initialization threads have completed their work.
+
+#### Example: Thread Initialization
+
+```java
+import java.util.concurrent.CountDownLatch;
+
+public class CountDownLatchExample {
+
+    public static void main(String[] args) throws InterruptedException {
+        int numberOfThreads = 3;
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);  // Latch initialized with the number of threads
+
+        // Create 3 threads
+        for (int i = 0; i < numberOfThreads; i++) {
+            new Thread(new InitializationTask(latch, i)).start();
+        }
+
+        // Main thread waits for the other threads to finish their initialization
+        System.out.println("Main thread is waiting for initialization to complete.");
+        latch.await();  // Wait until the latch count reaches 0
+        System.out.println("Initialization completed. Main thread is now proceeding.");
+    }
+
+    static class InitializationTask implements Runnable {
+        private final CountDownLatch latch;
+        private final int threadId;
+
+        public InitializationTask(CountDownLatch latch, int threadId) {
+            this.latch = latch;
+            this.threadId = threadId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println("Thread " + threadId + " is performing initialization.");
+                // Simulate some work
+                Thread.sleep((long) (Math.random() * 1000));
+                System.out.println("Thread " + threadId + " has finished initialization.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                // Decrement the latch count when this thread finishes
+                latch.countDown();
+            }
+        }
+    }
+}
+```
+
+### Explanation of the Example:
+1. **CountDownLatch Initialization**: We initialize the `CountDownLatch` with a count of `3`, representing the number of threads that must complete their initialization before the main thread can proceed.
+   
+2. **Threads Start**: Three threads are started, each performing some initialization work (simulated with `Thread.sleep()`).
+
+3. **Main Thread Waiting**: The main thread calls `latch.await()`, which blocks until the count of the latch reaches zero.
+
+4. **Threads Complete Initialization**: Each thread, after finishing its work, calls `latch.countDown()`, decrementing the count of the latch.
+
+5. **Main Thread Resumes**: Once all threads call `countDown()` and the count reaches zero, the main thread is released from the `await()` and continues execution.
+
+### Output (example):
+```
+Thread 0 is performing initialization.
+Thread 1 is performing initialization.
+Thread 2 is performing initialization.
+Thread 2 has finished initialization.
+Thread 1 has finished initialization.
+Thread 0 has finished initialization.
+Main thread is waiting for initialization to complete.
+Initialization completed. Main thread is now proceeding.
+```
+
+### Key Characteristics:
+- **Single-use**: Once the count reaches zero, the latch can no longer be reused. If you need a reusable version, you should use `CyclicBarrier`.
+- **Blocking**: The `await()` method blocks until the count reaches zero. This is useful for ensuring that certain tasks are completed before proceeding.
+
+### Use Cases of `CountDownLatch`:
+1. **Waiting for a group of threads to finish before proceeding**:
+   - If multiple threads need to complete certain tasks before a main thread continues (e.g., completing preconditions or waiting for all components to be initialized).
+   
+2. **Testing concurrency**:
+   - `CountDownLatch` can be used in test scenarios where you want to wait for multiple threads to reach a certain point before continuing the test (e.g., for simulating parallel tasks).
+
+3. **Coordinating parallel tasks**:
+   - When performing parallel operations, `CountDownLatch` can coordinate when to start and when to wait for multiple tasks to finish.
+
+### When to Use `CountDownLatch`:
+- **Waiting for the completion of a fixed number of events**: When a fixed number of threads must complete before proceeding with the next step. For example, you can wait for N workers to finish a job before starting a final task.
+- **Synchronized start**: If you need multiple threads to start at the same time (e.g., in parallel benchmarking or testing), `CountDownLatch` can ensure they all reach a certain point before starting execution.
+
+### When Not to Use `CountDownLatch`:
+- **Reusability**: If you need a synchronization aid that can be reused after the count reaches zero, use `CyclicBarrier` instead.
+- **Multi-stage coordination**: If you need to coordinate multiple stages of thread execution with a resetting counter, `CyclicBarrier` or `Phaser` would be more appropriate.
+  
+### `CountDownLatch` vs `CyclicBarrier`:
+
+- **`CountDownLatch`**: It is a one-time use synchronization aid. Once the count reaches zero, the latch cannot be reset or reused.
+- **`CyclicBarrier`**: A reusable synchronization aid that can be used to make threads wait for each other at a common barrier point. After a barrier is broken (i.e., after threads have been released), it can be reused for the next set of threads.
+
+### Summary:
+- **`CountDownLatch`** is useful for situations where you need to wait for a fixed number of threads to complete before proceeding with a task.
+- It is a **one-time use** synchronization aid that blocks threads until a set count is reached.
+- It is ideal for tasks like **waiting for the completion of multiple threads** or **synchronizing the start of parallel tasks**.
+
+---
+### `CyclicBarrier` in Java
+
+A **`CyclicBarrier`** is a synchronization aid that allows a set of threads to wait for each other to reach a common barrier point before continuing. It is called a **cyclic** barrier because once the barrier is reached, it can be reused for the next set of threads that need to wait. Unlike a `CountDownLatch`, which is a one-time use mechanism, a `CyclicBarrier` can be reused once all the threads have reached the barrier.
+
+This is particularly useful in situations where you want multiple threads to work in parallel and synchronize at certain points in their execution. For example, in a parallel computation task, you may want to synchronize the threads after each phase of the task before they move to the next.
+
+### Key Features of `CyclicBarrier`:
+- **Reusability**: After all threads have reached the barrier, the barrier is reset and can be reused. This makes it suitable for iterative tasks where threads need to be synchronized multiple times.
+- **Count-based synchronization**: A `CyclicBarrier` is initialized with a count (number of threads). Once this number of threads has called `await()`, they are all released to proceed.
+- **Optional Action**: You can specify an optional action that will be executed once all threads have reached the barrier, before they continue.
+
+### Key Methods of `CyclicBarrier`:
+
+1. **`await()`**:
+   - Causes the calling thread to wait until all threads have reached the barrier. When the required number of threads have called `await()`, they are all released.
+   - This method can throw an `InterruptedException` if the thread is interrupted while waiting, and a `BrokenBarrierException` if the barrier is broken (e.g., another thread was interrupted).
+   
+   ```java
+   barrier.await();  // Wait until all threads reach the barrier
+   ```
+
+2. **`await(long timeout, TimeUnit unit)`**:
+   - Similar to `await()`, but with a timeout. The calling thread will wait until the barrier is tripped or the timeout expires.
+   
+   ```java
+   barrier.await(10, TimeUnit.SECONDS);  // Wait for up to 10 seconds
+   ```
+
+3. **`getNumberWaiting()`**:
+   - Returns the number of threads currently waiting at the barrier.
+   
+   ```java
+   int numberWaiting = barrier.getNumberWaiting();
+   ```
+
+4. **`getParties()`**:
+   - Returns the number of threads that must call `await()` to trip the barrier (i.e., the number of parties).
+   
+   ```java
+   int parties = barrier.getParties();  // The number of threads at the barrier
+   ```
+
+5. **`reset()`**:
+   - Resets the barrier to its initial state. This can be used if you need to reuse the barrier after it has been tripped. However, if any threads are currently waiting at the barrier, this will throw an `IllegalStateException`.
+   
+   ```java
+   barrier.reset();  // Resets the barrier
+   ```
+
+### Optional Action:
+When all threads reach the barrier, you can optionally specify an **action** to be executed. This action is run only once, after all threads have reached the barrier, before any of them are released.
+
+### Example of Using `CyclicBarrier`:
+
+Here's an example that demonstrates how a `CyclicBarrier` works. In this case, three threads will perform some work in parallel and then synchronize at a barrier before continuing.
+
+```java
+import java.util.concurrent.CyclicBarrier;
+
+public class CyclicBarrierExample {
+    public static void main(String[] args) throws InterruptedException {
+        int numberOfThreads = 3;
+        CyclicBarrier barrier = new CyclicBarrier(numberOfThreads, new BarrierAction());  // Barrier with optional action
+
+        // Create and start 3 threads
+        for (int i = 0; i < numberOfThreads; i++) {
+            new Thread(new Task(barrier, i)).start();
+        }
+    }
+
+    static class Task implements Runnable {
+        private final CyclicBarrier barrier;
+        private final int threadId;
+
+        public Task(CyclicBarrier barrier, int threadId) {
+            this.barrier = barrier;
+            this.threadId = threadId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println("Thread " + threadId + " is working.");
+                // Simulate some work
+                Thread.sleep((long) (Math.random() * 1000));
+
+                // Wait for other threads to reach the barrier
+                System.out.println("Thread " + threadId + " is waiting at the barrier.");
+                barrier.await();  // Wait until all threads reach the barrier
+                System.out.println("Thread " + threadId + " has passed the barrier.");
+            } catch (Exception e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    // Action to run once all threads reach the barrier
+    static class BarrierAction implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("All threads have reached the barrier, performing barrier action...");
+        }
+    }
+}
+```
+
+### Explanation of the Example:
+1. **CyclicBarrier Initialization**: We initialize a `CyclicBarrier` with a count of `3` (number of threads). We also pass an optional `BarrierAction`, which will be executed once all threads reach the barrier.
+   
+2. **Thread Execution**: Three threads are started. Each thread simulates doing some work by sleeping for a random amount of time. After the work, each thread calls `barrier.await()`, causing them to wait until all threads have reached the barrier.
+
+3. **Barrier Action**: Once all threads have called `await()`, the optional `BarrierAction` is executed. Then, the threads are released and can continue.
+
+4. **Waiting and Passing the Barrier**: After the barrier action completes, the threads continue execution and print messages to show they've passed the barrier.
+
+### Output (example):
+```
+Thread 0 is working.
+Thread 1 is working.
+Thread 2 is working.
+Thread 2 is waiting at the barrier.
+Thread 1 is waiting at the barrier.
+Thread 0 is waiting at the barrier.
+All threads have reached the barrier, performing barrier action...
+Thread 0 has passed the barrier.
+Thread 1 has passed the barrier.
+Thread 2 has passed the barrier.
+```
+
+### Key Characteristics:
+- **Reusability**: After all threads reach the barrier, the barrier is reset, and threads can use it again. This makes it useful for problems where threads need to synchronize multiple times during their execution (e.g., in iterative algorithms).
+  
+- **Fixed Count**: The barrier is initialized with a fixed number of threads (parties) that must reach the barrier before any of them can proceed.
+
+- **Optional Action**: An optional action can be executed when all threads reach the barrier. This is often used to perform some cleanup or prepare for the next phase of execution.
+
+### Use Cases of `CyclicBarrier`:
+1. **Parallel computations**:
+   - If you are performing a parallel computation that requires multiple threads to synchronize at certain points (e.g., after completing one phase of computation and before starting the next phase), a `CyclicBarrier` is ideal.
+  
+2. **Simulation**:
+   - In simulations where you have multiple agents (threads) performing tasks and periodically need to synchronize before moving to the next stage.
+  
+3. **Coordinating multiple threads**:
+   - When you need to synchronize a group of threads before they can continue to the next task, such as coordinating parallel tasks in a multi-threaded pipeline.
+
+### When to Use `CyclicBarrier`:
+- **Multiple phases of synchronization**: If you have a scenario where multiple threads need to synchronize repeatedly (for example, after each phase of a task), then `CyclicBarrier` is perfect. It can be reused after each barrier trip.
+- **Collaborative tasks**: If you have multiple threads performing collaborative tasks that need to wait for each other at certain points in time, like during the different stages of a multi-threaded algorithm, `CyclicBarrier` helps to coordinate their progress.
+
+### When Not to Use `CyclicBarrier`:
+- **One-time synchronization**: If you only need to synchronize threads once and not repeatedly, `CountDownLatch` is a better choice.
+- **Thread pooling**: For situations where you want to limit access to resources based on a fixed number of permits (e.g., limiting the number of threads accessing a shared resource), use a `Semaphore`.
+
+### `CyclicBarrier` vs `CountDownLatch`:
+
+- **`CyclicBarrier`**: Can be reused, allowing synchronization at multiple points. It is ideal for scenarios where you want threads to repeatedly wait for each other at certain points.
+- **`CountDownLatch`**: Can only be used once, and is typically used to block threads until a fixed number of threads finish their tasks.
+
+### Summary:
+- **`CyclicBarrier`** is a synchronization aid that allows threads to wait for each other at a common point (the barrier), and it can be reused once all threads have reached it.
+- It is ideal for scenarios where you need to **synchronize multiple threads at multiple points** during their execution (e.g., iterative tasks).
+- It offers **reusability**, and you can specify an **optional action** to be executed when all threads have reached the barrier.
