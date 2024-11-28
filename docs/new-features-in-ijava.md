@@ -904,3 +904,172 @@ abstract class Animal {
 - **Java 8 Interfaces**: Can have abstract methods, default methods (with implementation), static methods, but no instance fields or constructors.
 - **Abstract Classes**: Can have abstract and concrete methods, instance fields, constructors, and can inherit from other classes.
   
+---
+
+In **Java 8**, the **Concurrency API** saw several important updates and additions that significantly enhanced the way multithreading and parallel processing are handled. These improvements aimed to make concurrency easier to manage, more efficient, and more scalable. Some of the major updates introduced in Java 8 and beyond include new classes, methods, and concepts for better thread management, parallelism, and synchronization.
+
+Here’s an overview of the key new features and enhancements in the **Concurrency API** introduced in **Java 8 and later**, along with their uses and purposes:
+
+---
+
+### 1. **`CompletableFuture` (Java 8)**
+- **Description**: The **`CompletableFuture`** class was introduced in Java 8 as part of the `java.util.concurrent` package. It provides a more flexible and powerful way to handle asynchronous programming and concurrency, allowing for non-blocking asynchronous tasks, combining tasks, and working with results in a fluent and functional style.
+  
+- **Key Features**:
+  - **Asynchronous Execution**: You can run tasks asynchronously and then chain actions on the result.
+  - **Composability**: `CompletableFuture` can be used to chain multiple tasks together and manage them concurrently.
+  - **Non-blocking**: You can write asynchronous code in a more readable, non-blocking manner.
+  
+- **Example**:
+  ```java
+  CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+      return 10;
+  }).thenApplyAsync(result -> {
+      return result * 2;
+  });
+
+  // Combine futures
+  future.thenAcceptAsync(System.out::println);  // Output: 20
+  ```
+
+- **Use Case**:
+  - Ideal for handling long-running or IO-bound tasks (like reading data from a file or making HTTP requests) asynchronously without blocking the main thread.
+  - You can easily chain multiple tasks that depend on each other, making your asynchronous code more readable and maintainable.
+
+---
+
+### 2. **`ForkJoinPool` and Parallel Streams (Java 8)**
+- **Description**: The **`ForkJoinPool`** was introduced to help with parallel execution of tasks that can be broken down into smaller sub-tasks. In Java 8, the **`ForkJoinPool`** was used internally to execute **parallel streams** (via the `Stream.parallel()` method) and the `CompletableFuture` tasks.
+  
+- **Key Features**:
+  - **Parallel Processing**: Allows tasks to be broken down into smaller tasks and executed in parallel, with the results then being combined.
+  - **Work Stealing**: The `ForkJoinPool` uses a work-stealing algorithm, where idle threads can "steal" tasks from busy threads, making the execution more efficient.
+
+- **Example**:
+  ```java
+  List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  int sum = list.parallelStream()
+                .mapToInt(Integer::intValue)
+                .sum();
+  System.out.println(sum);  // Output: 55 (calculated in parallel)
+  ```
+
+- **Use Case**:
+  - Efficient for **data parallelism** where tasks can be split and processed concurrently (e.g., summing large datasets, performing heavy computations).
+  - The **`Stream.parallel()`** method allows you to leverage multiple cores for parallel processing without worrying about managing threads manually.
+
+---
+
+### 3. **`@FunctionalInterface` and Lambda Expressions (Java 8)**
+- **Description**: With the introduction of **lambda expressions** and **functional interfaces**, Java 8 made it easier to pass behavior (as parameters) to methods in the concurrency API, such as `ExecutorService.submit()` or `CompletableFuture.thenApply()`. Lambdas make asynchronous tasks and functional-style concurrency more concise and expressive.
+
+- **Example**:
+  ```java
+  ExecutorService executorService = Executors.newFixedThreadPool(10);
+  executorService.submit(() -> {
+      System.out.println("Task is running asynchronously");
+  });
+  ```
+
+- **Use Case**:
+  - Lambda expressions simplify the implementation of short-lived concurrency tasks (like submitting jobs to an executor).
+  - They are ideal when you want to pass simple behavior to a method or task (e.g., submitting a task to an executor or processing results asynchronously).
+
+---
+
+### 4. **`new` `Executor` API (Java 8)**
+- **Description**: The **`ExecutorService`** API was enhanced in Java 8 to support more flexible and efficient handling of concurrency tasks. A number of new methods were added to handle parallel tasks better.
+  
+- **Key Features**:
+  - The **`Executor`** and **`ExecutorService`** interfaces are part of a high-level API that abstracts away low-level thread management.
+  - New methods like **`invokeAll()`**, **`invokeAny()`**, and **`submit()`** provide more options for managing tasks.
+  
+- **Example**:
+  ```java
+  ExecutorService executorService = Executors.newFixedThreadPool(4);
+  executorService.submit(() -> {
+      System.out.println("Task executed in a pool thread");
+  });
+  executorService.shutdown();
+  ```
+
+- **Use Case**:
+  - **`ExecutorService`** is ideal for running multiple tasks in parallel without manually managing threads.
+  - **`invokeAll()`** and **`invokeAny()`** allow you to wait for tasks to finish or obtain results from multiple tasks at once, providing higher-level concurrency control.
+
+---
+
+### 5. **`StampedLock` (Java 8)**
+- **Description**: The **`StampedLock`** class was introduced to provide a more flexible and high-performance lock mechanism compared to traditional **`ReentrantLock`**. It offers three modes of locking:
+  - **Write Lock**: Exclusive lock for writing.
+  - **Read Lock**: Shared lock for reading.
+  - **Optimistic Lock**: Allows reading without blocking and checks if the lock was modified after reading.
+  
+- **Key Features**:
+  - **Optimistic Locking**: Allows a read operation to proceed without blocking, but it checks whether the data has been modified after the read. If modified, the read operation is retried.
+  - **Lock Downgrading**: A thread can acquire a write lock and then downgrade to a read lock.
+
+- **Example**:
+  ```java
+  StampedLock lock = new StampedLock();
+  long stamp = lock.readLock();
+  try {
+      // perform read operation
+  } finally {
+      lock.unlockRead(stamp);
+  }
+  ```
+
+- **Use Case**:
+  - **Optimistic reads**: Where reads are frequent and can be performed without acquiring a full lock, improving performance.
+  - **High contention scenarios**: Where different threads may want to read and write concurrently, but using traditional locks would introduce too much overhead.
+
+---
+
+### 6. **`Parallel Streams` (Java 8)**
+- **Description**: Java 8 added **parallel streams** to the **Stream API**. You can now convert a sequential stream to a parallel stream using the `parallel()` method, which allows operations on large datasets to be performed concurrently across multiple threads.
+
+- **Key Features**:
+  - **Easy Parallelization**: Simply call `.parallel()` on a stream to parallelize it.
+  - **Efficient Use of CPU Cores**: Stream operations can now be parallelized using available CPU cores, improving performance for large-scale data processing.
+
+- **Example**:
+  ```java
+  List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+  int sum = numbers.parallelStream().mapToInt(Integer::intValue).sum();
+  System.out.println(sum);  // Output: 21 (calculated in parallel)
+  ```
+
+- **Use Case**:
+  - Ideal for **data parallelism** when processing large collections of data, such as in map-reduce-like operations.
+  - Can be used for aggregating results from large datasets, such as computing the sum, average, or other statistics in parallel.
+
+---
+
+### 7. **`@Async` (Spring Framework)**
+- **Description**: Although not part of the core Java library, **`@Async`** (in Spring) provides an easy way to handle asynchronous tasks in Java. It is often used with Spring’s concurrency management tools for executing methods asynchronously in a background thread.
+  
+- **Key Features**:
+  - **Declarative Asynchronous Execution**: Mark methods with `@Async` and Spring will execute them asynchronously.
+  - **Thread Pool Management**: Spring can automatically handle thread pools, making it easier to manage background tasks.
+
+- **Use Case**:
+  - Ideal for applications that use the Spring framework and need to execute tasks asynchronously (like sending email notifications, processing data in the background, etc.).
+
+---
+
+### Summary of New Concurrency Features in Java 8:
+
+| **Feature**                          | **Description**                                                                                  | **Use Case**                                                                                             |
+|--------------------------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| **`CompletableFuture`**              | Provides a way to handle asynchronous tasks with callbacks, composing multiple futures.          | Asynchronous processing, managing complex workflows and chaining dependent tasks.                        |
+| **`ForkJoinPool` and Parallel Streams** | Parallel processing of tasks using a work-stealing algorithm, leveraging available CPU cores.    | Data parallelism, large-scale computations, optimizing multi-core performance.                          |
+| **Lambda Expressions and `@FunctionalInterface`** | Allows passing behavior (e.g., tasks) as parameters.                                              | Simplifies asynchronous tasks like submitting jobs to executors, processing results with lambda expressions. |
+|
+
+ **`ExecutorService` Enhancements**   | Higher-level abstractions to manage concurrency and parallelism.                                 | Running multiple concurrent tasks, managing thread pools, handling long-running or IO-bound tasks.      |
+| **`StampedLock`**                    | A more flexible locking mechanism with optimistic reading and lock downgrading.                  | High contention situations, where reads are frequent, and you want efficient locking.                    |
+| **Parallel Streams**                 | Parallelization of stream operations using multiple threads to improve performance.              | Processing large collections in parallel, such as summing values, filtering large datasets.              |
+| **`@Async` in Spring Framework**     | Annotations for executing methods asynchronously, with thread management handled by Spring.       | Background task execution in Spring-based applications, such as asynchronous notifications or data processing. |
+
+These updates in the **Java 8 Concurrency API** provide modern tools to simplify and improve parallel processing, asynchronous programming, and multi-threaded applications. They make it easier to write more efficient, readable, and scalable concurrent code.
