@@ -33,12 +33,874 @@
 | | **Hidden Classes** | Allows for defining classes that are not accessible from outside the JVM, typically used by frameworks. | Useful for frameworks and tools that generate bytecode at runtime. | Improves performance and security by restricting access to generated classes. |
 | **Java 16** (Released in March 2021) | **JEP 376: ZGC (Garbage Collector) on macOS** | Extends ZGC to macOS, bringing the low-latency garbage collector to this platform. | Useful for applications running on macOS that need low-latency GC. | Increases the cross-platform support for ZGC and optimizes memory management. |
 | | **Records (Finalized)** | Finalizing the Record feature introduced in Java 14. | Used for more concise and immutable data classes. | Further simplifies code and promotes immutability. |
-| **Java 17** (Released in September 2021) | **Sealed Classes (Finalized
-
-)** | Finalizes sealed classes feature from Java 15. | Used for data modeling and limiting subclassing. | Enhances domain modeling and control over class hierarchies. |
+| **Java 17** (Released in September 2021) | **Sealed Classes (Finalized)** | Finalizes sealed classes feature from Java 15. | Used for data modeling and limiting subclassing. | Enhances domain modeling and control over class hierarchies. |
 | | **JEP 356: Enhanced Pseudo-Random Number Generators** | Introduces new interfaces and implementations for random number generation. | Used in cryptographic applications and simulations. | Improves random number generation for better performance and security. |
 | **Java 18** (Released in March 2022) | **Simple Web Server** | A simple HTTP server that can be used for testing, debugging, or development purposes. | Ideal for quick prototyping or testing web-based applications. | Simplifies development and testing workflows without needing full-fledged web servers. |
 | **Java 19** (Released in September 2022) | **Record Patterns (Preview)** | Introduces pattern matching for records. | Allows deconstructing records in pattern matching. Example: `if (person instanceof Person(String name, int age)) {}` | Enhances the flexibility of pattern matching with records. |
 | **Java 20** (Released in March 2023) | **Vector API (Incubator)** | Offers a vector API for working with SIMD (Single Instruction, Multiple Data) operations. | Used in high-performance computing, scientific applications, and graphics. | Boosts performance by enabling vectorized operations. |
 | **Java 21** (Released in September 2023) | **Pattern Matching for Switch (Preview)** | Extends pattern matching to `switch` statements. | Enhances readability and flexibility when using `switch`. Example: `switch (obj) { case Integer i -> ...; }` | Simplifies complex `switch` statements, making them more powerful and concise. |
 | | **Virtual Threads** | Introduces lightweight threads to handle high concurrency with minimal overhead. | Ideal for applications with high concurrency, such as web servers or microservices. | Significantly reduces the overhead of handling large numbers of threads, improving scalability. |
+
+Java 8 introduced several key updates and new features to the **Collections Framework**, significantly enhancing how collections are handled, processed, and manipulated. Below are the most notable changes and additions that Java 8 brought to the Collections Framework:
+
+### 1. **Introduction of the Streams API**
+
+The **Streams API** in Java 8 is one of the most significant changes to the Collections Framework. It allows you to process collections in a more functional and declarative style, with support for both sequential and parallel operations.
+
+- **Stream Interface**: The `Stream` interface represents a sequence of elements and provides methods to perform aggregate operations on them (e.g., filtering, mapping, reducing).
+- **Key Methods**:
+  - `filter(Predicate<? super T> predicate)` – Filters elements based on the provided predicate.
+  - `map(Function<? super T, ? extends R> mapper)` – Transforms each element into another form.
+  - `reduce(T identity, BinaryOperator<T> accumulator)` – Performs a reduction on the elements using an associative accumulation function.
+  - `forEach(Consumer<? super T> action)` – Performs an action for each element of the stream.
+  - `collect(Collector<? super T, A, R> collector)` – Collects the elements of the stream into a collection or other containers.
+  - `sorted(Comparator<? super T> comparator)` – Sorts elements according to a comparator.
+  - **Parallel Streams**: `parallelStream()` can be used to process data in parallel, making full use of multi-core processors.
+
+**Example**:
+```java
+List<String> list = Arrays.asList("apple", "banana", "cherry", "date");
+list.stream()
+    .filter(s -> s.startsWith("a"))
+    .map(String::toUpperCase)
+    .forEach(System.out::println);  // Output: APPLE
+```
+
+**Benefits**:
+- Simplifies working with large collections of data.
+- Supports both sequential and parallel execution.
+- Reduces boilerplate code for filtering, mapping, and collecting.
+
+---
+
+### 2. **Lambda Expressions and Functional Interfaces**
+
+Lambda expressions in Java 8 allowed for more concise and flexible ways to write functional-style code. They can be used extensively with the **Streams API** and other new collection methods.
+
+- **Lambda Syntax**: `(parameters) -> expression` or `(parameters) -> { statements; }`
+- **Functional Interfaces**: Java 8 introduced the concept of **functional interfaces**, which are interfaces that have only one abstract method. Common examples include `Predicate<T>`, `Function<T, R>`, `Consumer<T>`, and `Supplier<T>`.
+
+**Example**:
+```java
+List<String> list = Arrays.asList("one", "two", "three");
+list.forEach(s -> System.out.println(s));  // Prints each element of the list
+```
+
+**Benefits**:
+- Improves readability by reducing boilerplate code (e.g., no need for anonymous inner classes).
+- Enables functional programming in Java, allowing collections to be processed in a more declarative manner.
+
+---
+
+### 3. **Default Methods in Interfaces**
+
+Java 8 allows interfaces to have **default methods**—methods with a body. This change was made to enable the addition of new methods to existing interfaces without breaking existing implementations. Now, collection interfaces like `Collection`, `List`, `Set`, `Queue`, and `Map` have default methods.
+
+- **Example of Default Method**:
+  ```java
+  interface MyInterface {
+      default void print() {
+          System.out.println("Default print method");
+      }
+  }
+  ```
+
+- **Example in Collections**:
+  - `forEach(Consumer<? super E> action)` is a default method added to the `Collection` interface. It allows iterating over the elements of the collection using a lambda expression or method reference.
+
+**Benefits**:
+- Enables the extension of interfaces without breaking backward compatibility.
+- Reduces the need for abstract classes.
+
+---
+
+### 4. **New Methods in the `Collection` Interface**
+
+Java 8 added several new methods to the **`Collection`** interface. These methods are now available to all collections (`List`, `Set`, `Queue`, etc.):
+
+- **`forEach(Consumer<? super E> action)`**: Iterates over each element in the collection and performs the given action.
+  
+  **Example**:
+  ```java
+  List<String> list = Arrays.asList("apple", "banana", "cherry");
+  list.forEach(System.out::println);  // Output: apple, banana, cherry
+  ```
+
+- **`removeIf(Predicate<? super E> filter)`**: Removes elements from the collection that satisfy the given predicate.
+
+  **Example**:
+  ```java
+  List<String> list = new ArrayList<>(Arrays.asList("a", "b", "c"));
+  list.removeIf(s -> s.equals("b"));
+  System.out.println(list);  // Output: [a, c]
+  ```
+
+- **`stream()`**: Converts the collection into a stream for further processing.
+
+  **Example**:
+  ```java
+  List<String> list = Arrays.asList("one", "two", "three");
+  list.stream().filter(s -> s.length() == 3).forEach(System.out::println);  // Output: one two
+  ```
+
+- **`parallelStream()`**: Returns a parallel stream for concurrent processing of the collection.
+
+  **Example**:
+  ```java
+  list.parallelStream().forEach(System.out::println);  // Processes elements in parallel
+  ```
+
+**Benefits**:
+- Makes iteration and filtering easier with lambdas.
+- Improves performance with parallel streams.
+- Allows for more concise and readable code.
+
+---
+
+### 5. **New Methods in the `Map` Interface**
+
+Several new methods were introduced to the **`Map`** interface in Java 8 to improve how maps are manipulated:
+
+- **`forEach(BiConsumer<? super K, ? super V> action)`**: Iterates over the map's key-value pairs and applies the given action.
+
+  **Example**:
+  ```java
+  Map<Integer, String> map = Map.of(1, "one", 2, "two");
+  map.forEach((key, value) -> System.out.println(key + ": " + value));
+  ```
+
+- **`replaceAll(BiFunction<? super K, ? super V, ? extends V> function)`**: Replaces each value in the map with the result of applying the provided function.
+
+  **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  map.replaceAll((key, value) -> value.toUpperCase());
+  System.out.println(map);  // Output: {1=APPLE}
+  ```
+
+- **`computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)`**: Computes a value for the key if it is absent.
+
+  **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.computeIfAbsent(1, k -> "one");
+  System.out.println(map);  // Output: {1=one}
+  ```
+
+- **`merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)`**: Merges a value with the existing value for the given key.
+
+  **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  map.merge(1, "fruit", (oldValue, newValue) -> oldValue + " & " + newValue);
+  System.out.println(map);  // Output: {1=apple & fruit}
+  ```
+
+**Benefits**:
+- More flexible and functional methods for manipulating maps.
+- Simplifies operations like replacing, merging, and computing values.
+
+---
+
+### 6. **The `Optional` Class**
+
+The **`Optional`** class was introduced in **`java.util`** to help avoid `NullPointerException`. It represents a value that might or might not be present, encouraging safer handling of nulls, especially when working with collections.
+
+- **Example**:
+  ```java
+  Optional<String> name = Optional.ofNullable(getName());
+  name.ifPresent(n -> System.out.println("Name is: " + n));
+  ```
+
+- **Methods**:
+  - `isPresent()` – Checks if a value is present.
+  - `ifPresent(Consumer<? super T> action)` – Executes a given action if the value is present.
+  - `orElse(T other)` – Returns the value if present, otherwise returns the provided default value.
+
+**Benefits**:
+- Reduces the need for explicit null checks.
+- Prevents `NullPointerException` by enforcing handling of absent values.
+
+---
+
+### 7. **Collectors Utility Class**
+
+The **`Collectors`** utility class provides predefined implementations for common collection operations that can be used with streams:
+
+- **`toList()`**: Collects elements into a `List`.
+- **`toSet()`**: Collects elements into a `Set`.
+- **`joining()`**: Concatenates elements into a string.
+- **`groupingBy()`**: Groups elements by a classifier function.
+- **`partitioningBy()`**: Partitions elements into two groups based on a predicate.
+
+**Example**:
+```java
+List<String> list = Arrays.asList("apple", "banana", "cherry");
+String result = list.stream().collect(Collectors.joining(", ", "[", "]"));
+System.out.println(result);  // Output: [apple, banana, cherry]
+```
+
+**Benefits**:
+- Simplifies collecting and grouping elements from a stream.
+- Provides a consistent way to
+
+ convert stream data into various collection types.
+
+---
+
+### Summary of Key Java 8 Updates to the Collections Framework:
+
+| **Feature**            | **Description**                                                                 | **Example**                                                       | **Benefits**                                                              |
+|------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------|---------------------------------------------------------------------------|
+| **Streams API**         | Functional-style operations on collections, supporting parallelism.            | `stream().filter().map().reduce()`                                | Concise, readable, and performant data processing.                        |
+| **Lambda Expressions**  | Enables functional programming style with shorter syntax.                       | `forEach(s -> System.out.println(s))`                             | Reduces boilerplate, increases flexibility.                               |
+| **Default Methods**     | Allows interfaces to have default implementations without breaking existing code.| `forEach()`, `removeIf()`                                         | Extends interfaces while maintaining backward compatibility.              |
+| **New Collection Methods** | New methods in `Collection`, like `forEach`, `removeIf`, `stream()`.             | `list.forEach()`, `list.stream()`                                  | Simplifies iteration, filtering, and collection processing.               |
+| **Optional Class**      | Encapsulates an optional value to avoid `NullPointerException`.                | `Optional.ofNullable(value).ifPresent()`                          | Safer handling of null values, prevents `NullPointerException`.           |
+| **Map Updates**         | New methods in `Map`, like `computeIfAbsent()`, `replaceAll()`, and `merge()`. | `map.merge()`, `map.replaceAll()`                                  | Simplifies map manipulation and functional handling of key-value pairs.   |
+| **Collectors Class**    | Utility methods for collecting stream elements.                               | `Collectors.toList()`, `Collectors.groupingBy()`                   | Provides convenient ways to gather stream results into collections.      |
+
+---
+
+In **Java 8**, the **`Map`** interface was enhanced with several new methods, making it more flexible, functional, and easier to work with. These updates enable you to perform a variety of operations on maps in a more concise and expressive manner, often using **lambdas** and **streams**.
+
+Here are the key updates and new methods introduced to the **`Map`** interface in Java 8:
+
+### 1. **`forEach(BiConsumer<? super K, ? super V> action)`**
+- **Description**: This method allows you to iterate over the entries (key-value pairs) in a `Map` and perform an action for each entry. The action is provided as a `BiConsumer`, which takes two parameters: the key and the value.
+- **Example**:
+  ```java
+  Map<Integer, String> map = Map.of(1, "one", 2, "two", 3, "three");
+  map.forEach((key, value) -> System.out.println(key + ": " + value));
+  ```
+  **Output**:
+  ```
+  1: one
+  2: two
+  3: three
+  ```
+
+- **Benefits**: 
+  - Simplifies iteration over `Map` entries.
+  - Makes the code more readable and concise.
+  - Can be combined with **lambda expressions** or **method references**.
+
+---
+
+### 2. **`replaceAll(BiFunction<? super K, ? super V, ? extends V> function)`**
+- **Description**: This method allows you to replace all values in the map by applying a given function to each key-value pair. The function takes the key and value, and returns the new value.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  map.put(2, "banana");
+  map.put(3, "cherry");
+  
+  map.replaceAll((key, value) -> value.toUpperCase());
+  
+  System.out.println(map);  // Output: {1=APPLE, 2=BANANA, 3=CHERRY}
+  ```
+
+- **Benefits**: 
+  - Provides a more concise way to modify all values in the map.
+  - Enables transformations to be performed on map values in a functional style.
+
+---
+
+### 3. **`computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)`**
+- **Description**: This method computes a value for the specified key if the key is not already present in the map. If the key is absent, the `mappingFunction` is applied to compute the value and insert it into the map.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  
+  map.computeIfAbsent(2, key -> "banana");
+  map.computeIfAbsent(1, key -> "grape");  // This won't change the value for key 1
+  
+  System.out.println(map);  // Output: {1=apple, 2=banana}
+  ```
+
+- **Benefits**:
+  - Helps in populating the map with computed values only when necessary.
+  - Avoids unnecessary recomputation when the key already exists.
+  - Useful for lazy loading or default values.
+
+---
+
+### 4. **`computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)`**
+- **Description**: This method computes a new value for an existing key if the key is present in the map. If the key is absent, nothing happens. The provided `remappingFunction` takes both the key and the current value, and computes a new value.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  map.put(2, "banana");
+  
+  map.computeIfPresent(1, (key, value) -> value.toUpperCase());
+  map.computeIfPresent(3, (key, value) -> value.toLowerCase());  // No effect, as key 3 is not present
+  
+  System.out.println(map);  // Output: {1=APPLE, 2=banana}
+  ```
+
+- **Benefits**:
+  - Enables updating an existing value if the key is present.
+  - Provides a functional way to modify map entries conditionally.
+
+---
+
+### 5. **`merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)`**
+- **Description**: This method allows you to merge the specified value with the existing value for the given key in the map. If the key is absent, the given value is inserted. If the key is present, the `remappingFunction` is used to combine the existing value with the new value.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  map.put(2, "banana");
+  
+  map.merge(1, "fruit", (oldValue, newValue) -> oldValue + " & " + newValue);
+  map.merge(3, "cherry", (oldValue, newValue) -> oldValue + " & " + newValue);  // Key 3 is absent, value is inserted
+  
+  System.out.println(map);  // Output: {1=apple & fruit, 2=banana, 3=cherry}
+  ```
+
+- **Benefits**:
+  - Provides a powerful mechanism to update or insert values based on a custom merge logic.
+  - Useful for scenarios where the value for an existing key needs to be modified or combined with a new value.
+
+---
+
+### 6. **`getOrDefault(Object key, V defaultValue)`**
+- **Description**: This method returns the value associated with the specified key, or the provided default value if the key is not found in the map.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  
+  String value = map.getOrDefault(2, "banana");
+  System.out.println(value);  // Output: banana
+  ```
+
+- **Benefits**:
+  - Simplifies retrieving a value with a fallback if the key is missing.
+  - Reduces the need for null checks when the key might be absent.
+
+---
+
+### 7. **`putIfAbsent(K key, V value)`**
+- **Description**: This method inserts the value for the given key only if the key is not already present in the map. If the key already exists, the existing value is retained.
+- **Example**:
+  ```java
+  Map<Integer, String> map = new HashMap<>();
+  map.put(1, "apple");
+  
+  map.putIfAbsent(1, "banana");  // Does nothing because key 1 already exists.
+  map.putIfAbsent(2, "cherry");  // Adds key 2 with value "cherry".
+  
+  System.out.println(map);  // Output: {1=apple, 2=cherry}
+  ```
+
+- **Benefits**:
+  - Prevents overwriting existing values.
+  - Useful for ensuring that a key has a default value only if it is not already set.
+
+---
+
+### Summary of Key Java 8 Updates to the `Map` Interface:
+
+| **Method**                         | **Description**                                                                 | **Example Use Case**                                                    |
+|------------------------------------|---------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| **`forEach(BiConsumer<? super K, ? super V> action)`** | Iterates over the map and applies the action on each key-value pair. | `map.forEach((key, value) -> System.out.println(key + ": " + value));` |
+| **`replaceAll(BiFunction<? super K, ? super V, ? extends V> function)`** | Replaces all values in the map using the provided function. | `map.replaceAll((key, value) -> value.toUpperCase());`                 |
+| **`computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)`** | Computes a value for a missing key if it is not already present. | `map.computeIfAbsent(2, key -> "banana");`                             |
+| **`computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)`** | Computes a new value if the key is present in the map. | `map.computeIfPresent(1, (key, value) -> value.toUpperCase());`       |
+| **`merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)`** | Merges a value with an existing value for a key. | `map.merge(1, "fruit", (oldValue, newValue) -> oldValue + " & " + newValue);` |
+| **`getOrDefault(Object key, V defaultValue)`** | Returns the value or the default if the key is absent. | `String value = map.getOrDefault(2, "banana");`                       |
+| **`putIfAbsent(K key, V value)`**   | Adds a key-value pair only if the key is not already present. | `map.putIfAbsent(2, "cherry");`                                         |
+
+### Benefits of Java 8 Updates to `Map`:
+- **Conciseness**: The new methods simplify map manipulations, making the code more concise and readable.
+- **Functional Style**: These methods encourage the use of functional programming techniques (like lambdas and higher-order functions) for
+
+ handling maps.
+- **Performance**: Some methods like `computeIfAbsent` or `merge` can be more efficient than manually checking if a key exists and performing operations.
+
+These updates to the `Map` interface make it easier and more flexible to work with key-value pairs in a more modern, functional programming style in Java.
+
+---
+
+In **Java 8**, the **`String`** class received several important updates that enhanced its functionality and made string manipulation more powerful, especially in the context of **lambda expressions**, **streams**, and **functional programming**. Below are the key updates introduced to the **`String`** class in Java 8:
+
+### 1. **`String.join(CharSequence delimiter, CharSequence... elements)`**
+- **Description**: The `String.join()` method was introduced to simplify joining multiple strings (or other `CharSequence` objects) with a specified delimiter. It works with any collection of `CharSequence` elements, including arrays, lists, or any iterable collection.
+  
+- **Example**:
+  ```java
+  String result = String.join(", ", "apple", "banana", "cherry");
+  System.out.println(result);  // Output: apple, banana, cherry
+  ```
+
+  You can also use `String.join()` with collections or arrays:
+  ```java
+  List<String> list = Arrays.asList("one", "two", "three");
+  String result = String.join("-", list);
+  System.out.println(result);  // Output: one-two-three
+  ```
+
+- **Benefits**:
+  - Simplifies the process of joining strings with a delimiter.
+  - Avoids the need for manually iterating over collections to concatenate elements.
+  
+---
+
+### 2. **`String.lines()`**
+- **Description**: The `String.lines()` method was added to split a `String` into a stream of lines. It returns a **Stream<String>**, where each element in the stream represents a line from the string (based on line separators such as `\n` or `\r\n`).
+  
+- **Example**:
+  ```java
+  String text = "First line\nSecond line\nThird line";
+  text.lines().forEach(System.out::println);
+  ```
+
+  **Output**:
+  ```
+  First line
+  Second line
+  Third line
+  ```
+
+- **Benefits**:
+  - Provides an easy and functional way to process text line by line.
+  - Can be used in combination with the **Streams API** for more complex text processing tasks.
+
+---
+
+### 3. **`String.strip()` and `String.stripLeading()` / `String.stripTrailing()`**
+- **Description**: Java 8 introduced new methods for removing whitespace from the beginning and end of a string:
+  - `String.strip()` removes both leading and trailing whitespace.
+  - `String.stripLeading()` removes leading whitespace (beginning of the string).
+  - `String.stripTrailing()` removes trailing whitespace (end of the string).
+  
+  These methods are an improvement over `trim()`, as they are Unicode-aware and follow the Unicode standard for whitespace characters.
+
+- **Example**:
+  ```java
+  String text = "   Hello World!   ";
+  
+  System.out.println(text.strip());       // Output: "Hello World!"
+  System.out.println(text.stripLeading());  // Output: "Hello World!   "
+  System.out.println(text.stripTrailing()); // Output: "   Hello World!"
+  ```
+
+- **Benefits**:
+  - Handles Unicode whitespace characters, not just the ASCII space.
+  - Provides more accurate string trimming according to Unicode definitions.
+
+---
+
+### 4. **`String.repeat(int count)`**
+- **Description**: The `String.repeat()` method was added to repeat a string a given number of times. This makes it much easier to create repeated patterns or strings without needing to write loops.
+
+- **Example**:
+  ```java
+  String repeated = "abc".repeat(3);
+  System.out.println(repeated);  // Output: abcabcabc
+  ```
+
+- **Benefits**:
+  - Provides a more concise and readable way to repeat strings compared to using a loop or `StringBuilder`.
+  - Great for generating repeated patterns or generating text content dynamically.
+
+---
+
+### 5. **`String.chars()`**
+- **Description**: The `String.chars()` method was introduced to return an **IntStream** of the code points of a string. This allows you to work with the individual Unicode code points of a string in a more functional and stream-based way.
+
+- **Example**:
+  ```java
+  String text = "Hello";
+  text.chars().forEach(c -> System.out.println((char) c));
+  ```
+
+  **Output**:
+  ```
+  H
+  e
+  l
+  l
+  o
+  ```
+
+- **Benefits**:
+  - Facilitates working with individual characters in a more functional and stream-based manner.
+  - Useful for processing non-ASCII characters and surrogate pairs in Unicode.
+
+---
+
+### 6. **`String.codePoints()`**
+- **Description**: The `String.codePoints()` method returns an **IntStream** of Unicode code points from a string. This is similar to `chars()`, but it allows you to process code points in a way that properly handles characters outside the Basic Multilingual Plane (BMP), such as emoji or characters from other scripts that require multiple `char` values.
+
+- **Example**:
+  ```java
+  String text = "Hello 🌍";
+  text.codePoints().forEach(c -> System.out.println((char) c));
+  ```
+
+  **Output**:
+  ```
+  H
+  e
+  l
+  l
+  o
+  (space)
+  🌍
+  ```
+
+- **Benefits**:
+  - Handles Unicode characters and surrogate pairs properly.
+  - Useful for processing complex characters (e.g., emoji, Asian scripts, etc.) in a functional style.
+
+---
+
+### 7. **`String.isBlank()`**
+- **Description**: The `String.isBlank()` method was introduced to check whether a string is empty or consists only of whitespace characters (spaces, tabs, newlines, etc.). This is an improvement over `isEmpty()`, as it accounts for strings that might contain only spaces or other whitespace characters.
+
+- **Example**:
+  ```java
+  String str1 = "   ";
+  String str2 = "Hello";
+  
+  System.out.println(str1.isBlank());  // Output: true
+  System.out.println(str2.isBlank());  // Output: false
+  ```
+
+- **Benefits**:
+  - Provides a simple and reliable way to check for blank (whitespace-only) strings.
+  - Useful for validation checks where only non-empty, non-blank strings are acceptable.
+
+---
+
+### 8. **`String.format(Locale, String, Object...)`**
+- **Description**: Java 8 introduced the ability to pass a `Locale` explicitly to the `String.format()` method, making it easier to format strings in a locale-specific way. This is particularly useful for internationalization (i18n) and ensuring the correct format for dates, numbers, and currencies.
+
+- **Example**:
+  ```java
+  Locale locale = Locale.FRANCE;
+  String formatted = String.format(locale, "Price: %.2f", 1234.56);
+  System.out.println(formatted);  // Output: Price: 1234,56 (using French locale formatting)
+  ```
+
+- **Benefits**:
+  - Helps in formatting strings based on a specific locale, ensuring that numbers, currencies, and other locale-sensitive data are displayed correctly.
+
+---
+
+### Summary of Key String Updates in Java 8:
+
+| **Method**                        | **Description**                                                       | **Example**                                                              |
+|-----------------------------------|-----------------------------------------------------------------------|--------------------------------------------------------------------------|
+| **`String.join(CharSequence delimiter, CharSequence... elements)`** | Joins multiple strings with a delimiter.                             | `String.join(", ", "apple", "banana", "cherry")`                          |
+| **`String.lines()`**              | Splits a string into a stream of lines.                               | `"First line\nSecond line".lines().forEach(System.out::println)`          |
+| **`String.strip()`**              | Removes leading and trailing whitespace (Unicode-aware).             | `"   Hello   ".strip()`                                                  |
+| **`String.stripLeading()`**       | Removes leading whitespace (Unicode-aware).                          | `"   Hello   ".stripLeading()`                                            |
+| **`String.stripTrailing()`**      | Removes trailing whitespace (Unicode-aware).                         | `"   Hello   ".stripTrailing()`                                           |
+| **`String.repeat(int count)`**    | Repeats the string a given number of times.                           | `"abc".repeat(3)`  (Output: `"abcabcabc"`)                                |
+| **`String.chars()`**              | Returns an `IntStream` of the string’s characters.                    | `"Hello".chars().forEach(c -> System.out.println((char) c))`              |
+| **`String.codePoints()`**         | Returns an `IntStream` of Unicode code points.                        | `"Hello 🌍".codePoints().forEach(c -> System.out.println((char) c))`      |
+| **`String.isBlank()`**            | Checks if a string is empty or only contains whitespace.              | `"   ".isBlank()`  (Output: `true`)                                       |
+| **`String.format(Locale, String, Object...)`** | Formats a string with a given locale.                                | `String.format(Locale.FRANCE, "Price: %.2f", 1234.56)`                   |
+
+### Benefits of Java 8 String Updates:
+- **Simplification**: Many of these updates simplify common string operations, such as joining, trimming, and checking for blank strings.
+- **Functional Programming**: Methods like `lines()`, `chars()`, and `codePoints()` provide stream-based, functional-style operations for working with strings.
+- **Unicode Support**: Methods like `strip()`, `chars()`, and `codePoints()` ensure proper handling of Unicode characters, including whitespace and surrogate pairs.
+
+These enhancements to
+
+ the **`String`** class in Java 8 provide a more powerful and flexible set of tools for string manipulation and improve compatibility with modern programming paradigms, like functional programming and internationalization.
+
+---
+
+In **Java 8**, abstract classes received some important updates, primarily with the addition of **default methods** and **static methods**. These changes allowed abstract classes to have behavior (in addition to just defining an API) and also improved the overall flexibility and usability of abstract classes in Java. Below are the key updates introduced to abstract classes in Java 8:
+
+### 1. **Default Methods in Abstract Classes**
+- **Description**: Java 8 introduced the concept of **default methods** in interfaces, but abstract classes can also define methods with a body (which behave similarly to default methods in interfaces). This allows abstract classes to provide concrete behavior that can be inherited by subclasses, making it easier to add new methods without breaking existing implementations.
+  
+- **Key Points**:
+  - A default method in an abstract class is a method with a body, defined using the `default` keyword.
+  - Abstract classes can now provide a default implementation for some methods, which can be overridden by subclasses if needed.
+  
+- **Example**:
+  ```java
+  abstract class Shape {
+      abstract void draw(); // Abstract method (must be implemented by subclasses)
+
+      // Default method with a body
+      public void color() {
+          System.out.println("Coloring the shape");
+      }
+  }
+
+  class Circle extends Shape {
+      @Override
+      void draw() {
+          System.out.println("Drawing Circle");
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Circle circle = new Circle();
+          circle.draw();  // Output: Drawing Circle
+          circle.color(); // Output: Coloring the shape (default implementation)
+      }
+  }
+  ```
+
+- **Benefits**:
+  - **Backward Compatibility**: You can add new methods to abstract classes without forcing subclasses to implement them.
+  - **Code Reusability**: Provides common functionality (like `color()` in the example) in the abstract class that can be shared by all subclasses.
+  - **Flexibility**: Subclasses can override default methods to provide their own specific behavior.
+
+---
+
+### 2. **Static Methods in Abstract Classes**
+- **Description**: Java 8 also introduced the ability to define **static methods** in abstract classes. This allows abstract classes to provide utility methods or other static behavior, which is common in base classes. Static methods in abstract classes are not inherited by subclasses but can be accessed through the class name.
+
+- **Example**:
+  ```java
+  abstract class Shape {
+      static void printShapeType() {
+          System.out.println("This is a shape.");
+      }
+  }
+
+  class Circle extends Shape {
+      // No need to override the static method
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          // Accessing the static method via the abstract class
+          Shape.printShapeType();  // Output: This is a shape.
+      }
+  }
+  ```
+
+- **Benefits**:
+  - **Utility Methods**: Abstract classes can now have static utility methods (like `printShapeType()`) that are related to the class but are not required to be overridden by subclasses.
+  - **Organized Code**: Helps in organizing common static methods in abstract classes, reducing code duplication.
+
+---
+
+### 3. **Private Methods in Abstract Classes**
+- **Description**: Java 9 (after Java 8) introduced **private methods** in interfaces, but in Java 8, abstract classes already supported private methods. This means that in Java 8, you could have **private helper methods** inside abstract classes. These methods cannot be overridden, and they are only accessible within the class itself.
+
+- **Example**:
+  ```java
+  abstract class Shape {
+      abstract void draw(); // Abstract method
+
+      // Private helper method
+      private void printMessage() {
+          System.out.println("Shape is being drawn.");
+      }
+
+      // Method using the private method
+      public void drawShape() {
+          printMessage();
+          draw();
+      }
+  }
+
+  class Circle extends Shape {
+      @Override
+      void draw() {
+          System.out.println("Drawing Circle");
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Circle circle = new Circle();
+          circle.drawShape();  // Output: Shape is being drawn. Drawing Circle
+      }
+  }
+  ```
+
+- **Benefits**:
+  - **Encapsulation**: The ability to use private methods allows for better encapsulation within abstract classes.
+  - **Helper Methods**: Private methods can be used as helper methods that are not intended to be accessed outside the abstract class.
+  
+---
+
+### 4. **Increased Flexibility with Method Overriding**
+- **Description**: Java 8 abstract classes can now have methods that are already implemented with a default implementation or static methods, giving subclasses the flexibility to override or not override methods based on the need.
+
+  - Abstract classes can define methods with default behaviors, and subclasses can override them if they require specialized behavior.
+  
+- **Example**:
+  ```java
+  abstract class Animal {
+      abstract void sound();  // Abstract method
+
+      // Default method
+      public void breathe() {
+          System.out.println("Breathing...");
+      }
+  }
+
+  class Dog extends Animal {
+      @Override
+      void sound() {
+          System.out.println("Barking");
+      }
+
+      // No need to override breathe() if the default behavior is sufficient
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Dog dog = new Dog();
+          dog.sound();  // Output: Barking
+          dog.breathe(); // Output: Breathing...
+      }
+  }
+  ```
+
+- **Benefits**:
+  - **Reduced Boilerplate**: You can provide default behavior to reduce the need for every subclass to implement every method.
+  - **Enhanced Flexibility**: Subclasses can choose to override methods as needed, or use the default methods directly.
+
+---
+
+### Summary of Java 8 Updates to Abstract Classes:
+
+| **Feature**              | **Description**                                                                 | **Example Use Case**                                         |
+|--------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------|
+| **Default Methods**       | Abstract classes can provide method implementations, which can be inherited or overridden by subclasses. | Allows providing common method implementations for subclasses. |
+| **Static Methods**        | Abstract classes can now have static methods, which can be called without instantiating the class. | Utility or helper methods that don't need to be overridden.  |
+| **Private Methods**       | Abstract classes can define private methods that are only used internally.        | Helper methods for internal use that don't need to be accessed outside the class. |
+| **Method Overriding Flexibility** | Subclasses can choose to override default methods or use them as-is. | Subclasses can choose to override or use default behavior from the abstract class. |
+
+### Benefits of Java 8 Updates to Abstract Classes:
+- **Code Reusability**: Abstract classes can now provide default behavior, reducing the amount of code that subclasses need to write.
+- **Backward Compatibility**: Default methods allow you to add new methods to abstract classes without breaking existing subclasses.
+- **Flexible Design**: Subclasses can now inherit behavior from abstract classes but still override methods as needed.
+- **Improved Organization**: Static and private methods help in organizing and structuring code more effectively.
+
+These updates to abstract classes in **Java 8** allow for more flexible and powerful object-oriented design, where abstract classes can provide behavior while still maintaining their role as templates for subclasses.
+
+---
+
+In **Java 8**, interfaces, abstract classes, and regular interfaces (before Java 8) have distinct characteristics. The introduction of new features like **default methods** and **static methods** in interfaces has blurred the lines between abstract classes and interfaces, but there are still key differences between them. Here’s a detailed comparison between **Java 8 interfaces**, **abstract classes**, and **regular interfaces (before Java 8)**:
+
+### 1. **Regular Interface (Before Java 8)**
+In Java versions prior to **Java 8**, interfaces were used primarily to define **abstract methods** that must be implemented by any class that implements the interface. They could not have any method implementations (except for `static` and `default` methods, which were introduced in Java 8).
+
+#### Key Characteristics:
+- **All methods are abstract by default** (except for `static` and `default` methods in Java 8).
+- **Cannot have instance fields**; they can only have `static` constants (public, static, final fields).
+- **Cannot have method implementations** (all methods are implicitly abstract before Java 8).
+- **Cannot have constructors**.
+
+#### Example of Regular Interface (Before Java 8):
+```java
+interface Animal {
+    void sound();  // Abstract method, no implementation
+
+    // All fields are implicitly public, static, final
+    int age = 5;
+
+    // No constructors allowed
+}
+```
+
+### 2. **Java 8 Interface (With Default and Static Methods)**
+Java 8 introduced the concept of **default methods** and **static methods** in interfaces, allowing interfaces to provide method implementations. This gave interfaces more functionality, similar to abstract classes, but with certain restrictions.
+
+#### Key Characteristics of Java 8 Interface:
+- **Can have abstract methods** (which must be implemented by classes that implement the interface).
+- **Can have default methods**: These are methods with a body, which provide a default implementation. They can be overridden by implementing classes but are not required to be.
+- **Can have static methods**: These are methods that belong to the interface itself and can be called without an instance of the interface.
+- **Can have constants**: Like regular interfaces, all fields are `public`, `static`, and `final`.
+- **Cannot have instance fields or constructors**.
+  
+#### Example of Java 8 Interface (With Default and Static Methods):
+```java
+interface Animal {
+    void sound();  // Abstract method
+
+    // Default method
+    default void eat() {
+        System.out.println("Eating food");
+    }
+
+    // Static method
+    static void sleep() {
+        System.out.println("Sleeping");
+    }
+}
+```
+
+### 3. **Abstract Class**
+An abstract class is a class that cannot be instantiated directly and is meant to be subclassed. It can contain both abstract methods (without a body) and concrete methods (with a body). Abstract classes are a more flexible alternative to interfaces when you need shared code in the base class.
+
+#### Key Characteristics of Abstract Classes:
+- **Can have both abstract and concrete methods**: Abstract methods must be implemented by subclasses, while concrete methods provide a default implementation.
+- **Can have instance fields** (non-static fields). Unlike interfaces, abstract classes can hold state.
+- **Can have constructors**: Abstract classes can define constructors, which can be invoked by subclasses.
+- **Can implement interfaces**: An abstract class can implement one or more interfaces.
+- **Can inherit from other classes**: Unlike interfaces, abstract classes can extend other classes, making it possible to create a class hierarchy.
+  
+#### Example of Abstract Class:
+```java
+abstract class Animal {
+    int age;  // Instance field
+
+    // Constructor
+    Animal(int age) {
+        this.age = age;
+    }
+
+    // Abstract method
+    abstract void sound();
+
+    // Concrete method
+    void breathe() {
+        System.out.println("Breathing...");
+    }
+}
+```
+
+---
+
+### **Comparison Table: Interface vs Abstract Class vs Regular Interface**
+
+| Feature                            | **Regular Interface (Before Java 8)**                               | **Java 8 Interface (With Default and Static Methods)**         | **Abstract Class**                                      |
+|------------------------------------|---------------------------------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------|
+| **Method Implementation**          | No method implementation (only abstract methods)                   | Can have abstract methods, default methods, and static methods | Can have both abstract and concrete methods              |
+| **Instance Fields**                | Cannot have instance fields (only static final constants)          | Cannot have instance fields (only static final constants)     | Can have instance fields (non-static fields)             |
+| **Static Methods**                 | Not allowed (only constants)                                        | Can have static methods                                         | Can have static methods                                  |
+| **Default Methods**                | Not available (methods must be implemented in classes)              | Can have default methods (methods with a body)                 | Not applicable (methods must be implemented or abstract)  |
+| **Constructor**                    | Cannot have constructors                                            | Cannot have constructors                                       | Can have constructors                                    |
+| **Inheritance**                    | Can implement multiple interfaces, but cannot extend another class | Can implement multiple interfaces, but cannot extend another class | Can extend one class (abstract or concrete) and implement interfaces |
+| **Access Modifiers**              | All methods are implicitly `public`; no other access modifiers allowed | Methods can be `public` (default and static methods); constants are `public static final` | Methods and fields can have any access modifiers (private, protected, public) |
+| **Multiple Inheritance**           | No multiple inheritance of implementation (since all methods are abstract, no method body) | Supports multiple inheritance of behavior via default methods | Single inheritance from a base class; can implement multiple interfaces |
+| **Purpose**                        | Used to define a contract for implementing classes; no shared state or behavior | Used to define a contract with optional default behavior, but still primarily a contract | Used to define a common base class that can share code and state, and enforce a contract through abstract methods |
+| **Example**                        | ```interface Animal { void sound(); }```                          | ```interface Animal { void sound(); default void eat() { ... } }``` | ```abstract class Animal { void sound(); abstract void breathe(); }``` |
+
+---
+
+### **When to Use Which:**
+- **Use a regular interface (before Java 8)** when you want to define a contract that must be implemented by any class, without providing any behavior or state. Typically used when you need polymorphism (i.e., classes can implement multiple interfaces).
+  
+- **Use a Java 8 interface** when you need to define a contract, but also want to provide default behavior in the form of default methods. This is particularly useful when you want to add new functionality to interfaces without breaking existing classes. Java 8 interfaces are great for functional programming paradigms, such as passing behavior via lambdas or using `Stream` APIs.
+
+- **Use an abstract class** when you need to share code (methods or state) among multiple subclasses. Abstract classes allow you to define a base class with both abstract and concrete methods, as well as instance fields, which can be inherited and customized by subclasses. Use an abstract class when your base class has some shared behavior and common fields that multiple subclasses will need to use.
+
+### **Summary:**
+- **Regular Interfaces (Before Java 8)**: Only abstract methods, no method implementations or state.
+- **Java 8 Interfaces**: Can have abstract methods, default methods (with implementation), static methods, but no instance fields or constructors.
+- **Abstract Classes**: Can have abstract and concrete methods, instance fields, constructors, and can inherit from other classes.
+  
