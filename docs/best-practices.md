@@ -793,8 +793,8 @@ public class VirtualThreadExample {
 ```mermaid
 graph TD
     A[Thread Creation] --> B[Thread Types]
-    B --> C[Platform Thread (Traditional)]
-    B --> D[Virtual Thread (Lightweight)]
+    B --> C[Platform Thread - Traditional]
+    B --> D[Virtual Thread -Lightweight]
     C --> E[CPU-bound Tasks]
     D --> F[IO-bound Tasks]
     D --> G[High Concurrency]
