@@ -936,6 +936,230 @@ Here’s an overview of the key new features and enhancements in the **Concurren
   - Ideal for handling long-running or IO-bound tasks (like reading data from a file or making HTTP requests) asynchronously without blocking the main thread.
   - You can easily chain multiple tasks that depend on each other, making your asynchronous code more readable and maintainable.
 
+
+### **`CompletableFuture`** in Depth
+
+`CompletableFuture` is a powerful utility introduced in **Java 8** as part of the **`java.util.concurrent`** package, designed to handle asynchronous computations. It extends **`Future`** by allowing you to manually complete the computation and manage the results of the computation asynchronously. The class provides several methods to work with asynchronous tasks, and it allows for **non-blocking** operations, **task composition**, and **exception handling**.
+
+A **`CompletableFuture`** provides a way to model computations that may or may not complete immediately, allowing for deferred computation and non-blocking interactions. It’s particularly useful when dealing with I/O-bound tasks, parallel tasks, or long-running computations.
+
+---
+
+### **Core Features of `CompletableFuture`**:
+
+1. **Asynchronous Computations**: Allows tasks to run in the background asynchronously without blocking the main thread.
+2. **Task Composition**: Supports chaining and combining multiple asynchronous tasks, which helps in building complex workflows.
+3. **Manual Completion**: You can explicitly complete a `CompletableFuture` using `complete()` and `completeExceptionally()`.
+4. **Exception Handling**: Provides better tools for handling errors in asynchronous computations.
+5. **Non-blocking Results**: Methods like `thenApply`, `thenAccept`, and `thenCompose` return results asynchronously without blocking.
+6. **Functional Style**: It provides a fluent API to chain tasks, transforming results or applying actions once the task is complete.
+
+---
+
+### **Basic Structure of a `CompletableFuture`**
+
+A `CompletableFuture` represents a result of an asynchronous computation. You can either create it directly or obtain it via a factory method. The most common ways to create `CompletableFuture` objects are:
+
+- **`supplyAsync()`**: To start an asynchronous task that returns a result.
+- **`runAsync()`**: To start an asynchronous task that doesn't return a result.
+
+#### **Creating a CompletableFuture**
+
+```java
+// Create a CompletableFuture without a result
+CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+    System.out.println("Running task asynchronously");
+});
+
+// Create a CompletableFuture with a result
+CompletableFuture<Integer> futureWithResult = CompletableFuture.supplyAsync(() -> {
+    return 42; // Perform computation
+});
+```
+
+---
+
+### **Key Methods in `CompletableFuture`**
+
+#### **1. Running Asynchronously:**
+
+- **`supplyAsync()`**: Runs a task asynchronously and returns a result.
+- **`runAsync()`**: Runs a task asynchronously without returning any result.
+
+```java
+// Supply Async (returns a result)
+CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> 42);
+
+// Run Async (no result)
+CompletableFuture<Void> futureWithoutResult = CompletableFuture.runAsync(() -> System.out.println("Task done"));
+```
+
+#### **2. Task Chaining:**
+
+You can chain multiple tasks together to create complex workflows. The methods `thenApply()`, `thenAccept()`, and `thenCompose()` allow you to specify actions that should occur when the previous task completes.
+
+- **`thenApply()`**: Transforms the result of the previous stage.
+- **`thenAccept()`**: Consumes the result of the previous stage without returning a result.
+- **`thenCompose()`**: Used to chain two asynchronous tasks, where the second task depends on the result of the first.
+
+```java
+// Chaining with thenApply()
+CompletableFuture<Integer> result = CompletableFuture.supplyAsync(() -> 42)
+        .thenApply(result -> result * 2);
+
+// Chaining with thenAccept() - just consume the result, no return
+result.thenAccept(value -> System.out.println("Result is: " + value));
+
+// Chaining with thenCompose() - chaining asynchronous tasks
+CompletableFuture<Integer> finalResult = CompletableFuture.supplyAsync(() -> 10)
+        .thenCompose(result -> CompletableFuture.supplyAsync(() -> result * 3));
+```
+
+#### **3. Combining Futures:**
+
+You can combine multiple `CompletableFuture` instances using methods like `allOf()`, `anyOf()`, and `thenCombine()`.
+
+- **`allOf()`**: Waits for all futures to complete and returns an array of results.
+- **`anyOf()`**: Waits for any one future to complete and returns the result of the first one that completes.
+- **`thenCombine()`**: Combines the results of two futures once both have completed.
+
+```java
+// Using allOf() - wait for multiple futures to finish
+CompletableFuture<Void> allDone = CompletableFuture.allOf(
+    CompletableFuture.supplyAsync(() -> 10),
+    CompletableFuture.supplyAsync(() -> 20)
+);
+
+// Using anyOf() - wait for any future to finish
+CompletableFuture<Object> firstDone = CompletableFuture.anyOf(
+    CompletableFuture.supplyAsync(() -> 10),
+    CompletableFuture.supplyAsync(() -> 20)
+);
+
+// Using thenCombine() - combine two independent futures
+CompletableFuture<Integer> combined = CompletableFuture.supplyAsync(() -> 10)
+        .thenCombine(CompletableFuture.supplyAsync(() -> 20), Integer::sum);
+```
+
+#### **4. Exception Handling:**
+
+`CompletableFuture` provides ways to handle exceptions during asynchronous computation using methods like `exceptionally()` and `handle()`.
+
+- **`exceptionally()`**: Allows you to handle exceptions and provide an alternative result.
+- **`handle()`**: Allows you to handle both the result and the exception.
+
+```java
+// Using exceptionally() to handle exceptions
+CompletableFuture<Integer> futureWithException = CompletableFuture.supplyAsync(() -> {
+    if (true) throw new RuntimeException("Something went wrong");
+    return 42;
+}).exceptionally(ex -> {
+    System.out.println("Handled exception: " + ex.getMessage());
+    return 0;
+});
+
+// Using handle() to handle both result and exception
+CompletableFuture<Integer> resultWithHandle = CompletableFuture.supplyAsync(() -> {
+    return 10 / 0; // ArithmeticException
+}).handle((result, ex) -> {
+    if (ex != null) {
+        System.out.println("Handled exception: " + ex.getMessage());
+        return 0;
+    }
+    return result;
+});
+```
+
+#### **5. Completing a Future Manually:**
+
+You can manually complete a `CompletableFuture` by calling **`complete()`** or **`completeExceptionally()`**.
+
+- **`complete()`**: Completes the future successfully with a result.
+- **`completeExceptionally()`**: Completes the future with an exception.
+
+```java
+CompletableFuture<Integer> future = new CompletableFuture<>();
+
+// Completing manually
+future.complete(42); // Completes the future successfully
+future.completeExceptionally(new RuntimeException("Task failed")); // Completes with an exception
+```
+
+#### **6. Waiting for Completion:**
+
+To block and wait for a result, you can use **`get()`** or **`join()`**:
+
+- **`get()`**: Waits for the completion and retrieves the result, throwing checked exceptions if something goes wrong.
+- **`join()`**: Waits for the completion and retrieves the result, but wraps exceptions in **`CompletionException`**.
+
+```java
+try {
+    Integer result = future.get(); // Waits and retrieves the result, throws checked exceptions
+} catch (ExecutionException | InterruptedException e) {
+    e.printStackTrace();
+}
+
+// Using join() which wraps the exception in CompletionException
+Integer resultJoin = future.join();
+```
+
+---
+
+### **Advanced Features of `CompletableFuture`**
+
+1. **Async Pipelines:**
+   - **`thenApplyAsync()`** and **`thenAcceptAsync()`**: Execute asynchronously in a different thread or executor than the original task.
+
+   ```java
+   CompletableFuture.supplyAsync(() -> 10)
+       .thenApplyAsync(result -> result * 2)
+       .thenAcceptAsync(System.out::println);
+   ```
+
+2. **Timeout Handling:**
+   - You can handle timeouts by using **`orTimeout()`** (Java 9+) to add a timeout to a `CompletableFuture`.
+
+   ```java
+   CompletableFuture<String> futureWithTimeout = CompletableFuture.supplyAsync(() -> {
+       try {
+           Thread.sleep(5000); // Simulating a long-running task
+       } catch (InterruptedException e) {
+           Thread.currentThread().interrupt();
+       }
+       return "Hello";
+   }).orTimeout(3, TimeUnit.SECONDS);
+   ```
+
+3. **Custom Executor:**
+   - You can supply a custom **`Executor`** to control thread management. This is useful when you want to control the threading model (e.g., limiting the number of threads).
+
+   ```java
+   Executor executor = Executors.newFixedThreadPool(2);
+   CompletableFuture<Void> futureWithExecutor = CompletableFuture.runAsync(() -> {
+       // Task execution
+   }, executor);
+   ```
+
+---
+
+### **Use Cases for `CompletableFuture`**
+
+1. **Handling Multiple Independent Async Tasks**: If you need to perform multiple independent asynchronous tasks, **`CompletableFuture`** is perfect for chaining and combining them efficiently.
+   
+2. **Parallel Computation**: When you need to perform parallel computations and then combine the results, **`CompletableFuture`** enables you to do this cleanly with **`allOf()`** and **`thenCombine()`**.
+
+3. **Non-blocking IO**: For applications that require non-blocking IO operations (e.g., web servers, microservices), **`CompletableFuture`** allows you to handle tasks asynchronously without blocking threads.
+
+4. **Distributed Systems**: When working with distributed systems, **`CompletableFuture`** helps manage asynchronous communication between
+
+ services, whether for request-response patterns or event-driven processing.
+
+---
+
+### **Conclusion**
+
+`CompletableFuture` is a highly versatile tool in Java for handling asynchronous computations. It simplifies the complexity of managing threads and tasks, making it much easier to handle parallelism, improve performance, and write cleaner, non-blocking code. With support for **task chaining**, **error handling**, **manual completion**, and more, it enables developers to write efficient and responsive applications. It’s a must-have tool for modern Java applications, especially in scenarios requiring high concurrency or parallelism.
+
 ---
 
 ### 2. **`ForkJoinPool` and Parallel Streams (Java 8)**
@@ -957,6 +1181,191 @@ Here’s an overview of the key new features and enhancements in the **Concurren
 - **Use Case**:
   - Efficient for **data parallelism** where tasks can be split and processed concurrently (e.g., summing large datasets, performing heavy computations).
   - The **`Stream.parallel()`** method allows you to leverage multiple cores for parallel processing without worrying about managing threads manually.
+
+
+### **ForkJoinPool in Depth**
+
+The **`ForkJoinPool`** is a specialized implementation of the **`ExecutorService`** introduced in **Java 7** as part of the **`java.util.concurrent`** package. It is designed to efficiently handle **parallel tasks** and is particularly useful for **divide-and-conquer** algorithms. The **`ForkJoinPool`** is optimized for parallelism and helps in tasks that can be recursively divided into smaller subtasks and then combined.
+
+### Key Concepts and Purpose of ForkJoinPool:
+
+1. **Divide-and-Conquer Pattern**: The ForkJoinPool is ideal for tasks that can be divided into smaller tasks, solved independently, and then combined to produce the final result. This is called the **fork/join** model.
+2. **Work Stealing**: One of the defining features of the `ForkJoinPool` is **work-stealing**. Idle threads can "steal" tasks from busy threads, improving load balancing and resource utilization.
+3. **Efficient Thread Management**: The pool can dynamically manage the number of worker threads, increasing or decreasing based on demand. This reduces the overhead of creating and destroying threads for each task.
+
+### **ForkJoinPool Overview**
+
+- **Fork**: Split a task into multiple smaller sub-tasks.
+- **Join**: Wait for the results of the sub-tasks and combine them.
+- **Work Stealing**: Threads that finish their tasks can "steal" tasks from other busy threads, improving load balancing.
+
+### **How `ForkJoinPool` Works**
+
+In **ForkJoinPool**, tasks are submitted to a pool of worker threads. Each thread can execute tasks concurrently, but if a thread finishes its work early, it can "steal" a task from another thread. This allows for better utilization of resources, especially when the number of tasks is large or unbalanced.
+
+- **Work-Stealing**: ForkJoinPool has a work-stealing mechanism where idle threads can "steal" tasks from other busy threads. This leads to better CPU utilization because threads that are idle due to imbalanced workloads can contribute to work done by other threads.
+- **RecursiveTask vs RecursiveAction**: 
+   - **`RecursiveTask<T>`**: A subclass of `ForkJoinTask` that returns a result.
+   - **`RecursiveAction`**: A subclass of `ForkJoinTask` that doesn't return any result (used for void tasks).
+
+### **Creating and Using a ForkJoinPool**
+
+1. **Creating ForkJoinPool**:
+
+You can create a `ForkJoinPool` explicitly, or you can use the default pool.
+
+```java
+// Creating a ForkJoinPool with a default number of threads (usually available processors)
+ForkJoinPool pool = new ForkJoinPool();
+
+// Using a custom ForkJoinPool with a specific number of threads
+ForkJoinPool customPool = new ForkJoinPool(4);
+```
+
+2. **Submitting Tasks to ForkJoinPool**:
+
+To submit tasks to a `ForkJoinPool`, you generally extend **`RecursiveTask`** or **`RecursiveAction`**, depending on whether the task returns a result.
+
+#### Example 1: Using `RecursiveTask` for a Result
+
+```java
+import java.util.concurrent.*;
+
+class SumTask extends RecursiveTask<Integer> {
+    private final int[] numbers;
+    private final int start, end;
+
+    SumTask(int[] numbers, int start, int end) {
+        this.numbers = numbers;
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    protected Integer compute() {
+        if (end - start <= 1) {
+            return numbers[start]; // Base case: only one element, return it
+        } else {
+            int mid = (start + end) / 2;
+            // Fork two tasks
+            SumTask leftTask = new SumTask(numbers, start, mid);
+            SumTask rightTask = new SumTask(numbers, mid, end);
+
+            leftTask.fork();  // Fork the left task
+            rightTask.fork(); // Fork the right task
+
+            // Join the results of the tasks
+            int leftResult = leftTask.join();
+            int rightResult = rightTask.join();
+
+            return leftResult + rightResult; // Combine the results
+        }
+    }
+}
+
+public class ForkJoinExample {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        ForkJoinPool pool = new ForkJoinPool(); // Using default ForkJoinPool
+
+        // Submit the task to the pool and get the result
+        SumTask task = new SumTask(numbers, 0, numbers.length);
+        Future<Integer> result = pool.submit(task);
+        
+        // Wait for the result
+        System.out.println("Sum: " + result.get());
+
+        pool.shutdown(); // Always shut down the pool when done
+    }
+}
+```
+
+- **Forking Tasks**: The `fork()` method is used to asynchronously submit a task for execution.
+- **Joining Results**: The `join()` method waits for the completion of the task and retrieves the result.
+
+#### Example 2: Using `RecursiveAction` for Void Tasks
+
+```java
+import java.util.concurrent.*;
+
+class PrintTask extends RecursiveAction {
+    private final String message;
+    
+    PrintTask(String message) {
+        this.message = message;
+    }
+
+    @Override
+    protected void compute() {
+        System.out.println(message);
+    }
+}
+
+public class ForkJoinExample2 {
+    public static void main(String[] args) throws InterruptedException {
+        ForkJoinPool pool = new ForkJoinPool();
+
+        // Submit a task that does not return a result
+        PrintTask task = new PrintTask("Hello, ForkJoin!");
+        pool.submit(task);
+        
+        // Wait for the task to finish
+        task.join();
+
+        pool.shutdown();
+    }
+}
+```
+
+- **RecursiveAction**: Used when you do not need to return a value (i.e., when performing side-effect operations like printing).
+
+### **Key Characteristics of ForkJoinPool**
+
+1. **Work-Stealing**: ForkJoinPool is designed for parallelism, where idle worker threads can **steal work** from other threads that have more tasks. This helps balance the workload and ensures maximum CPU utilization.
+   
+2. **Task Splitting**: ForkJoinPool is efficient for tasks that can be split recursively. For instance, **divide-and-conquer** algorithms like quicksort, merge sort, or recursive matrix multiplication are well-suited for ForkJoinPool.
+   
+3. **Dynamic Thread Management**: ForkJoinPool has a dynamic thread pool based on the number of available CPU cores. Threads are created on demand and recycled once tasks are completed.
+
+4. **Optimal for Recursive Tasks**: The pool is optimized for **recursively breaking tasks into smaller tasks**, hence it's excellent for algorithms that follow the divide-and-conquer pattern.
+   
+5. **Support for Thresholds**: You can set a **threshold** for when a task should stop splitting further and when it should start executing directly (base case). This avoids excessive task creation for very small tasks.
+
+### **Work-Stealing Mechanism**
+
+ForkJoinPool uses a **work-stealing** algorithm to improve the performance of parallel tasks. When a worker thread completes its task, it "steals" work from other threads that have not completed their tasks. This helps keep the system busy and prevents any thread from remaining idle while there is still work left to be done.
+
+### **Key Methods in ForkJoinPool**
+
+- **`fork()`**: Used to initiate a task asynchronously.
+- **`join()`**: Blocks until the task is finished and retrieves the result.
+- **`submit()`**: Submits a task for execution and returns a `Future` object.
+- **`invoke()`**: Blocks until the task completes and returns the result. It is used when you want the result immediately.
+- **`shutdown()`**: Initiates an orderly shutdown of the pool, terminating all worker threads once all tasks are completed.
+- **`invokeAll()`**: Executes a collection of tasks and returns a list of `Future` objects that represent the results.
+- **`getActiveThreadCount()`**: Returns the number of active threads currently working in the pool.
+- **`getQueuedTaskCount()`**: Returns the number of tasks waiting to be executed.
+
+### **Advantages of ForkJoinPool**
+
+1. **Efficient for Recursive Tasks**: It's a perfect fit for divide-and-conquer algorithms where tasks can be split into smaller subtasks and then recombined.
+2. **Improved Resource Utilization**: With work-stealing and dynamic thread management, ForkJoinPool optimizes CPU usage by preventing idle threads.
+3. **Scalable**: It automatically scales according to the number of available processors. ForkJoinPool uses a smaller number of threads when tasks are not highly parallelizable and scales up when needed.
+
+### **Disadvantages of ForkJoinPool**
+
+1. **Not Ideal for Independent Tasks**: ForkJoinPool is best suited for recursive tasks or tasks that can be split into smaller chunks. It's not as efficient for independent, non-recursive tasks.
+2. **Increased Complexity**: Setting up tasks to work recursively with `RecursiveTask` or `RecursiveAction` can be more complex than using a regular `ExecutorService` for simpler tasks.
+
+### **When to Use ForkJoinPool**
+
+- **Divide-and-Conquer Algorithms**: For example, merge sort, quicksort, parallel computations like matrix operations, etc.
+- **High-Parallelism**: When the workload can be split into many small, independent tasks.
+- **Improving CPU Utilization**: In cases where you have a large number of independent tasks to be executed in parallel.
+
+### **Conclusion**
+
+The **`ForkJoinPool`** is a high-performance, specialized pool for parallel processing, designed to handle tasks that can be recursively divided and solved concurrently. Its work-stealing mechanism helps maximize resource utilization and ensures that threads are not idle. It's particularly beneficial for recursive, divide-and-conquer tasks like sorting, searching, and complex mathematical computations. However, for independent, non-recursive tasks, a general-purpose `ExecutorService` might be more suitable.
 
 ---
 
@@ -996,6 +1405,193 @@ Here’s an overview of the key new features and enhancements in the **Concurren
 - **Use Case**:
   - **`ExecutorService`** is ideal for running multiple tasks in parallel without manually managing threads.
   - **`invokeAll()`** and **`invokeAny()`** allow you to wait for tasks to finish or obtain results from multiple tasks at once, providing higher-level concurrency control.
+
+
+### **Executor Framework in Depth**
+
+The **Executor Framework** in Java, introduced in **Java 5** as part of the **`java.util.concurrent`** package, is a powerful and flexible framework that decouples task submission from the mechanics of how each task will be executed. It provides a higher-level replacement for directly managing threads using **`Thread`** or **`Runnable`**, simplifying concurrency and parallelism in Java applications.
+
+The core purpose of the **Executor Framework** is to manage and control thread execution more efficiently and abstract away the complexities of thread management.
+
+### **Key Concepts of the Executor Framework**
+
+1. **Task Submission**: Tasks (either `Runnable` or `Callable` objects) are submitted to an executor for execution.
+2. **Thread Management**: Executors manage a pool of worker threads, which helps to optimize resource utilization and avoid the overhead of creating and destroying threads for every task.
+3. **Concurrency and Parallelism**: Executors are designed to handle concurrent tasks and efficiently manage parallel execution of tasks.
+4. **Decoupling Task Submission and Execution**: Executors abstract the details of thread management, freeing developers from manually handling thread creation, execution, and termination.
+
+### **Core Interfaces in the Executor Framework**
+
+The Executor Framework is built around a few key interfaces, each serving a specific purpose in task execution and management:
+
+#### 1. **Executor Interface** (The root interface)
+The `Executor` interface provides a simple, low-level mechanism to submit tasks for execution. It defines a single method:
+
+```java
+void execute(Runnable command);
+```
+
+- **Purpose**: Submits a `Runnable` task for execution.
+- **Behavior**: The `execute()` method does not return a result and does not allow the caller to block or wait for the completion of the task.
+- **Use Case**: It is the most basic executor interface and is typically used for fire-and-forget tasks.
+
+Example:
+
+```java
+Executor executor = Executors.newFixedThreadPool(10);
+executor.execute(() -> System.out.println("Task is running"));
+```
+
+#### 2. **ExecutorService Interface** (Extends Executor)
+`ExecutorService` is a more advanced interface that extends `Executor` and adds methods for managing task execution lifecycle, scheduling, and shutdown of the executor.
+
+**Key Methods**:
+- **`submit()`**: Submits a task for execution and returns a `Future` object.
+- **`invokeAll()`**: Submits a collection of tasks and returns a list of `Future` objects.
+- **`invokeAny()`**: Submits a collection of tasks and returns the result of the first task to complete successfully.
+- **`shutdown()`**: Initiates an orderly shutdown in which previously submitted tasks are executed, but no new tasks will be accepted.
+- **`shutdownNow()`**: Attempts to stop all actively executing tasks, halts the processing of waiting tasks, and returns a list of the tasks that were waiting to be executed.
+
+```java
+ExecutorService executorService = Executors.newFixedThreadPool(10);
+Future<Integer> future = executorService.submit(() -> 42);
+Integer result = future.get(); // Blocks until the result is available
+```
+
+#### 3. **ScheduledExecutorService Interface** (Extends ExecutorService)
+`ScheduledExecutorService` adds scheduling capabilities to `ExecutorService`, allowing tasks to be executed periodically or after a delay.
+
+**Key Methods**:
+- **`schedule()`**: Schedules a task to run after a fixed delay.
+- **`scheduleAtFixedRate()`**: Schedules a task to run at a fixed rate.
+- **`scheduleWithFixedDelay()`**: Schedules a task to run with a fixed delay between the end of one execution and the start of the next.
+
+```java
+ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
+
+// Schedule a task to run after a delay
+scheduledExecutor.schedule(() -> System.out.println("Task after delay"), 1, TimeUnit.SECONDS);
+
+// Schedule a task to run periodically
+scheduledExecutor.scheduleAtFixedRate(() -> System.out.println("Periodic Task"), 0, 1, TimeUnit.SECONDS);
+```
+
+---
+
+### **Executor Implementations**
+
+Java provides several built-in implementations of the `Executor` interfaces through the `Executors` utility class. These implementations include different types of thread pools that offer varying levels of control over the number of threads and task execution behavior.
+
+#### 1. **FixedThreadPool** (`ExecutorService`)
+The `FixedThreadPool` creates a pool of worker threads with a fixed size. If all threads are busy, tasks are queued until a thread becomes available.
+
+- **Behavior**: The number of threads in the pool is fixed, which makes it suitable for a steady stream of tasks.
+- **Use Case**: Useful when you want to limit the number of concurrent threads, e.g., for I/O-bound tasks.
+
+Example:
+
+```java
+ExecutorService fixedThreadPool = Executors.newFixedThreadPool(4);
+fixedThreadPool.submit(() -> System.out.println("Task executed in a fixed pool"));
+```
+
+#### 2. **CachedThreadPool** (`ExecutorService`)
+The `CachedThreadPool` creates new threads as needed, but reuses previously constructed threads when they are available. It can grow the pool size as needed and shrink the pool when threads are idle for more than 60 seconds.
+
+- **Behavior**: Dynamic number of threads. Good for short-lived tasks where the number of tasks is unpredictable.
+- **Use Case**: Best suited for handling a large number of short-lived tasks where you don’t want to limit the number of threads.
+
+Example:
+
+```java
+ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+cachedThreadPool.submit(() -> System.out.println("Task executed in a cached pool"));
+```
+
+#### 3. **SingleThreadExecutor** (`ExecutorService`)
+The `SingleThreadExecutor` creates a single worker thread to execute tasks. All tasks are executed sequentially (one after the other), so it’s useful when you need to execute tasks in order, or when only one thread is required.
+
+- **Behavior**: One thread is always running and executing tasks in the order they are submitted.
+- **Use Case**: Use when tasks must be executed serially or you want to avoid thread contention.
+
+Example:
+
+```java
+ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+singleThreadExecutor.submit(() -> System.out.println("Task executed by a single thread"));
+```
+
+#### 4. **ScheduledThreadPoolExecutor** (`ScheduledExecutorService`)
+The `ScheduledThreadPoolExecutor` is an implementation of the `ScheduledExecutorService`, which allows tasks to be executed at fixed intervals or after a delay.
+
+- **Behavior**: Supports scheduling tasks for one-time execution or recurring execution with a fixed rate or delay.
+- **Use Case**: Useful for scheduling periodic tasks, timeouts, or delayed execution.
+
+Example:
+
+```java
+ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+scheduler.scheduleWithFixedDelay(() -> System.out.println("Periodic task"), 0, 1, TimeUnit.SECONDS);
+```
+
+---
+
+### **Advanced Concepts in Executors**
+
+#### **Thread Pool Sizing**
+Thread pools in the `ExecutorService` can be configured to have dynamic or fixed sizes. Choosing the right pool size is important to avoid resource contention or excessive CPU usage.
+
+- **Fixed-size pools**: Use a pool with a set number of threads when you know the number of concurrent tasks is relatively constant or predictable.
+- **Dynamic pools**: Use a `CachedThreadPool` when you have unpredictable task arrival and task lifetime.
+
+#### **Rejection Policies**
+When all threads are busy and the task queue is full, tasks can be rejected. The `ExecutorService` provides several **rejection policies** to handle rejected tasks:
+
+1. **AbortPolicy** (default): Throws a `RejectedExecutionException` when the task cannot be executed.
+2. **CallerRunsPolicy**: The caller’s thread executes the task directly.
+3. **DiscardPolicy**: Simply discards the rejected task.
+4. **DiscardOldestPolicy**: Discards the oldest unprocessed task and attempts to submit the new task.
+
+Example of configuring a custom rejection policy:
+
+```java
+ThreadPoolExecutor executor = new ThreadPoolExecutor(
+    2, 4, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(2),
+    new ThreadPoolExecutor.CallerRunsPolicy()
+);
+```
+
+#### **Shutting Down Executors**
+
+Shutting down an executor is an important step to avoid resource leaks and uncontrolled resource consumption. Executors can be shut down in two ways:
+
+1. **`shutdown()`**: Initiates an orderly shutdown in which previously submitted tasks are executed, but no new tasks will be accepted.
+2. **`shutdownNow()`**: Attempts to stop all actively executing tasks, halts the processing of waiting tasks, and returns a list of the tasks that were waiting to be executed.
+
+```java
+executorService.shutdown(); // Graceful shutdown
+executorService.shutdownNow(); // Forceful shutdown
+```
+
+#### **Future and Callable**
+The `Future` interface represents the result of an asynchronous computation and provides methods to query if the task is completed or to block until the result is available.
+
+- **`submit()`**: This method allows you to submit both `Runnable` and `Callable` tasks, returning a `Future` object that can be used to check the status or retrieve the result.
+
+```java
+Callable<Integer> task = () -> 10;
+Future<Integer> future = executorService.submit(task);
+Integer result = future.get(); // Blocks until the result is available
+```
+
+---
+
+### **Conclusion**
+
+The **Executor Framework** is a high-level concurrency utility that simplifies the management of concurrent tasks in Java. By abstracting thread management and task submission, it provides a flexible, scalable, and efficient way to execute tasks asynchronously, with built-in thread pools and task scheduling capabilities. 
+
+The **`Executor`** interface is simple, while **`ExecutorService`** and **`ScheduledExecutorService`** offer more advanced features for task execution, handling thread pools, and managing task lifecycles. With a variety of implementations such as **`FixedThreadPool`**, **`CachedThreadPool`**, and **`SingleThreadExecutor`**, the framework provides all the necessary tools to optimize task execution in multi-threaded applications.
+
 
 ---
 
@@ -1813,3 +2409,1962 @@ The **`Executor`** framework in Java, introduced in **Java 5**, has undergone se
 ### Conclusion:
 The **Executor** framework in Java has seen significant updates from **Java 8 to Java 21**. Key improvements include the introduction of **`CompletableFuture`**, **work-stealing pools**, **virtual threads**, and **structured concurrency**, all of which enhance the framework's ability to manage complex concurrent tasks. These updates make Java more efficient, scalable, and easier to use for developers working with multi-threaded applications.
 
+---
+### **Types of Queues in Java and New Features (Java 8 to Java 21)**
+
+Java provides several types of **queues** through the `java.util.Queue` interface and its implementations, as well as additional concurrent queue classes in the `java.util.concurrent` package. Queues are essential data structures for managing a collection of elements in a particular order (usually FIFO – First In, First Out), but they can be used in a variety of ways depending on the use case. Additionally, new features and enhancements have been added to the `Queue` and `Deque` interfaces and their implementations in recent Java versions (from Java 8 to Java 21).
+
+### **1. Queue Interface in Java**
+
+The **`Queue`** interface extends the **`Collection`** interface and represents a collection designed for holding elements before processing. It is typically used to represent a **FIFO (First-In, First-Out)** data structure, though variations (e.g., priority queues) offer different ordering rules.
+
+- **Key Methods**:
+  - `offer(E e)`: Inserts the specified element into the queue. Returns `true` if the element is added successfully, otherwise `false`.
+  - `poll()`: Retrieves and removes the head of the queue, or returns `null` if the queue is empty.
+  - `peek()`: Retrieves, but does not remove, the head of the queue, or returns `null` if the queue is empty.
+  - `remove()`: Removes the head of the queue and throws an exception if the queue is empty.
+  - `element()`: Retrieves the head of the queue without removing it, throwing an exception if the queue is empty.
+
+### **Common Types of Queues in Java**
+
+#### 1. **LinkedList** (Queue Implementation)
+- **Description**: `LinkedList` implements both the `Queue` and `Deque` interfaces, and it allows insertion at both ends (FIFO and LIFO). It provides efficient insertion and removal of elements from the ends of the list.
+- **Features**:
+  - It supports FIFO behavior when used as a queue.
+  - Allows efficient insertion and deletion operations at both ends of the list.
+
+```java
+Queue<Integer> queue = new LinkedList<>();
+queue.offer(1);  // Adds element to the queue
+queue.offer(2);
+System.out.println(queue.poll());  // Removes and returns the head (1)
+```
+
+#### 2. **PriorityQueue**
+- **Description**: A **`PriorityQueue`** is a queue in which elements are ordered according to their natural ordering, or by a `Comparator` provided at queue construction time. Unlike other queues, **`PriorityQueue`** does not guarantee FIFO order. Instead, the queue is ordered based on priority.
+- **Features**:
+  - Supports **priority ordering** of elements.
+  - **Not thread-safe** (though it is widely used for tasks like scheduling).
+  - The elements with the highest priority are always retrieved first.
+
+```java
+Queue<Integer> pq = new PriorityQueue<>();
+pq.offer(10);
+pq.offer(5);
+pq.offer(20);
+System.out.println(pq.poll());  // Outputs 5 (smallest element in a min-priority queue)
+```
+
+#### 3. **ArrayDeque**
+- **Description**: **`ArrayDeque`** implements both `Queue` and `Deque` interfaces and provides a **dynamic array-based implementation** of a double-ended queue.
+- **Features**:
+  - It allows adding and removing elements from both ends.
+  - Does not have the limitations of a fixed size (like in `ArrayList`).
+  - **More efficient** than `LinkedList` when used as a queue (because `LinkedList` uses extra memory for links).
+  
+```java
+Queue<Integer> deque = new ArrayDeque<>();
+deque.offer(1);
+deque.offer(2);
+System.out.println(deque.poll());  // Removes and returns the head (1)
+```
+
+#### 4. **ConcurrentLinkedQueue** (Concurrent Queue)
+- **Description**: A **`ConcurrentLinkedQueue`** is a thread-safe, non-blocking queue implemented using **lock-free algorithms**. It allows for safe element insertion and removal by multiple threads.
+- **Features**:
+  - Supports **non-blocking** operations.
+  - **Thread-safe** and designed for highly concurrent applications.
+  
+```java
+Queue<Integer> concurrentQueue = new ConcurrentLinkedQueue<>();
+concurrentQueue.offer(10);
+System.out.println(concurrentQueue.poll());  // Outputs 10
+```
+
+#### 5. **LinkedBlockingQueue**
+- **Description**: A **`LinkedBlockingQueue`** is a **bounded queue** where the capacity of the queue can be specified during construction. It is particularly useful in producer-consumer scenarios, as it supports thread-safe blocking operations (waiting for an item to become available or space to become available in the queue).
+- **Features**:
+  - **Thread-safe** with blocking operations.
+  - Supports optional **capacity limit**.
+  - Provides methods like `take()` (blocking) and `put()` (blocking).
+  
+```java
+BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<>(10);
+blockingQueue.put(1);
+System.out.println(blockingQueue.take());  // Blocks if queue is empty, or retrieves element
+```
+
+#### 6. **DelayQueue**
+- **Description**: A **`DelayQueue`** is a specialized queue used for scheduling tasks to be processed at a future time. Elements in the queue cannot be retrieved until their delay time has expired.
+- **Features**:
+  - Useful for tasks that need to be delayed before execution.
+  - Supports scheduling of delayed tasks (e.g., for timeout or retry mechanisms).
+  
+```java
+DelayQueue<DelayedItem> delayQueue = new DelayQueue<>();
+```
+
+#### 7. **SynchronousQueue**
+- **Description**: A **`SynchronousQueue`** is a blocking queue with no internal capacity. It is designed for handoff-style concurrency, where a thread waits for another thread to take a task from the queue (or vice versa).
+- **Features**:
+  - Does not hold any elements internally.
+  - Often used for **thread handoff** scenarios.
+  
+```java
+Queue<Integer> syncQueue = new SynchronousQueue<>();
+```
+
+---
+
+### **New Features and Enhancements in Java (Java 8 to Java 21) for Queues**
+
+Java has introduced several new features and improvements in the `Queue` and concurrent queue classes from **Java 8 to Java 21**. Below are some key updates and new features.
+
+#### **1. Stream API Enhancements (Java 8)**
+- The **`Stream API`** introduced in **Java 8** works seamlessly with queues, allowing you to process collections (including queues) in a functional programming style.
+- The `Queue` interface now supports **streaming** elements with the **`stream()`** method.
+
+Example:
+
+```java
+Queue<Integer> queue = new LinkedList<>(List.of(1, 2, 3, 4, 5));
+queue.stream().filter(n -> n % 2 == 0).forEach(System.out::println);  // Outputs 2, 4
+```
+
+#### **2. `take()` and `put()` Enhancements in Blocking Queues (Java 8)**
+- The **`BlockingQueue`** interface was updated in **Java 8** with **timeout versions** of the `take()` and `put()` methods. These allow a thread to wait for a task to be available or space to be freed up, with a specified timeout.
+
+Example of `offer()` with a timeout:
+
+```java
+BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(10);
+queue.offer(1, 2, TimeUnit.SECONDS);  // Adds element with a timeout
+```
+
+#### **3. `ConcurrentLinkedQueue` Updates (Java 8)**
+- The **`ConcurrentLinkedQueue`** was updated to support more efficient **non-blocking operations** and improved thread safety for concurrent applications.
+- Also introduced was the **`poll()`** method with a timeout for better resource management in multi-threaded applications.
+
+Example:
+
+```java
+ConcurrentLinkedQueue<Integer> concurrentQueue = new ConcurrentLinkedQueue<>();
+concurrentQueue.offer(100);
+Integer item = concurrentQueue.poll();  // Thread-safe, non-blocking retrieval
+```
+
+#### **4. `Deque` Enhancements (Java 8)**
+- The **`Deque`** (Double-Ended Queue) interface has been enhanced to support **streaming** and **parallel operations** in Java 8, making it easier to perform advanced operations on the queue’s elements.
+- Methods like `forEach()` and `removeIf()` are now supported.
+
+```java
+Deque<Integer> deque = new ArrayDeque<>(List.of(1, 2, 3, 4, 5));
+deque.removeIf(n -> n % 2 == 0);  // Removes even numbers
+deque.forEach(System.out::println);  // Prints the updated deque
+```
+
+#### **5. `LinkedBlockingQueue` Updates (Java 9 and beyond)**
+- **Java 9** introduced the **`offer()`** method with a timeout, which helps prevent the **blocking** of a thread for an indefinite period when trying to insert or remove items.
+- The `take()` method was also enhanced with better **timeout management**.
+
+Example:
+
+```java
+BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<>(10);
+boolean isAdded = blockingQueue.offer(100, 500, TimeUnit.MILLISECONDS);
+```
+
+#### **6. New Features in `PriorityBlockingQueue` (Java 10+)**
+- **Java 10** introduced better support for handling priority queues in concurrent environments. This includes enhancements for thread safety and more efficient memory management in blocking priority queues.
+
+#### **7. `SynchronousQueue` Enhancements (Java 11+)**
+- **Java 11** brought improvements to the **`SynchronousQueue`**, making it more efficient in concurrent producer-consumer scenarios by refining its internal handling of thread synchronization.
+
+#### **8. Queues in Java 17 and Beyond**
+- **Java 17** introduced improvements related to garbage collection and concurrent processing, indirectly benefiting queues by improving overall performance in multi-threaded environments.
+  
+#### **9. `TransferQueue` Interface (Java 17)**
+- **Java 17** introduced **`TransferQueue`**, which extends the `BlockingQueue` interface, allowing more complex interactions like "transfer" operations, where a thread can attempt to transfer an item directly to another thread.
+
+---
+
+### **Conclusion**
+
+Java offers a variety of queue types, from simple `LinkedList` and `PriorityQueue` implementations to more advanced **blocking** and **concurrent** queues like `LinkedBlockingQueue`, `SynchronousQueue`, and `ConcurrentLinkedQueue`. Java 8 to Java 21 introduced significant updates that make queues more flexible, thread-safe, and efficient, especially in multi-threaded environments. With the introduction of **streams**, **timeout operations**, and better **concurrency features**, these queues are now easier to use in modern, high-performance applications.
+
+---
+
+### **Updates and Enhancements to Iterators in Java (Java 8 to Java 21)**
+
+Iterators in Java are used to traverse collections like `List`, `Set`, and `Map`. They allow you to access each element of a collection without exposing the internal structure of the collection. The `Iterator` interface is part of the `java.util` package and provides methods for iterating over a collection, removing elements, and more.
+
+While the fundamental `Iterator` interface has remained largely the same over the years, there have been several enhancements and updates introduced between **Java 8 and Java 21** that have impacted how iterators work, particularly in conjunction with **Streams**, **forEach**, **lambda expressions**, and **parallel processing**.
+
+### **Core Iterator Interface (Recap)**
+
+The `Iterator` interface has three primary methods:
+1. **`hasNext()`**: Returns `true` if the iterator has more elements.
+2. **`next()`**: Returns the next element in the iteration.
+3. **`remove()`**: Removes the last element returned by the iterator. This method is optional.
+
+Example:
+
+```java
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String element = iterator.next();
+    System.out.println(element);
+}
+```
+
+### **Enhancements and Updates in Iterators (Java 8 to Java 21)**
+
+#### **1. `forEachRemaining()` Method (Java 8)**
+
+Java 8 introduced the **`forEachRemaining()`** method in the `Iterator` interface. This method allows you to iterate over the remaining elements in the iterator using a **lambda expression** or **method reference**, which is consistent with the **Stream API** introduced in Java 8.
+
+- **Usage**: The `forEachRemaining()` method is a more compact and functional approach to consuming the remaining elements of an iterator.
+
+```java
+Iterator<String> iterator = list.iterator();
+iterator.forEachRemaining(element -> System.out.println(element));
+```
+
+This simplifies code that would previously use a `while` loop with `hasNext()` and `next()` to iterate through elements.
+
+#### **2. The `remove()` Method (Java 8 and beyond)**
+
+Java 8 introduced better handling of the `remove()` method in iterators. The `remove()` method allows you to remove elements during iteration. However, the **`remove()`** method was already present in earlier versions, but Java 8 made it clearer that the `remove()` method is only allowed once per call to `next()`. Any attempt to call `remove()` more than once without calling `next()` first will throw an **IllegalStateException**.
+
+- **Usage**: You can safely remove elements while iterating using the iterator's `remove()` method.
+
+```java
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String element = iterator.next();
+    if (element.equals("RemoveMe")) {
+        iterator.remove();  // Removes the current element
+    }
+}
+```
+
+#### **3. The `Spliterator` Interface (Java 8)**
+
+The `Spliterator` (splitable iterator) was introduced in **Java 8** as a more powerful alternative to the `Iterator` for **parallel processing**. It allows splitting a collection into smaller parts for parallel processing, making it highly useful in conjunction with **Streams**.
+
+- **Usage**: `Spliterator` is designed for breaking a collection into chunks, which can then be processed in parallel. It provides methods like `trySplit()`, `estimateSize()`, and `forEachRemaining()`.
+
+```java
+Spliterator<String> spliterator = list.spliterator();
+spliterator.forEachRemaining(System.out::println);
+```
+
+- **Advantages**:
+  - Can be used to divide work among multiple threads.
+  - Improves the performance of **parallel streams**.
+  
+Java Streams use **`Spliterator`** behind the scenes for efficient splitting and parallelism.
+
+#### **4. Stream API Integration (Java 8)**
+
+Java 8 introduced the **Stream API**, which is closely related to iterators but allows more functional-style operations on collections. With the introduction of the `Stream` interface, Java collections could now be processed more concisely using **map**, **filter**, **reduce**, and other functional operations.
+
+- **Usage**: The `Stream` API internally uses **iterators** to process elements, but it abstracts the iteration process and allows developers to perform functional operations more naturally.
+
+Example:
+
+```java
+List<String> list = Arrays.asList("a", "b", "c", "d");
+list.stream()
+    .filter(s -> s.startsWith("a"))
+    .forEach(System.out::println);
+```
+
+This eliminates the need for explicitly creating an iterator and manually handling `next()` and `hasNext()`, simplifying the iteration process.
+
+#### **5. `Iterator` as part of `Iterable` (Java 8 and beyond)**
+
+The `Iterable` interface, which is implemented by all collections, provides a default method **`forEach()`** for iterating over the collection. This method allows you to use **lambda expressions** or **method references** to iterate over the elements without explicitly creating an iterator.
+
+- **Usage**: `Iterable`'s `forEach()` method allows for more concise and expressive iteration.
+
+```java
+list.forEach(System.out::println);
+```
+
+This removes the need to manually obtain an iterator, calling `hasNext()`, and using `next()`. It provides a much simpler and more functional approach to iteration.
+
+#### **6. Parallel Iteration with `Stream` (Java 8 and beyond)**
+
+With **Java 8**'s `Stream` API, you can now easily parallelize operations. The `parallelStream()` method allows a collection to be processed in parallel, and behind the scenes, it splits the stream into chunks that can be processed concurrently using multiple threads. Internally, this uses **`Spliterators`** to break the work into smaller parts.
+
+- **Usage**: This allows for easy parallelism with collections, eliminating the need for manual thread management.
+
+```java
+list.parallelStream().forEach(System.out::println); // Processes elements in parallel
+```
+
+This is an advanced use of iterators, as **parallel streams** are internally using **spliterators** to manage concurrent iteration efficiently.
+
+#### **7. `Stream` of Iterators (Java 9)**
+
+In **Java 9**, new methods were added to the `Stream` interface, such as `Stream.iterate()` and `Stream.of()`. These methods are useful for generating streams from iterators or converting an iterator into a stream.
+
+- **Usage**: You can convert an iterator into a stream for more functional-style operations.
+
+```java
+Iterator<String> iterator = list.iterator();
+Stream<String> stream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
+stream.forEach(System.out::println);
+```
+
+- This makes it easier to combine the old-style iteration (`Iterator`) with modern **functional programming** techniques (`Stream`).
+
+#### **8. `Iterator` Improvements in Java 10+**
+
+- **Java 10** introduced improvements to the **`Spliterator`** interface, but there were no significant direct updates to the `Iterator` interface itself.
+- **Java 11+** continued with enhancements to **parallel streams** and **`Spliterator`**, improving their efficiency in large-scale applications.
+  
+#### **9. `Iterator` and `Iterable` Enhancements (Java 16 and Beyond)**
+
+In **Java 16**, the `Iterator` and `Iterable` APIs have been enhanced with a **new `toList()` method**. The `Iterable` interface now provides the `toList()` default method, which allows for easy collection of elements into a `List` without needing explicit iteration.
+
+Example:
+
+```java
+Iterable<String> iterable = Arrays.asList("a", "b", "c", "d");
+List<String> list = iterable.toList();
+```
+
+This was a convenience feature that simplified conversion to a collection when working with iterators.
+
+#### **10. `Iterator` for `Map` Keys, Values, and Entries (Java 8 and Beyond)**
+
+Java collections have been updated to support easier iteration for **`Map`** entries, **keys**, and **values**. Specifically, the `Map` interface has the methods:
+- `keySet().iterator()`
+- `values().iterator()`
+- `entrySet().iterator()`
+
+These make iterating over a `Map` easier and more consistent with the iterator patterns used in other collections.
+
+Example:
+
+```java
+Map<String, Integer> map = Map.of("a", 1, "b", 2, "c", 3);
+Iterator<Map.Entry<String, Integer>> iterator = map.entrySet().iterator();
+while (iterator.hasNext()) {
+    Map.Entry<String, Integer> entry = iterator.next();
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}
+```
+
+---
+
+### **Conclusion**
+
+The `Iterator` interface in Java remains a powerful tool for iterating through collections, but modern Java (Java 8 and beyond) has introduced many updates and enhancements that make iteration more flexible, functional, and parallelizable. Key updates include:
+
+- **`forEachRemaining()`** method for streamlined iteration.
+- Integration with **`Spliterator`** for efficient parallel processing.
+- New **stream-based iteration** with **lambda expressions** and **method references**.
+- **`Stream` API** for functional-style iteration.
+- Enhanced support for **parallel processing** and **splitting tasks** for concurrent execution.
+
+These updates make iterators more powerful, and their usage is now often abstracted by modern **Stream APIs** or **parallel operations**, enabling more efficient and expressive code.
+
+---
+
+### **ConcurrentHashMap in Depth (Java)**
+
+The `ConcurrentHashMap` is one of the most widely used concurrent collections in Java. Introduced in **Java 5** as part of the **`java.util.concurrent`** package, it provides thread-safe operations for a map-like data structure where multiple threads can read and write concurrently, without compromising data integrity or performance. 
+
+Unlike other collections, `ConcurrentHashMap` is designed specifically for use in highly concurrent environments, where it is essential to allow multiple threads to access the map simultaneously without significant locking overhead. The data structure has been improved in each subsequent version of Java, with new features added over time to further enhance performance and usability.
+
+This detailed exploration covers how **`ConcurrentHashMap`** works, its internal mechanics, key features, and the updates that have been added from **Java 5 to Java 21**.
+
+### **Key Features of `ConcurrentHashMap`**
+
+1. **Thread Safety:**
+   - `ConcurrentHashMap` allows **concurrent reads** and **writes** by multiple threads without the need for external synchronization.
+   - It provides **fine-grained locking** (more specifically, segment-level locking) instead of locking the entire map. This increases performance compared to other thread-safe collections like `Hashtable`.
+
+2. **Segmentation and Locking:**
+   - In **Java 7 and earlier**, `ConcurrentHashMap` was divided into **segments**, each of which had its own lock. When one thread modified data in one segment, other threads could still modify data in other segments.
+   - **Java 8 and later** made significant improvements by eliminating the segment concept and instead using **bucket-level locking** and **CAS (Compare-And-Swap)** operations to allow for even finer concurrency. The result is much better performance and scalability.
+
+3. **No Blocking for Reads:**
+   - Reads in `ConcurrentHashMap` are **non-blocking** and typically don't require any locks, making it highly efficient for read-heavy workloads.
+
+4. **Atomic Operations:**
+   - Operations like **`putIfAbsent()`**, **`remove()`**, and **`replace()`** ensure thread safety while performing updates without requiring locks.
+   - **`compute()`**, **`computeIfAbsent()`**, **`merge()`**, and other new methods in Java 8 make it even easier to perform atomic updates.
+
+5. **Size and Performance:**
+   - The `size()` operation is **not lock-protected**, which means it is not guaranteed to be accurate in a multi-threaded environment. However, the performance trade-off here is usually acceptable.
+
+6. **Customizable Concurrency Level:**
+   - The **`initialCapacity`** and **`concurrencyLevel`** parameters allow for fine-tuning the internal partitioning of the map to meet different use cases.
+   
+### **How `ConcurrentHashMap` Works Internally**
+
+#### **1. Hashing and Bucketing:**
+   - `ConcurrentHashMap` uses a **hash table** to store its entries.
+   - Each **bucket** (or slot) within the table is independently locked, allowing for efficient concurrent access to different sections of the table.
+   - In **Java 8** and beyond, the internal data structure uses a combination of **linked lists** and **red-black trees** (for high collision rates) to balance performance and memory usage.
+
+#### **2. Segments (Pre-Java 8)**:
+   - Prior to Java 8, the `ConcurrentHashMap` was divided into **segments**, each segment being a smaller hash table that had its own lock. This allowed multiple threads to operate on different segments concurrently.
+   - The segment locking mechanism was replaced with finer-grained locking in Java 8, which significantly improved the performance.
+
+#### **3. Bucket-Level Locking (Java 8+)**:
+   - **Java 8 and later** versions use **bucket-level locking** instead of segments.
+   - A **bucket** in the hash table stores multiple entries (usually a linked list or a tree, depending on the number of collisions).
+   - For each bucket, only one thread is allowed to modify the data at a time. This helps avoid contention for the entire map and allows **concurrent writes** to different buckets.
+   - The use of **`CAS` (Compare-And-Swap)** ensures that updates to the map can happen atomically without locking the entire map.
+
+#### **4. CAS (Compare-And-Swap):**
+   - In **Java 8 and beyond**, **`CAS`** is used extensively to atomically modify values without locking the entire bucket or the map.
+   - **`CAS`** operations allow changes to occur at the bucket level (or even smaller granularity) while ensuring consistency and thread-safety. This significantly boosts performance by minimizing locking overhead.
+
+#### **5. Handling High Collision Rates (Java 8)**:
+   - When hash collisions are frequent (many entries are mapped to the same bucket), the `ConcurrentHashMap` uses a **red-black tree** instead of a linked list to store the entries in that bucket. This improves the time complexity from **O(n)** (linked list) to **O(log n)** (red-black tree) when there are many collisions.
+
+### **Key Methods in `ConcurrentHashMap`**
+
+1. **putIfAbsent(K key, V value)**:
+   - Atomically inserts the given key-value pair if the key is not already present in the map. If the key is present, it does nothing and returns the existing value.
+   - This operation is highly useful in concurrent environments, where multiple threads may attempt to put the same key at the same time.
+
+   ```java
+   map.putIfAbsent("key1", "value1");
+   ```
+
+2. **remove(K key, V value)**:
+   - Removes the key-value pair only if the current value associated with the key matches the expected value. This operation ensures that the removal is atomic.
+
+   ```java
+   map.remove("key1", "value1");  // Removes if the value matches
+   ```
+
+3. **replace(K key, V oldValue, V newValue)**:
+   - Atomically replaces the value for the specified key only if the current value matches `oldValue`. This is useful for performing safe updates.
+
+   ```java
+   map.replace("key1", "oldValue", "newValue");
+   ```
+
+4. **computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)**:
+   - This method atomically computes the value for the given key if the key is absent, and places the computed value into the map.
+
+   ```java
+   map.computeIfAbsent("key1", key -> "computedValue");
+   ```
+
+5. **compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)**:
+   - Allows you to atomically update the value for a given key using a remapping function.
+
+   ```java
+   map.compute("key1", (key, value) -> value == null ? "newValue" : value + "Updated");
+   ```
+
+6. **merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)**:
+   - This method is used to merge the value of an existing key with the provided value using a remapping function, which can be useful for accumulating values or resolving conflicts.
+
+   ```java
+   map.merge("key1", "value1", (oldValue, newValue) -> oldValue + newValue);
+   ```
+
+### **Java 8 and Beyond Enhancements to `ConcurrentHashMap`**
+
+#### **1. New Methods in Java 8:**
+   - Java 8 introduced several new methods to **`ConcurrentHashMap`** that enable atomic operations on map entries:
+     - **`forEach()`**: Iterates over the map entries in parallel (using `forEachKey`, `forEachValue`, and `forEachEntry`).
+     - **`replaceAll()`**: Replaces all values in the map using a provided function.
+     - **`computeIfAbsent()`**, **`compute()`**, **`merge()`**: These methods allow for more advanced atomic updates.
+
+#### **2. `compute` and `merge` Operations (Java 8+):**
+   - These methods allow you to modify values in an atomic and thread-safe manner. They are ideal for operations where you need to update the map based on the existing value, like **incrementing counters** or **accumulating results**.
+
+#### **3. Bulk Operations (Java 9 and beyond)**:
+   - Java 9 introduced **`putAll()`** with improved performance. It also added **`forEach()`**, **`reduce()`**, and **`map()`** methods that allow for more declarative operations on the map's contents.
+
+#### **4. `LongAdder` and `LongAccumulator` (Java 8 and beyond)**:
+   - For high-performance counters, `ConcurrentHashMap` can integrate with **`LongAdder`** and **`LongAccumulator`** to perform atomic, low-cost, thread-safe updates.
+
+### **Performance Considerations**
+
+- **Read Performance**: `ConcurrentHashMap` is highly optimized for read-heavy workloads. Since reads do not require locking and are often non-blocking, it can handle large numbers of concurrent read operations efficiently.
+  
+- **Write Performance**: Writes are slower than reads, but still very efficient because of the **bucket-level locking** and **CAS** operations. The design ensures that only a small portion of the map is locked during a write operation, minimizing contention.
+
+- **Lock Contention**: In scenarios where many threads are writing to the same bucket or segment, lock contention may occur. However, **bucket-level locking** and **fine-grained concurrency** have made this a rare
+
+ occurrence in most applications.
+
+---
+
+### **Use Cases**
+
+1. **Caching**: `ConcurrentHashMap` is often used as a simple in-memory cache, where multiple threads need to update and retrieve values concurrently.
+   
+2. **Counting and Aggregation**: Using methods like `computeIfAbsent()` or `merge()`, you can efficiently count occurrences of items or aggregate values.
+
+3. **Thread-safe Collections**: When working with data structures that require thread-safe operations, `ConcurrentHashMap` provides a high-performance alternative to `Hashtable`.
+
+4. **Distributed Systems**: In distributed environments, `ConcurrentHashMap` can be used to maintain shared state across multiple threads or workers.
+
+---
+
+### **Conclusion**
+
+The `ConcurrentHashMap` is a powerful, thread-safe, and highly efficient map implementation designed for concurrent programming in Java. With its fine-grained locking, atomic operations, and advanced methods introduced in Java 8, it is well-suited for modern, multi-threaded applications that require high concurrency with minimal contention.
+
+Whether you're implementing caching, counting, or concurrent data management, `ConcurrentHashMap` provides a flexible, high-performance solution. Its enhancements over time, especially in terms of concurrency and atomic operations, make it one of the most reliable and performant map structures in the Java ecosystem.
+
+---
+
+### **Java Concurrency API Overview**
+
+The **Java Concurrency API** provides a set of classes and interfaces that simplify multi-threading and parallel programming tasks. With the growing need for high-performance, multi-core processing, the concurrency API enables developers to manage threads, synchronization, and concurrent collections more effectively. Since its introduction in **Java 5**, the Java Concurrency API has been enhanced with new features, making it a powerful tool for handling complex parallel tasks.
+
+### **Core Components of Java Concurrency API (java.util.concurrent)**
+
+The Java Concurrency API is primarily part of the `java.util.concurrent` package. It includes a variety of classes and interfaces that facilitate concurrent programming. These components include **Executor Framework**, **Concurrency Utilities**, **Locks**, **Concurrent Collections**, and **Atomic Variables**.
+
+---
+
+### **1. Executor Framework**
+
+The **Executor Framework** (introduced in Java 5) provides an alternative to managing threads directly, making it easier to manage the lifecycle of tasks and threads.
+
+#### **Key Classes and Interfaces**:
+
+1. **`Executor` Interface**:
+   - Provides a simple interface for executing tasks. It decouples task submission from the mechanics of how each task will be executed (such as creating a new thread).
+   
+   ```java
+   public interface Executor {
+       void execute(Runnable command);
+   }
+   ```
+
+2. **`ExecutorService` Interface**:
+   - Extends `Executor` and provides additional methods for managing the lifecycle of tasks (e.g., `shutdown()`, `submit()`).
+   - Allows submitting tasks that return a result or can throw exceptions.
+
+   ```java
+   public interface ExecutorService extends Executor {
+       void shutdown();
+       List<Runnable> shutdownNow();
+       <T> Future<T> submit(Callable<T> task);
+   }
+   ```
+
+3. **`ThreadPoolExecutor` Class**:
+   - An implementation of the `ExecutorService` that uses a pool of threads to execute submitted tasks.
+   - **Dynamic Thread Pool**: You can specify the core pool size, maximum pool size, and keep-alive time.
+   
+   Example:
+   ```java
+   ExecutorService executorService = new ThreadPoolExecutor(4, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+   executorService.submit(() -> System.out.println("Task executed"));
+   executorService.shutdown();
+   ```
+
+4. **`ScheduledExecutorService` Interface**:
+   - Extends `ExecutorService` and provides methods for scheduling tasks with fixed-rate or fixed-delay executions (e.g., for periodic tasks).
+   
+   Example:
+   ```java
+   ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+   scheduler.scheduleAtFixedRate(() -> System.out.println("Task executed periodically"), 0, 1, TimeUnit.SECONDS);
+   ```
+
+5. **`Executors` Utility Class**:
+   - Provides factory methods to create common types of thread pools (e.g., single-threaded, cached, fixed-size, and scheduled).
+
+   Example:
+   ```java
+   ExecutorService executor = Executors.newFixedThreadPool(4);
+   executor.submit(() -> System.out.println("Task"));
+   ```
+
+---
+
+### **2. Concurrent Collections**
+
+Java provides several thread-safe collections to support concurrent access and modification of data structures.
+
+#### **Key Classes and Interfaces**:
+
+1. **`ConcurrentHashMap<K, V>`**:
+   - A thread-safe, high-performance map implementation. It allows concurrent reads and writes by dividing the map into segments, allowing multiple threads to work on different segments without contention.
+
+   Example:
+   ```java
+   ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+   map.put("key1", 100);
+   ```
+
+2. **`CopyOnWriteArrayList<E>`**:
+   - A thread-safe version of `ArrayList`, where any modification (e.g., `add()`, `remove()`) causes a copy of the internal array to be created. It is suitable for applications where reads are much more frequent than writes.
+
+   Example:
+   ```java
+   CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+   list.add("item1");
+   ```
+3. **`BlockingQueue<E>`**:
+   - A thread-safe queue that supports operations for adding and removing elements, with blocking operations (i.e., blocking the thread until the operation can complete). It is ideal for implementing producer-consumer scenarios.
+   
+   Key Implementations:
+   - `LinkedBlockingQueue<E>`
+   - `ArrayBlockingQueue<E>`
+   - `PriorityBlockingQueue<E>`
+   
+   Example:
+   ```java
+   BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(10);
+   queue.put(1);  // Blocks if the queue is full
+   queue.take();  // Blocks if the queue is empty
+   ```
+
+4. **`ConcurrentLinkedQueue<E>`**:
+   - A lock-free queue that provides thread-safe operations for enqueueing and dequeueing elements, but without the use of locks. It is useful in highly concurrent, low-latency applications.
+
+5. **`TransferQueue<E>`**:
+   - An extension of `BlockingQueue`, which allows for more complex interactions, such as transferring elements between threads directly using the `transfer()` method.
+
+---
+
+### **3. Locks and Synchronization**
+
+Java provides several **Lock** classes and **atomic operations** to enhance synchronization beyond traditional synchronized blocks and methods.
+
+#### **Key Classes and Interfaces**:
+
+1. **`ReentrantLock`**:
+   - A lock implementation that allows a thread to lock a resource, and if the thread already holds the lock, it can lock again without blocking itself. This lock provides more control over synchronization compared to `synchronized` blocks.
+
+   Example:
+   ```java
+   ReentrantLock lock = new ReentrantLock();
+   lock.lock();
+   try {
+       // Critical section
+   } finally {
+       lock.unlock();
+   }
+   ```
+
+2. **`ReadWriteLock`**:
+   - A special lock that allows multiple threads to read a resource concurrently, but only one thread can write to the resource at a time.
+   - `ReentrantReadWriteLock` is a common implementation of this interface.
+
+   Example:
+   ```java
+   ReadWriteLock rwLock = new ReentrantReadWriteLock();
+   rwLock.readLock().lock();
+   try {
+       // Read operation
+   } finally {
+       rwLock.readLock().unlock();
+   }
+   ```
+
+3. **`StampedLock`**:
+   - A more advanced lock, introduced in Java 8, that allows for optimistic locking. It provides three types of locks: writing, reading, and optimistic reading. It's especially useful when performance is crucial for read-heavy applications.
+
+4. **`Semaphore`**:
+   - A counter-based lock used for controlling access to a resource by multiple threads. It maintains a set of permits, and threads acquire a permit before proceeding. Once a thread is done, it releases the permit.
+
+   Example:
+   ```java
+   Semaphore semaphore = new Semaphore(3); // Allows up to 3 threads at once
+   semaphore.acquire();  // Acquire a permit
+   semaphore.release();  // Release a permit
+   ```
+
+5. **`CountDownLatch`**:
+   - A synchronization aid that allows one or more threads to wait until a set of operations in other threads is completed. Useful for waiting for multiple threads to reach a certain point before continuing.
+
+   Example:
+   ```java
+   CountDownLatch latch = new CountDownLatch(3);  // Wait for 3 threads to finish
+   latch.countDown();  // Decrement the count
+   latch.await();  // Wait until the count reaches 0
+   ```
+
+6. **`CyclicBarrier`**:
+   - A synchronization aid that allows a set of threads to wait until all threads have reached a common barrier point. Once all threads reach the barrier, they can proceed.
+
+   Example:
+   ```java
+   CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All threads reached barrier"));
+   barrier.await();  // Threads wait here until all have arrived
+   ```
+
+---
+
+### **4. Atomic Variables**
+
+Java provides classes in the **`java.util.concurrent.atomic`** package to support atomic operations, which are operations that are guaranteed to be executed as a single, indivisible unit, even in the presence of multiple threads.
+
+#### **Key Classes**:
+
+1. **`AtomicInteger`**, **`AtomicLong`**, **`AtomicReference<T>`**:
+   - These classes allow for atomic updates to integer, long, and object values.
+   
+   Example:
+   ```java
+   AtomicInteger atomicInt = new AtomicInteger(0);
+   atomicInt.incrementAndGet();  // Atomically increment the value
+   ```
+
+2. **`AtomicBoolean`**:
+   - Provides atomic operations for `boolean` values.
+   
+   Example:
+   ```java
+   AtomicBoolean flag = new AtomicBoolean(false);
+   flag.compareAndSet(false, true);  // Atomically set to true if the current value is false
+   ```
+
+---
+
+### **5. CompletableFuture (Java 8 and Beyond)**
+
+`CompletableFuture` is part of the **`java.util.concurrent`** package and provides an easy-to-use API for asynchronous programming. It allows non-blocking asynchronous tasks to be executed and supports a wide range of operations like chaining, combining, and waiting for tasks to complete.
+
+#### **Key Features**:
+
+1. **Chaining**: You can chain multiple asynchronous tasks using methods like `thenApply()`, `thenAccept()`, `thenCompose()`, etc.
+2. **Async**: Perform tasks asynchronously using `supplyAsync()` or `runAsync()`.
+3. **Waiting for Completion**: You can block and wait for a task to finish using `join()` or `get()`.
+
+
+
+```java
+CompletableFuture.supplyAsync(() -> {
+    return "Hello, World!";
+}).thenApply(result -> result + " - CompletableFuture").thenAccept(System.out::println);
+```
+
+---
+
+### **Conclusion**
+
+The **Java Concurrency API** is designed to provide robust, high-performance tools for multi-threaded programming. The API simplifies the complex tasks of thread management, synchronization, and concurrency, and allows developers to write safe, efficient, and scalable multi-threaded programs.
+
+With the addition of new features in each version, such as the **Executor Framework**, **CompletableFuture**, **`ReentrantLock`**, and **atomic variables**, Java's concurrency capabilities have become more powerful, flexible, and easier to use for a wide range of applications.
+
+---
+
+### **`CopyOnWriteArrayList<E>` in Java**
+
+The **`CopyOnWriteArrayList<E>`** is a thread-safe, concurrent collection class introduced in **Java 5** as part of the **`java.util.concurrent`** package. It is a variant of the traditional **`ArrayList`** designed to support concurrent read and write operations. The key distinction between `CopyOnWriteArrayList` and other collections like `ArrayList` is its **copy-on-write** behavior, which ensures thread safety for multi-threaded applications without requiring external synchronization.
+
+### **How `CopyOnWriteArrayList` Works**
+
+The **copy-on-write** concept means that every time the list is modified (e.g., adding or removing an element), a new copy of the underlying array is created. This ensures that any read operations (like `get()`, `contains()`, `size()`, etc.) do not need to be synchronized, as they always operate on a consistent snapshot of the list.
+
+Here’s a breakdown of how `CopyOnWriteArrayList` works:
+
+1. **Reads** are non-blocking and fast:
+   - Since the list is immutable during read operations (due to copy-on-write), all read operations are thread-safe and do not require locking. Multiple threads can read the list concurrently without contention.
+
+2. **Writes (Modifications)** involve copying:
+   - When you perform a modification, such as adding, removing, or replacing an element, the list creates a **new array** that contains the updated elements. The new array then becomes the internal representation of the list.
+   - This means that while writing to the list may be slower (due to the copying operation), the reads are always fast and thread-safe.
+
+3. **Thread-safety**:
+   - **Concurrency on reads**: Multiple threads can access the list simultaneously for reading.
+   - **Concurrency on writes**: Writes are serialized because a new copy of the underlying array is created for each modification.
+   - This makes it a good choice for situations where the list is read frequently but written infrequently.
+
+---
+
+### **When to Use `CopyOnWriteArrayList`**
+
+The `CopyOnWriteArrayList` is particularly useful in scenarios where the list will be modified infrequently but needs to be accessed by multiple threads concurrently. Since reading operations are very fast and do not require synchronization, it works well in environments where the list is mostly read and occasionally modified. Here are some common use cases:
+
+- **Event Listeners**: When there are multiple threads listening for events (like in GUI applications or server applications), the list of listeners can be accessed concurrently without locking.
+- **Caching**: If you have a read-heavy cache with infrequent updates, using `CopyOnWriteArrayList` can help ensure fast and thread-safe reads.
+- **Snapshot-based Systems**: Any system where you need to periodically take a snapshot of data and read it in parallel.
+
+### **Advantages of `CopyOnWriteArrayList`**
+
+1. **Thread Safety without Synchronization**:
+   - All read operations (e.g., `get()`, `size()`, `iterator()`) are thread-safe and do not need explicit synchronization. You don’t have to worry about manually managing locks for reads.
+
+2. **Consistency During Iteration**:
+   - Iterators over the list do not throw `ConcurrentModificationException`, even if the list is modified during iteration. This is because the underlying array is copied before modifications are made, ensuring that iterators work on a snapshot of the list.
+
+3. **Simple API**:
+   - It behaves like a typical `List`, so you can use all the standard methods (`add()`, `remove()`, `contains()`, etc.) with the benefit of thread-safety.
+
+### **Disadvantages of `CopyOnWriteArrayList`**
+
+1. **Write Performance**:
+   - Each write operation (i.e., adding, removing, or updating an element) involves creating a copy of the underlying array. This can be costly in terms of both time and memory, particularly when the list grows large or when writes are frequent.
+   
+2. **Memory Overhead**:
+   - Since a new copy of the internal array is created on every write, memory usage can increase quickly, especially if the list has frequent updates.
+
+3. **Not Suitable for High Write-Heavy Workloads**:
+   - If your use case requires frequent modifications, `CopyOnWriteArrayList` is not ideal. The cost of copying the array on each write operation can become a bottleneck.
+
+---
+
+### **Key Methods of `CopyOnWriteArrayList<E>`**
+
+`CopyOnWriteArrayList` extends the **`AbstractList`** class and implements the **`List`** interface. Most of its methods behave as expected for a list, but there are a few important nuances due to the copy-on-write nature.
+
+#### **Constructors**
+
+1. **Default Constructor**:
+   ```java
+   CopyOnWriteArrayList<E> list = new CopyOnWriteArrayList<>();
+   ```
+
+2. **Constructor with Initial Collection**:
+   ```java
+   CopyOnWriteArrayList<E> list = new CopyOnWriteArrayList<>(Collection<? extends E> c);
+   ```
+
+3. **Constructor with Initial Capacity**:
+   ```java
+   CopyOnWriteArrayList<E> list = new CopyOnWriteArrayList<>(int initialCapacity);
+   ```
+
+#### **Core Methods**
+
+- **`add(E e)`**:
+  - Adds the element to the list. A new copy of the array is created with the element added.
+  ```java
+  list.add("element");
+  ```
+
+- **`remove(Object o)`**:
+  - Removes the first occurrence of the specified element. A new array is created without the element.
+  ```java
+  list.remove("element");
+  ```
+
+- **`set(int index, E element)`**:
+  - Replaces the element at the specified position. A new array is created with the updated element at the given index.
+  ```java
+  list.set(0, "newElement");
+  ```
+
+- **`get(int index)`**:
+  - Retrieves the element at the specified index. This operation is fast and does not involve any synchronization.
+  ```java
+  String element = list.get(0);
+  ```
+
+- **`iterator()`**:
+  - Returns an iterator over the list. The iterator is **fail-safe**, meaning it will not throw `ConcurrentModificationException` even if the list is modified during iteration.
+  ```java
+  Iterator<String> iterator = list.iterator();
+  while (iterator.hasNext()) {
+      System.out.println(iterator.next());
+  }
+  ```
+
+- **`size()`**:
+  - Returns the number of elements in the list. This operation is very fast because the list is not locked for reading.
+  ```java
+  int size = list.size();
+  ```
+
+- **`contains(Object o)`**:
+  - Checks if the list contains the specified element. Like `size()`, this operation is thread-safe and fast for reads.
+  ```java
+  boolean contains = list.contains("element");
+  ```
+
+#### **Iteration Methods**
+
+1. **`forEach(Consumer<? super E> action)`**:
+   - Iterates over the elements of the list and applies the provided action (introduced in Java 8).
+   ```java
+   list.forEach(System.out::println);
+   ```
+
+2. **`spliterator()`**:
+   - Returns a **Spliterator** that can be used for parallel processing of the elements in the list.
+   ```java
+   Spliterator<String> spliterator = list.spliterator();
+   ```
+
+---
+
+### **Example Usage of `CopyOnWriteArrayList`**
+
+```java
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class CopyOnWriteArrayListExample {
+    public static void main(String[] args) {
+        // Create a CopyOnWriteArrayList
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+
+        // Add elements
+        list.add("apple");
+        list.add("banana");
+        list.add("cherry");
+
+        // Read elements (thread-safe, no need for synchronization)
+        System.out.println("List: " + list);
+
+        // Modify elements
+        list.add("date");
+        list.remove("banana");
+
+        // Iterate over the list
+        list.forEach(System.out::println);
+
+        // Get an element by index
+        String item = list.get(0);
+        System.out.println("First item: " + item);
+
+        // Size of the list
+        System.out.println("Size of the list: " + list.size());
+    }
+}
+```
+
+### **Output**
+```
+List: [apple, banana, cherry]
+apple
+cherry
+date
+First item: apple
+Size of the list: 3
+```
+
+---
+
+### **Conclusion**
+
+`CopyOnWriteArrayList` is a great choice for concurrent read-heavy applications where modifications are infrequent. It offers fast, thread-safe read operations without requiring external synchronization and eliminates the risk of `ConcurrentModificationException` during iteration. However, it is less suitable for write-heavy scenarios due to its cost of copying the underlying array with each modification. Understanding these trade-offs helps you make the right decision on when and how to use it in your concurrent Java applications.
+
+---
+
+### **`LinkedBlockingQueue<E>` in Java**
+
+The **`LinkedBlockingQueue<E>`** is a class that implements the **`BlockingQueue<E>`** interface, which provides thread-safe operations for a queue with blocking behavior. It is part of the **`java.util.concurrent`** package and is commonly used in multithreaded applications to implement producer-consumer patterns, task scheduling, and other scenarios where threads need to communicate by passing messages or work items through a queue.
+
+### **Key Features of `LinkedBlockingQueue`**
+
+- **Thread-Safe**: `LinkedBlockingQueue` provides thread-safe methods for adding and removing elements from the queue, ensuring that multiple threads can safely interact with the queue without explicit synchronization.
+- **Blocking Operations**: It supports blocking operations, where threads can block while waiting for elements to become available or space to become available in the queue. This is particularly useful in producer-consumer scenarios.
+- **Capacity Control**: It has an optional maximum capacity. If the queue is full, threads attempting to add elements will block until space becomes available. Similarly, if the queue is empty, threads attempting to remove elements will block until an element is available.
+- **FIFO Order**: The `LinkedBlockingQueue` follows the First-In-First-Out (FIFO) order for both insertion and removal of elements.
+- **Non-Blocking Operations**: In addition to the blocking operations, it also provides non-blocking methods like `offer()` and `poll()` that attempt to add or remove an element without blocking.
+
+### **How `LinkedBlockingQueue` Works**
+
+- **Linked List Structure**: Internally, `LinkedBlockingQueue` is backed by a linked list, which allows for efficient dynamic resizing and handling of large numbers of elements. The list-based structure means that both the head and tail of the queue can be accessed efficiently.
+  
+- **Blocking on Full Queue**: If a producer thread tries to insert an element when the queue is full (if a capacity limit is specified), it will block (wait) until space becomes available.
+
+- **Blocking on Empty Queue**: If a consumer thread tries to remove an element when the queue is empty, it will block (wait) until an element is available.
+
+---
+
+### **Constructors of `LinkedBlockingQueue<E>`**
+
+1. **No-argument constructor** (default capacity):
+   - Initializes the queue with an unbounded capacity, meaning there is no limit to the number of elements the queue can hold (other than memory limits).
+   ```java
+   LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+   ```
+
+2. **With capacity argument**:
+   - Initializes the queue with a specified capacity, which limits the number of elements that can be in the queue at once.
+   ```java
+   LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>(10);  // Queue size limit of 10
+   ```
+
+3. **With another collection**:
+   - Initializes the queue by copying elements from an existing collection.
+   ```java
+   LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>(anotherCollection);
+   ```
+
+---
+
+### **Core Methods of `LinkedBlockingQueue<E>`**
+
+Since `LinkedBlockingQueue` implements the **`BlockingQueue<E>`** interface, it provides several methods for adding, removing, and inspecting elements, as well as blocking operations. Here's a summary of its key methods:
+
+#### **Adding Elements**
+
+1. **`add(E e)`**:
+   - Adds the specified element to the queue. If the queue is full, it throws an **`IllegalStateException`**.
+   ```java
+   queue.add("Element");
+   ```
+
+2. **`offer(E e)`**:
+   - Tries to add the specified element to the queue. If the queue is full, it returns `false` instead of blocking or throwing an exception.
+   ```java
+   queue.offer("Element");
+   ```
+
+3. **`put(E e)`**:
+   - Adds the specified element to the queue, waiting (blocking) if necessary until space becomes available. This method blocks if the queue is full.
+   ```java
+   queue.put("Element");
+   ```
+
+#### **Removing Elements**
+
+1. **`remove()`**:
+   - Removes and returns the head of the queue. If the queue is empty, it throws a **`NoSuchElementException`**.
+   ```java
+   queue.remove();
+   ```
+
+2. **`poll()`**:
+   - Removes and returns the head of the queue, or returns `null` if the queue is empty (non-blocking).
+   ```java
+   queue.poll();
+   ```
+
+3. **`take()`**:
+   - Removes and returns the head of the queue, waiting (blocking) if necessary until an element becomes available.
+   ```java
+   queue.take();
+   ```
+
+4. **`poll(long timeout, TimeUnit unit)`**:
+   - Removes and returns the head of the queue, or returns `null` if the queue is empty, waiting up to the specified timeout for an element to become available.
+   ```java
+   queue.poll(5, TimeUnit.SECONDS);
+   ```
+
+5. **`drainTo(Collection<? super E> c)`**:
+   - Removes all available elements from the queue and adds them to the specified collection. This is useful for processing all items in the queue without blocking.
+   ```java
+   queue.drainTo(list);
+   ```
+
+#### **Inspecting the Queue**
+
+1. **`peek()`**:
+   - Retrieves, but does not remove, the head of the queue. If the queue is empty, it returns `null`.
+   ```java
+   queue.peek();
+   ```
+
+2. **`size()`**:
+   - Returns the number of elements in the queue.
+   ```java
+   int size = queue.size();
+   ```
+
+3. **`remainingCapacity()`**:
+   - Returns the number of additional elements that the queue can hold before it becomes full. If the queue is unbounded, it returns `Integer.MAX_VALUE`.
+   ```java
+   int remainingCapacity = queue.remainingCapacity();
+   ```
+
+4. **`isEmpty()`**:
+   - Checks if the queue is empty.
+   ```java
+   boolean isEmpty = queue.isEmpty();
+   ```
+
+5. **`isFull()`**:
+   - Checks if the queue is full. This is useful only when a capacity is set for the queue. If the queue is unbounded, this will always return `false`.
+   ```java
+   boolean isFull = queue.isFull();
+   ```
+
+---
+
+### **Blocking and Non-Blocking Behavior**
+
+1. **Blocking Operations**:
+   - **`put(E e)`**: Blocks when the queue is full until space becomes available.
+   - **`take()`**: Blocks when the queue is empty until an element is available.
+   - **`poll(long timeout, TimeUnit unit)`**: Blocks for a given amount of time if the queue is empty, waiting for an element to become available.
+
+2. **Non-Blocking Operations**:
+   - **`offer(E e)`**: Non-blocking method that returns `false` if the queue is full instead of waiting.
+   - **`poll()`**: Non-blocking method that returns `null` if the queue is empty.
+   - **`peek()`**: Non-blocking method that returns `null` if the queue is empty.
+
+---
+
+### **Example Usage of `LinkedBlockingQueue`**
+
+#### **Producer-Consumer Example**
+
+A common use case for `LinkedBlockingQueue` is the **producer-consumer** problem, where one or more producer threads add items to the queue and one or more consumer threads remove items from the queue.
+
+```java
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class ProducerConsumerExample {
+
+    static class Producer implements Runnable {
+        private LinkedBlockingQueue<Integer> queue;
+
+        public Producer(LinkedBlockingQueue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    System.out.println("Produced: " + i);
+                    queue.put(i);  // Blocking operation if the queue is full
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    static class Consumer implements Runnable {
+        private LinkedBlockingQueue<Integer> queue;
+
+        public Consumer(LinkedBlockingQueue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    Integer item = queue.take();  // Blocking operation if the queue is empty
+                    System.out.println("Consumed: " + item);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<>(5); // Queue with capacity 5
+
+        // Create and start the producer and consumer threads
+        Thread producerThread = new Thread(new Producer(queue));
+        Thread consumerThread = new Thread(new Consumer(queue));
+        
+        producerThread.start();
+        consumerThread.start();
+
+        // Wait for both threads to finish
+        producerThread.join();
+        consumerThread.join();
+    }
+}
+```
+
+### **Output (may vary)**:
+```
+Produced: 0
+Consumed: 0
+Produced: 1
+Consumed: 1
+Produced: 2
+Consumed: 2
+Produced: 3
+Consumed: 3
+...
+```
+
+---
+
+### **Use Cases for `LinkedBlockingQueue`**
+
+1. **Producer-Consumer Problems**: It is ideal for scenarios where multiple producer threads produce data and multiple consumer threads consume data. The queue naturally synchronizes the access between threads.
+  
+2.
+
+ **Task Scheduling**: Used in thread pools and other parallel processing systems where tasks are queued and processed by worker threads.
+
+3. **Rate-Limiting**: Can be used for implementing rate-limited systems where producers produce at a certain rate, and consumers consume at a different rate. The queue can help balance production and consumption rates.
+
+4. **Event-Driven Architectures**: It can be used in event-driven systems where events are queued and processed by worker threads.
+
+---
+
+### **Conclusion**
+
+`LinkedBlockingQueue` is a powerful, thread-safe data structure for managing tasks or data between multiple threads in concurrent programming. Its blocking behavior makes it ideal for situations like the **producer-consumer problem**, where threads need to wait for the availability of resources (items in a queue) or space (for putting new items). It combines blocking and non-blocking operations and supports both bounded and unbounded capacity modes, making it flexible for different use cases.
+
+---
+
+### **`PriorityBlockingQueue<E>` in Java**
+
+The **`PriorityBlockingQueue<E>`** is a class that implements the **`BlockingQueue<E>`** interface, which allows for thread-safe operations on a queue with priority ordering. It is part of the **`java.util.concurrent`** package, introduced in **Java 5**. This class is similar to a standard **`PriorityQueue`**, but with the added feature of being **blocking**, which makes it suitable for use in multithreaded environments where threads need to wait for elements to become available or where elements are added in order of their priority.
+
+### **Key Features of `PriorityBlockingQueue`**
+
+- **Thread-Safe**: `PriorityBlockingQueue` provides thread-safe operations for adding, removing, and inspecting elements in the queue. Multiple threads can safely interact with the queue without the need for explicit synchronization.
+  
+- **Blocking Operations**: It supports blocking behavior, where threads can block while waiting for an element to become available or space to become available in the queue. This is useful in producer-consumer scenarios where threads may need to wait if the queue is empty or full.
+  
+- **Priority Ordering**: The queue orders elements according to their natural ordering or a **`Comparator`** provided at the time of creation. The queue always removes elements in order of their priority (i.e., the "smallest" element, as defined by the comparator, is removed first). This makes it different from other queues like **`LinkedBlockingQueue`** or **`ArrayBlockingQueue`**, where the order of removal is FIFO (First-In-First-Out).
+
+- **Unbounded**: By default, a `PriorityBlockingQueue` is unbounded, meaning it can grow as large as the available memory allows. However, it can also be initialized with a bounded capacity, in which case it will block producers when the queue reaches its limit.
+
+- **No Blocking on Removal**: It is a non-fair queue, which means that if multiple threads are waiting to consume elements, the thread with the lowest priority will be consumed first. However, threads do not block during the **removal** operation unless the queue is empty. Producers, on the other hand, will block if the queue has a capacity limit and the queue is full.
+
+---
+
+### **How `PriorityBlockingQueue` Works**
+
+- **Priority Ordering**: Each element in the queue must implement the **`Comparable`** interface, or a **`Comparator`** must be provided to define the order in which elements are retrieved.
+  
+- **Thread Safety**: Like other `BlockingQueue` implementations, `PriorityBlockingQueue` ensures that only one thread can modify the queue at any time, thus avoiding concurrency issues like race conditions.
+
+- **Blocking Behavior**: When the queue is empty, threads trying to remove elements will block until elements become available (with the `take()` or `poll()` methods). Similarly, if a capacity is set, threads trying to add elements when the queue is full will block (with the `put()` or `offer()` methods) until space is available.
+
+- **Non-Fairness**: `PriorityBlockingQueue` does not guarantee fairness, which means that threads might not consume elements in the order in which they started waiting. The priority of the elements will dictate the order in which they are consumed.
+
+---
+
+### **Constructors of `PriorityBlockingQueue<E>`**
+
+1. **Default Constructor**:
+   - Creates an unbounded priority queue with elements ordered according to their natural ordering (i.e., the elements must implement the **`Comparable`** interface).
+   ```java
+   PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>();
+   ```
+
+2. **Constructor with initial capacity**:
+   - Creates an unbounded priority queue with an initial capacity but does not set a maximum capacity. The queue can still grow as large as necessary.
+   ```java
+   PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>(10);
+   ```
+
+3. **Constructor with initial capacity and comparator**:
+   - Creates an unbounded priority queue with an initial capacity and a **`Comparator`** to define the priority order of elements. If the elements do not implement `Comparable`, you must use a comparator.
+   ```java
+   PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>(10, Comparator.reverseOrder());
+   ```
+
+4. **Constructor with a collection**:
+   - Initializes the queue with elements from an existing collection (like a `List`), and the queue will maintain the priority ordering based on the provided comparator or the natural ordering of the elements.
+   ```java
+   PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>(anotherCollection);
+   ```
+
+---
+
+### **Core Methods of `PriorityBlockingQueue<E>`**
+
+`PriorityBlockingQueue` implements the **`BlockingQueue<E>`** interface, providing both blocking and non-blocking methods for adding, removing, and inspecting elements.
+
+#### **Adding Elements**
+
+1. **`add(E e)`**:
+   - Adds the specified element to the queue. If the queue is full (in case of a bounded queue), it will throw an **`IllegalStateException`**. For an unbounded queue, it will always add the element.
+   ```java
+   queue.add(10);
+   ```
+
+2. **`offer(E e)`**:
+   - Tries to add the specified element to the queue. If the queue is full (in case of a bounded queue), it will return `false`. If unbounded, it will always add the element and return `true`.
+   ```java
+   queue.offer(10);
+   ```
+
+3. **`put(E e)`**:
+   - Adds the specified element to the queue, blocking if necessary until space becomes available (if the queue has a capacity limit).
+   ```java
+   queue.put(10);
+   ```
+
+#### **Removing Elements**
+
+1. **`remove()`**:
+   - Removes and returns the head of the queue. If the queue is empty, it will throw a **`NoSuchElementException`**.
+   ```java
+   queue.remove();
+   ```
+
+2. **`poll()`**:
+   - Removes and returns the head of the queue, or returns `null` if the queue is empty (non-blocking).
+   ```java
+   queue.poll();
+   ```
+
+3. **`take()`**:
+   - Removes and returns the head of the queue, blocking if necessary until an element becomes available (if the queue is empty).
+   ```java
+   queue.take();
+   ```
+
+4. **`poll(long timeout, TimeUnit unit)`**:
+   - Removes and returns the head of the queue, or returns `null` if the queue is empty, waiting up to the specified timeout for an element to become available.
+   ```java
+   queue.poll(10, TimeUnit.SECONDS);
+   ```
+
+#### **Inspecting the Queue**
+
+1. **`peek()`**:
+   - Retrieves, but does not remove, the head of the queue. If the queue is empty, it returns `null`.
+   ```java
+   queue.peek();
+   ```
+
+2. **`size()`**:
+   - Returns the number of elements in the queue.
+   ```java
+   int size = queue.size();
+   ```
+
+3. **`isEmpty()`**:
+   - Checks if the queue is empty.
+   ```java
+   boolean isEmpty = queue.isEmpty();
+   ```
+
+4. **`remainingCapacity()`**:
+   - Returns the number of additional elements that the queue can hold before it becomes full. This is only meaningful for a bounded queue. For unbounded queues, it returns `Integer.MAX_VALUE`.
+   ```java
+   int remainingCapacity = queue.remainingCapacity();
+   ```
+
+---
+
+### **Priority Ordering in `PriorityBlockingQueue`**
+
+The priority in the queue is determined by:
+
+1. **Natural Ordering**:
+   - If the elements implement **`Comparable`**, they will be ordered according to their natural ordering. For example, integers are ordered numerically, and strings are ordered lexicographically.
+
+2. **Custom Comparator**:
+   - If a **`Comparator`** is provided when creating the queue, the elements will be ordered according to the rules defined by the comparator. For example, if a descending order is required, the comparator can reverse the natural order.
+
+### **Example Usage of `PriorityBlockingQueue`**
+
+Here's an example demonstrating how to use `PriorityBlockingQueue` in a multithreaded producer-consumer scenario where elements are processed based on priority:
+
+```java
+import java.util.concurrent.*;
+
+public class PriorityBlockingQueueExample {
+
+    static class Producer implements Runnable {
+        private PriorityBlockingQueue<Integer> queue;
+
+        public Producer(PriorityBlockingQueue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    queue.put(i);  // Add elements to the queue
+                    System.out.println("Produced: " + i);
+                    Thread.sleep(100);  // Simulate time to produce an item
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    static class Consumer implements Runnable {
+        private PriorityBlockingQueue<Integer> queue;
+
+        public Consumer(PriorityBlockingQueue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    Integer item = queue.take();  // Consume elements from the queue
+                    System.out.println("Consumed: " + item);
+                    Thread.sleep(150);  // Simulate time to consume an item
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        PriorityBlockingQueue
+
+<Integer> queue = new PriorityBlockingQueue<>(10);
+
+        // Create and start producer and consumer threads
+        Thread producerThread = new Thread(new Producer(queue));
+        Thread consumerThread = new Thread(new Consumer(queue));
+
+        producerThread.start();
+        consumerThread.start();
+
+        // Wait for both threads to finish
+        producerThread.join();
+        consumerThread.join();
+    }
+}
+```
+
+### **Output (may vary)**:
+```
+Produced: 0
+Consumed: 0
+Produced: 1
+Consumed: 1
+Produced: 2
+Consumed: 2
+...
+```
+
+In this example, the consumer thread will always consume the smallest number available in the queue, which represents the priority-based processing of tasks.
+
+---
+
+### **Use Cases for `PriorityBlockingQueue`**
+
+1. **Task Scheduling**: In systems where tasks have different priorities and need to be processed in order of priority, such as in a job scheduler or a task executor.
+  
+2. **Producer-Consumer Problems**: For scenarios where producers generate tasks or data with varying levels of priority, and consumers process them based on priority.
+
+3. **Event Processing**: In systems where events or messages are handled in order of their priority, such as in message queues or event-driven architectures.
+
+4. **Thread Pool Management**: `PriorityBlockingQueue` can be used in thread pools where tasks are executed in priority order, such as in real-time systems where some tasks need to be processed before others.
+
+---
+
+### **Conclusion**
+
+`PriorityBlockingQueue` is a powerful concurrent data structure suitable for situations where tasks or elements need to be processed in priority order in multithreaded environments. With its thread-safe, blocking, and priority-based features, it is commonly used in task scheduling, event processing, and producer-consumer scenarios where the order of processing is critical.
+
+---
+### **`ConcurrentLinkedQueue<E>` in Java**
+
+The **`ConcurrentLinkedQueue<E>`** is a thread-safe, non-blocking queue implementation from the **`java.util.concurrent`** package. It is part of the **Java Collections Framework** and is designed for high-concurrency environments where multiple threads can safely access and modify the queue concurrently without needing synchronization.
+
+`ConcurrentLinkedQueue` is based on the **non-blocking algorithm** that provides **lock-free** operations, making it highly suitable for applications where performance is critical, especially in multi-threaded environments with frequent insertions and removals of elements.
+
+---
+
+### **Key Features of `ConcurrentLinkedQueue<E>`**
+
+1. **Non-blocking and Lock-Free**: 
+   - The `ConcurrentLinkedQueue` uses a **lock-free** algorithm for enqueue and dequeue operations, meaning it doesn’t use traditional locking mechanisms (like `synchronized` or `ReentrantLock`), which makes it suitable for high-concurrency scenarios.
+
+2. **Thread-Safe**:
+   - It is designed to be thread-safe. Multiple threads can insert and remove elements from the queue simultaneously without causing data corruption or race conditions.
+
+3. **FIFO Order**:
+   - Elements in the queue are ordered in **First-In-First-Out (FIFO)** order. This means that the first element added to the queue will be the first one removed.
+
+4. **Unbounded Queue**:
+   - It is an unbounded queue, meaning it can grow dynamically as elements are added, with no fixed limit on the number of elements (except memory constraints).
+
+5. **No Blocking on Enqueue or Dequeue**:
+   - The queue doesn't block threads trying to add or remove elements. If there is space to add an element, it succeeds immediately. Similarly, if there are elements to remove, the operation succeeds immediately. This is in contrast to **`BlockingQueue`** implementations like **`LinkedBlockingQueue`**, which may block threads if the queue is full or empty.
+
+6. **Highly Scalable**:
+   - Due to its non-blocking nature, it provides better performance than blocking queues in cases where there are high throughput requirements and low contention.
+
+---
+
+### **How `ConcurrentLinkedQueue` Works**
+
+`ConcurrentLinkedQueue` uses an implementation of a **non-blocking algorithm** (specifically **CAS** – Compare-and-Swap), ensuring thread safety and avoiding the use of locks. It uses **atomic operations** to perform insertions and deletions, which reduces the overhead of locking and synchronization.
+
+In `ConcurrentLinkedQueue`, operations like `offer()` and `poll()` rely on atomic compare-and-swap (CAS) operations to ensure consistency across multiple threads. These operations allow threads to safely perform enqueue and dequeue operations without waiting for locks, leading to higher concurrency.
+
+---
+
+### **Constructors of `ConcurrentLinkedQueue<E>`**
+
+1. **Default Constructor**:
+   - Creates an empty queue with no initial capacity limit.
+   ```java
+   ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
+   ```
+
+2. **Constructor with a Collection**:
+   - Initializes the queue with elements from the provided collection, maintaining the same order.
+   ```java
+   List<String> list = Arrays.asList("One", "Two", "Three");
+   ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>(list);
+   ```
+
+---
+
+### **Core Methods of `ConcurrentLinkedQueue<E>`**
+
+Here is a breakdown of some key methods provided by `ConcurrentLinkedQueue`:
+
+#### **Adding Elements**
+
+1. **`offer(E e)`**:
+   - Adds the specified element to the queue if it is possible to do so immediately without exceeding the queue’s capacity. In the case of `ConcurrentLinkedQueue`, this method always returns `true` because the queue is unbounded.
+   ```java
+   boolean isAdded = queue.offer("Element");
+   ```
+
+2. **`add(E e)`**:
+   - Similar to `offer()`, this method adds the specified element to the queue and always returns `true`. This method is included for compatibility with the `Queue` interface but is rarely used because it is equivalent to `offer()` in behavior.
+   ```java
+   boolean isAdded = queue.add("Element");
+   ```
+
+#### **Removing Elements**
+
+1. **`poll()`**:
+   - Retrieves and removes the head of the queue, or returns `null` if the queue is empty. It does not block, even if the queue is empty.
+   ```java
+   String item = queue.poll();
+   ```
+
+2. **`remove()`**:
+   - Retrieves and removes the head of the queue. It throws a `NoSuchElementException` if the queue is empty.
+   ```java
+   String item = queue.remove();
+   ```
+
+#### **Inspecting the Queue**
+
+1. **`peek()`**:
+   - Retrieves, but does not remove, the head of the queue, or returns `null` if the queue is empty.
+   ```java
+   String item = queue.peek();
+   ```
+
+2. **`size()`**:
+   - Returns the approximate number of elements in the queue. It may not always reflect the exact number of elements due to concurrency.
+   ```java
+   int size = queue.size();
+   ```
+
+3. **`isEmpty()`**:
+   - Returns `true` if the queue is empty, otherwise `false`.
+   ```java
+   boolean isEmpty = queue.isEmpty();
+   ```
+
+---
+
+### **Example Usage of `ConcurrentLinkedQueue`**
+
+Here’s an example that demonstrates how to use `ConcurrentLinkedQueue` in a multithreaded environment.
+
+```java
+import java.util.concurrent.*;
+
+public class ConcurrentLinkedQueueExample {
+
+    public static void main(String[] args) throws InterruptedException {
+        // Create a ConcurrentLinkedQueue
+        ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();
+
+        // Producer thread
+        Thread producer = new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                queue.offer(i);  // Non-blocking addition
+                System.out.println("Produced: " + i);
+            }
+        });
+
+        // Consumer thread
+        Thread consumer = new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                Integer item = queue.poll();  // Non-blocking removal
+                if (item != null) {
+                    System.out.println("Consumed: " + item);
+                }
+            }
+        });
+
+        // Start the threads
+        producer.start();
+        consumer.start();
+
+        // Wait for both threads to finish
+        producer.join();
+        consumer.join();
+    }
+}
+```
+
+### **Output (may vary)**:
+```
+Produced: 0
+Produced: 1
+Produced: 2
+Consumed: 0
+Consumed: 1
+Consumed: 2
+...
+```
+
+In this example, one thread acts as a producer that inserts numbers into the queue, and the other acts as a consumer that removes and processes those numbers. The queue is thread-safe, ensuring no synchronization issues between the producer and consumer threads.
+
+---
+
+### **Use Cases for `ConcurrentLinkedQueue`**
+
+1. **High-Concurrency Environments**:
+   - `ConcurrentLinkedQueue` is ideal in scenarios where high concurrency is required, such as in real-time systems, message processing systems, or task scheduling systems, where multiple threads need to concurrently add and remove tasks or data.
+
+2. **Non-blocking Data Structures**:
+   - It is commonly used in situations where **non-blocking** behavior is important, such as in event-driven architectures, parallel processing, and scenarios where you need to prevent threads from waiting for others to complete tasks.
+
+3. **Producer-Consumer Problems**:
+   - The queue is perfect for the **producer-consumer** pattern where multiple threads produce items, and multiple threads consume them concurrently. The **non-blocking** nature ensures efficient handling of tasks without unnecessary contention or locking.
+
+4. **Implementing Concurrent Data Pipelines**:
+   - It is useful in implementing a concurrent **data pipeline**, where multiple stages process data concurrently, and the data is passed between different stages via a thread-safe queue.
+
+5. **Multithreaded Gaming**:
+   - In multithreaded gaming applications, where there may be high concurrency for processing user inputs, game events, or world state changes, `ConcurrentLinkedQueue` can be used to handle events in a non-blocking, FIFO manner.
+
+---
+
+### **Advantages of `ConcurrentLinkedQueue`**
+
+- **High Performance**: Due to its lock-free, non-blocking nature, it offers high performance in multi-threaded environments, as there is minimal thread contention.
+- **Scalability**: Because of its thread-safe and non-blocking nature, it scales well in high-concurrency scenarios.
+- **No Blocking**: Unlike `BlockingQueue` implementations (such as `LinkedBlockingQueue`), the `ConcurrentLinkedQueue` does not block threads, which can result in higher throughput and reduced thread contention in many use cases.
+
+---
+
+### **Disadvantages of `ConcurrentLinkedQueue`**
+
+- **No Capacity Limit**: It is an unbounded queue by default, which means it can potentially grow indefinitely, consuming system memory. For use cases where a bounded queue is needed, other data structures might be more suitable.
+  
+- **Approximate Size**: The `size()` method is **not guaranteed** to be accurate in a multi-threaded environment. The size may be approximate due to concurrent modifications.
+
+- **Lack of Blocking Features**: If you need blocking behavior (e.g., blocking when the queue is empty or full), you may want to consider other queue implementations like **`LinkedBlockingQueue`** or **`ArrayBlockingQueue`**.
+
+---
+
+### **Conclusion**
+
+`ConcurrentLinkedQueue<E>` is a powerful, high-performance, thread-safe, non-blocking queue implementation that is highly suited for concurrent applications.
+
+ It offers efficient handling of high-throughput scenarios where multiple threads interact with a shared queue without blocking each other. While it is not suitable for all use cases (e.g., when blocking operations are needed or when you need a bounded queue), it excels in situations where concurrency, non-blocking behavior, and scalability are essential.
+
+---
+
+### **`TransferQueue<E>` in Java**
+
+The **`TransferQueue<E>`** interface in Java is part of the **`java.util.concurrent`** package and represents a specialized type of **`BlockingQueue`** where the **producer** and **consumer** have a more intimate relationship. It allows a **producer** thread to **transfer** an item directly to a **consumer** thread, rather than just putting an item into the queue. The **`TransferQueue`** provides a method that blocks until an element is taken from the queue by a consumer, making it ideal for scenarios where the producer wants to wait for the consumer to take the item before proceeding.
+
+The **`TransferQueue`** interface extends **`BlockingQueue`**, meaning it retains all the thread-safety and blocking semantics of a `BlockingQueue`, but it adds an important feature: the **transfer** of elements between threads.
+
+### **Key Features of `TransferQueue<E>`**
+
+1. **Producer-Consumer Synchronization**:
+   - The `TransferQueue` introduces the concept of **direct transfer** between producer and consumer threads. It allows the producer to wait until the consumer consumes the item, instead of just placing the item into the queue and continuing.
+
+2. **Blocking Operations**:
+   - Like other `BlockingQueue` implementations, `TransferQueue` supports **blocking operations** like `put()`, `take()`, `offer()`, and `poll()`. The key difference is that `transfer()` can block the producer until the consumer takes the item.
+
+3. **Thread Coordination**:
+   - It allows explicit **thread coordination** between the producer and consumer. The producer can wait until the consumer is ready to consume the item, which ensures that the item is not placed in the queue before it is actually consumed.
+
+4. **Non-FIFO Ordering**:
+   - Unlike other `BlockingQueue` implementations that guarantee FIFO (First In, First Out) ordering, `TransferQueue` does not guarantee any specific order of element consumption. However, in many cases, the consumer is required to take the element immediately after the transfer.
+
+5. **Blocking Transfer**:
+   - The most important operation provided by `TransferQueue` is the **`transfer()`** method, which allows the producer to transfer an element directly to a consumer, blocking until the consumer takes the item from the queue. This operation allows for more efficient communication between producer and consumer threads compared to typical queuing.
+
+---
+
+### **Methods in `TransferQueue<E>`**
+
+The **`TransferQueue<E>`** interface provides the following key methods in addition to those inherited from **`BlockingQueue<E>`**:
+
+1. **`void transfer(E e)`**:
+   - This is the primary method of the `TransferQueue` interface. It transfers an element to a consumer, blocking until the consumer takes the item. If no consumer is currently waiting to take an item, the producer will wait until one is available.
+   - This method is a blocking call, and the producer is blocked until a consumer is ready to consume the item.
+   - This operation is especially useful for **point-to-point communication** between producer and consumer threads.
+   ```java
+   void transfer(E e);
+   ```
+
+2. **`boolean tryTransfer(E e)`**:
+   - This method attempts to transfer the element to the consumer immediately. It does not block the producer if no consumer is ready to take the item. Instead, it returns `false` if the element could not be transferred immediately, and `true` if the transfer was successful.
+   ```java
+   boolean tryTransfer(E e);
+   ```
+
+3. **`boolean tryTransfer(E e, long timeout, TimeUnit unit)`**:
+   - Similar to `tryTransfer()`, this method tries to transfer the element to the consumer but waits for up to the specified timeout if no consumer is ready to take the item.
+   - It returns `false` if the element could not be transferred within the timeout period.
+   ```java
+   boolean tryTransfer(E e, long timeout, TimeUnit unit);
+   ```
+
+---
+
+### **Implementations of `TransferQueue<E>`**
+
+There are a few concrete implementations of the `TransferQueue<E>` interface in Java, with the most common one being **`LinkedTransferQueue<E>`**.
+
+#### **`LinkedTransferQueue<E>`**:
+- `LinkedTransferQueue` is an implementation of the `TransferQueue` interface. It is a **non-blocking**, **lock-free** implementation of a queue that supports efficient transfers of elements between producer and consumer threads.
+- It allows a producer to transfer elements to consumers using the `transfer()` method, and if there is no consumer waiting, the producer will block until one is available.
+- It combines the functionality of a **queue** with the **direct transfer** capabilities, offering efficient operations for high-concurrency scenarios.
+
+---
+
+### **Core Operations of `LinkedTransferQueue<E>`**
+
+Here are some important operations of the `LinkedTransferQueue` (which implements `TransferQueue<E>`):
+
+1. **`transfer(E e)`**:
+   - Transfers an element to a consumer, blocking the producer until a consumer is ready to consume the element.
+   ```java
+   LinkedTransferQueue<Integer> queue = new LinkedTransferQueue<>();
+   queue.transfer(1);  // This will block until a consumer consumes 1.
+   ```
+
+2. **`tryTransfer(E e)`**:
+   - Attempts to transfer the element immediately. If no consumer is available, it returns `false` and does not block the producer.
+   ```java
+   boolean success = queue.tryTransfer(1);
+   ```
+
+3. **`tryTransfer(E e, long timeout, TimeUnit unit)`**:
+   - Similar to `tryTransfer()`, but the transfer will block for up to the specified timeout if no consumer is available.
+   ```java
+   boolean success = queue.tryTransfer(1, 100, TimeUnit.MILLISECONDS);
+   ```
+
+4. **`offer(E e)`**:
+   - Inserts an element into the queue if there is space available, without blocking.
+   ```java
+   boolean offered = queue.offer(1);
+   ```
+
+5. **`take()`**:
+   - Removes and returns the head of the queue, blocking until an element becomes available.
+   ```java
+   Integer element = queue.take();  // This will block if the queue is empty.
+   ```
+
+---
+
+### **Example Usage of `TransferQueue`**
+
+Here’s an example of how to use a `LinkedTransferQueue` to implement a simple producer-consumer scenario with direct item transfer:
+
+```java
+import java.util.concurrent.*;
+
+public class TransferQueueExample {
+
+    public static void main(String[] args) throws InterruptedException {
+        // Create a LinkedTransferQueue (an implementation of TransferQueue)
+        TransferQueue<Integer> queue = new LinkedTransferQueue<>();
+
+        // Producer thread
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    System.out.println("Producer transferring: " + i);
+                    queue.transfer(i);  // Transfer element to the consumer
+                    Thread.sleep(100);  // Simulate time for producing an item
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // Consumer thread
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    Integer item = queue.take();  // Take item from the queue
+                    System.out.println("Consumer consumed: " + item);
+                    Thread.sleep(200);  // Simulate time for consuming the item
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // Start the threads
+        producer.start();
+        consumer.start();
+
+        // Wait for both threads to finish
+        producer.join();
+        consumer.join();
+    }
+}
+```
+
+### **Expected Output:**
+
+```
+Producer transferring: 1
+Consumer consumed: 1
+Producer transferring: 2
+Consumer consumed: 2
+Producer transferring: 3
+Consumer consumed: 3
+Producer transferring: 4
+Consumer consumed: 4
+Producer transferring: 5
+Consumer consumed: 5
+```
+
+In this example, the producer **transfers** each element directly to the consumer thread using the `transfer()` method, and the consumer **takes** each item from the queue when it becomes available. Notice that the producer is **blocked** on `transfer()` until the consumer consumes the item, ensuring tight coordination between the two threads.
+
+---
+
+### **Use Cases for `TransferQueue<E>`**
+
+1. **Point-to-Point Communication**:
+   - `TransferQueue` is perfect for point-to-point communication between producer and consumer threads, where the producer can wait for a consumer to take an item before continuing. This can be useful for **task-based** or **message-based** systems.
+
+2. **Event-Driven Systems**:
+   - It can be used in systems where events are produced by one thread and consumed by another, and the producer needs to wait until the consumer has processed the event.
+
+3. **Producer-Consumer Scenarios with Tight Synchronization**:
+   - `TransferQueue` is ideal when you need the producer and consumer to be tightly synchronized, such as in real-time systems or when producing tasks that must be consumed immediately.
+
+4. **Job Scheduling Systems**:
+   - In job scheduling systems, where each job (task) is produced by a worker thread and must be consumed by a dedicated worker thread, `TransferQueue` ensures that jobs are not added to the queue until the consumer is ready to process them.
+
+---
+
+### **Advantages of `TransferQueue`**
+
+- **Direct Transfer**: The key advantage of the `TransferQueue` is that it allows direct communication between producer and consumer threads, ensuring tight synchronization and more efficient resource management.
+
+
+- **Thread Coordination**: It simplifies coordination between producer and consumer threads, especially when the producer wants to wait until the consumer has processed the element.
+- **Non-blocking Operations**: For situations where you don't want blocking, methods like `tryTransfer()` and `tryTransfer(timeout)` allow producers to attempt a transfer without waiting indefinitely.
+
+---
+
+### **Disadvantages of `TransferQueue`**
+
+- **Blocking Behavior**: If no consumers are available, the producer is blocked when calling `transfer()`, which may not be desirable in all use cases. It is important to understand when it is appropriate to use `transfer()` to avoid unnecessary blocking.
+- **Potential for Deadlock**: If not handled carefully, blocking behavior in `TransferQueue` can lead to deadlocks, especially when producers and consumers are interdependent.
+
+---
+
+### **Conclusion**
+
+The `TransferQueue<E>` is a highly specialized queue that facilitates direct communication between producer and consumer threads. By supporting blocking transfers, it enables tighter synchronization between threads, which can be beneficial for certain use cases, like task scheduling, real-time systems, and event-driven architectures. While it provides powerful features, it also comes with the caveat that it can block the producer thread, which needs to be considered when designing applications.
+
+---
+
+Here’s a comprehensive table listing the key methods available in the different types of **Queue** implementations in Java (`java.util.Queue`, `java.util.concurrent.Queue`, and specific implementations) along with their purpose:
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`add(E e)`** | Adds the specified element to the queue. Throws `IllegalStateException` if no space is available. | Adds an element to the queue if space allows. Used for unbounded queues or those that don't have fixed capacity. |
+| **`offer(E e)`** | Adds the specified element to the queue if space is available (returns `false` if it fails). | Adds an element to the queue without blocking. Useful for non-blocking queues and bounded queues. |
+| **`peek()`** | Retrieves, but does not remove, the head of the queue, or returns `null` if the queue is empty. | Provides a view of the first element without modifying the queue. |
+| **`poll()`** | Retrieves and removes the head of the queue, or returns `null` if the queue is empty. | Retrieves and removes the head element, returning `null` when empty. Non-blocking operation. |
+| **`remove()`** | Retrieves and removes the head of the queue. Throws `NoSuchElementException` if the queue is empty. | Retrieves and removes the head element, throwing an exception if the queue is empty. |
+| **`size()`** | Returns the number of elements in the queue. | Provides the size of the queue, but not always accurate in concurrent environments (especially for non-blocking queues). |
+| **`isEmpty()`** | Returns `true` if the queue is empty, otherwise `false`. | Checks if the queue is empty. |
+| **`clear()`** | Removes all elements from the queue (not in all implementations). | Clears all elements from the queue. |
+| **`contains(Object o)`** | Returns `true` if the queue contains the specified element. | Checks for the presence of a specific element in the queue. |
+| **`toArray()`** | Returns an array containing all of the elements in the queue. | Converts the queue into an array. |
+| **`forEach(Consumer<? super E> action)`** | Performs the specified action for each element in the queue. | Allows iteration over the queue, applying a provided action to each element. |
+
+---
+
+### Methods Specific to **`BlockingQueue`** (extends `Queue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`put(E e)`** | Inserts the specified element into the queue, blocking if necessary until space is available. | Adds an element to the queue while waiting if the queue is full. Useful in producer-consumer scenarios. |
+| **`take()`** | Retrieves and removes the head of the queue, blocking if the queue is empty. | Blocks until an element becomes available in the queue. |
+| **`offer(E e, long timeout, TimeUnit unit)`** | Inserts the specified element into the queue, waiting up to the specified time for space to become available. | Adds an element with a timeout, useful for non-blocking insertion with timeouts. |
+| **`poll(long timeout, TimeUnit unit)`** | Retrieves and removes the head of the queue, waiting up to the specified time if necessary. | Retrieves and removes an element, blocking for a limited time if the queue is empty. |
+
+---
+
+### Methods Specific to **`TransferQueue<E>`** (extends `BlockingQueue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`transfer(E e)`** | Transfers an element to a consumer, blocking until the consumer takes it. | Used for point-to-point communication between threads, where the producer waits for the consumer to take the item. |
+| **`tryTransfer(E e)`** | Attempts to transfer the element to a consumer immediately, returning `false` if no consumer is ready. | Non-blocking transfer that returns immediately if no consumer is available. |
+| **`tryTransfer(E e, long timeout, TimeUnit unit)`** | Attempts to transfer the element to the consumer, blocking for a specified time if no consumer is available. | Transfers an element, but waits only for a specified timeout if no consumer is available. |
+
+---
+
+### Methods Specific to **`PriorityQueue`** (extends `Queue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`peek()`** | Retrieves, but does not remove, the highest-priority element in the queue, or `null` if empty. | Allows access to the highest-priority element without removing it. |
+| **`poll()`** | Retrieves and removes the highest-priority element in the queue, or `null` if empty. | Removes and returns the highest-priority element from the queue. |
+| **`add(E e)`** | Adds the specified element to the priority queue (reorders based on priority). | Inserts an element into the queue and maintains the priority order. |
+| **`offer(E e)`** | Adds the specified element to the queue, returning `false` if it cannot be added. | Adds an element while maintaining priority order (returns `false` for bounded queues). |
+
+---
+
+### Methods Specific to **`Deque`** (extends `Queue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`addFirst(E e)`** | Inserts the specified element at the beginning of the deque. | Adds an element to the front of the deque. |
+| **`addLast(E e)`** | Inserts the specified element at the end of the deque. | Adds an element to the end of the deque. |
+| **`offerFirst(E e)`** | Inserts the specified element at the beginning, returning `false` if it cannot be added. | Adds an element to the front in a non-blocking way. |
+| **`offerLast(E e)`** | Inserts the specified element at the end, returning `false` if it cannot be added. | Adds an element to the end in a non-blocking way. |
+| **`removeFirst()`** | Removes and returns the first element of the deque. | Removes and returns the front element of the deque. |
+| **`removeLast()`** | Removes and returns the last element of the deque. | Removes and returns the last element of the deque. |
+| **`pollFirst()`** | Removes and returns the first element, or `null` if the deque is empty. | Removes and returns the front element without blocking. |
+| **`pollLast()`** | Removes and returns the last element, or `null` if the deque is empty. | Removes and returns the last element without blocking. |
+| **`getFirst()`** | Retrieves the first element without removing it. | Accesses the front element without modifying the deque. |
+| **`getLast()`** | Retrieves the last element without removing it. | Accesses the last element without modifying the deque. |
+
+---
+
+### Methods Specific to **`ConcurrentLinkedQueue<E>`** (extends `Queue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`offer(E e)`** | Adds the specified element to the queue if possible, otherwise returns `false`. | Non-blocking method for adding elements to the queue. |
+| **`poll()`** | Retrieves and removes the head of the queue, or returns `null` if empty. | Non-blocking method for removing the head of the queue. |
+| **`peek()`** | Retrieves, but does not remove, the head of the queue, or returns `null` if empty. | Non-blocking access to the head of the queue without removal. |
+
+---
+
+### Methods Specific to **`LinkedBlockingQueue<E>`** (extends `BlockingQueue`):
+
+| **Method** | **Description** | **Purpose** |
+|------------|-----------------|-------------|
+| **`put(E e)`** | Inserts the specified element into the queue, blocking if necessary until space is available. | Blocks until space is available to insert an element. |
+| **`take()`** | Retrieves and removes the head of the queue, blocking if the queue is empty. | Blocks until an element is available for removal. |
+| **`offer(E e, long timeout, TimeUnit unit)`** | Inserts the specified element into the queue, waiting up to the specified time for space to become available. | Non-blocking insertion with a timeout. |
+| **`poll(long timeout, TimeUnit unit)`** | Retrieves and removes the head of the queue, blocking for up to the specified time if necessary. | Non-blocking retrieval with a timeout. |
+
+---
+
+### Summary of Key Queue Types and Their Methods
+
+- **`Queue`**: Standard interface for a FIFO collection. Basic methods like `add()`, `peek()`, `poll()`, and `size()`.
+- **`BlockingQueue`**: Adds blocking behavior with methods like `put()`, `take()`, `offer()`, and `poll()` with timeout support.
+- **`TransferQueue`**: Specialized blocking queue for **point-to-point communication** between producer and consumer threads. Key methods are `transfer()`, `tryTransfer()`.
+- **`PriorityQueue`**: A queue where elements are ordered by priority. Methods like `peek()`, `poll()`, and `offer()` with custom sorting.
+- **`Deque`**: A **double-ended queue** with methods to add or remove from both ends (e.g., `addFirst()`, `removeFirst()`, `addLast()
+- **`ConcurrentLinkedQueue`**: Non-blocking, thread-safe, and efficient for concurrent access.
+- **`LinkedBlockingQueue`**: A blocking queue that supports both fair and non-fair thread synchronization.
