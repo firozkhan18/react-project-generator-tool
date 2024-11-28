@@ -4370,7 +4370,326 @@ Here’s a comprehensive table listing the key methods available in the differen
 - **`LinkedBlockingQueue`**: A blocking queue that supports both fair and non-fair thread synchronization.
 
 ---
+### `DelayQueue` in Java
 
+A **`DelayQueue`** is a specialized `BlockingQueue` that holds elements until they become eligible for processing. The elements in a `DelayQueue` are associated with a delay, and they can only be retrieved once their delay has expired. It is typically used in scenarios where you want to schedule tasks to be executed at a later time or after a specified delay, similar to a time-based priority queue.
+
+The `DelayQueue` implements the `BlockingQueue` interface and can be used to implement scenarios like task scheduling, retry mechanisms, and delayed event handling. It is part of the `java.util.concurrent` package.
+
+### Key Features of `DelayQueue`:
+- **Delay-based processing**: Elements in a `DelayQueue` are not accessible until their specified delay time has passed.
+- **Thread-blocking**: If a thread attempts to take an element before its delay has expired, it will be blocked until the element becomes available.
+- **Element expiration**: Once an element's delay time has expired, it becomes eligible for removal and retrieval from the queue.
+- **No direct method to set a timeout**: Instead of explicitly defining a timeout, you define a delay for each element and only retrieve it once the delay has passed.
+
+### Key Methods of `DelayQueue`:
+
+1. **`put(E e)`**:
+   - Inserts an element into the queue. The element must implement the `Delayed` interface, which specifies the delay time for the element.
+   - This is a blocking operation if the queue is full (in bounded queues).
+
+   ```java
+   delayQueue.put(element);  // Add an element to the queue with a delay
+   ```
+
+2. **`take()`**:
+   - Retrieves and removes the head of the queue, waiting if necessary until an element is available (i.e., the delay has expired).
+   - Blocks the thread if no element is ready to be retrieved yet.
+
+   ```java
+   MyElement element = delayQueue.take();  // Take the element when its delay expires
+   ```
+
+3. **`poll()`**:
+   - Retrieves and removes the head of the queue, but it will return `null` if no element is available.
+   - Does not block the thread, unlike `take()`.
+
+   ```java
+   MyElement element = delayQueue.poll();  // Non-blocking version of take()
+   ```
+
+4. **`poll(long timeout, TimeUnit unit)`**:
+   - Similar to `poll()`, but it will block for the specified time if no element is available.
+   - If the element's delay expires before the timeout, it will be returned; otherwise, it returns `null`.
+
+   ```java
+   MyElement element = delayQueue.poll(1, TimeUnit.SECONDS);  // Wait up to 1 second
+   ```
+
+5. **`peek()`**:
+   - Retrieves the head of the queue without removing it, but it will block if the delay has not yet expired.
+
+   ```java
+   MyElement element = delayQueue.peek();  // Look at the head of the queue
+   ```
+
+6. **`size()`**:
+   - Returns the number of elements in the queue, including those that are delayed.
+
+   ```java
+   int size = delayQueue.size();
+   ```
+
+### `Delayed` Interface:
+For an element to be used in a `DelayQueue`, it must implement the `Delayed` interface, which defines the following methods:
+
+1. **`getDelay(TimeUnit unit)`**:
+   - Returns the remaining delay of the element in the given time unit. This method determines when the element can be made available for retrieval.
+   - The return value of this method must be positive when the element is still delayed and zero or negative once the delay has expired.
+
+   ```java
+   long getDelay(TimeUnit unit);  // Return the delay in specified time unit
+   ```
+
+2. **`compareTo(Delayed o)`**:
+   - Compares this element with another element based on their delay times. This is used to determine the order of elements in the queue.
+   - The comparison should be based on the remaining delay, such that elements with shorter remaining delays are processed first.
+
+   ```java
+   int compareTo(Delayed o);  // Compare delays of two elements
+   ```
+
+### Example: Using `DelayQueue` to Schedule Tasks
+
+In this example, we'll create a simple `DelayQueue` where tasks are delayed by a specified amount of time. The tasks will be represented by `Delayed` elements, and they will be executed when their respective delays expire.
+
+```java
+import java.util.concurrent.*;
+
+public class DelayQueueExample {
+    public static void main(String[] args) throws InterruptedException {
+        DelayQueue<MyTask> delayQueue = new DelayQueue<>();
+
+        // Create and add tasks with different delays
+        delayQueue.put(new MyTask("Task 1", 2, TimeUnit.SECONDS));  // 2 seconds delay
+        delayQueue.put(new MyTask("Task 2", 1, TimeUnit.SECONDS));  // 1 second delay
+        delayQueue.put(new MyTask("Task 3", 3, TimeUnit.SECONDS));  // 3 seconds delay
+
+        // Poll tasks from the queue as their delays expire
+        while (!delayQueue.isEmpty()) {
+            MyTask task = delayQueue.take();  // Blocks until the delay expires
+            System.out.println("Executing: " + task.getName());
+        }
+    }
+
+    // Define a Task class that implements Delayed
+    static class MyTask implements Delayed {
+        private final String name;
+        private final long delayTime;
+        private final long expiryTime;
+
+        public MyTask(String name, long delayTime, TimeUnit unit) {
+            this.name = name;
+            this.delayTime = unit.toMillis(delayTime);
+            this.expiryTime = System.currentTimeMillis() + this.delayTime;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public long getDelay(TimeUnit unit) {
+            long remainingDelay = expiryTime - System.currentTimeMillis();
+            return unit.convert(remainingDelay, TimeUnit.MILLISECONDS);
+        }
+
+        @Override
+        public int compareTo(Delayed o) {
+            if (this.expiryTime < ((MyTask) o).expiryTime) {
+                return -1;
+            }
+            if (this.expiryTime > ((MyTask) o).expiryTime) {
+                return 1;
+            }
+            return 0;
+        }
+    }
+}
+```
+
+### Explanation of the Example:
+1. **Creating the `DelayQueue`**: A `DelayQueue<MyTask>` is created to store instances of `MyTask`.
+   
+2. **Adding Tasks**: Three tasks are created with different delays (1, 2, and 3 seconds) and added to the queue using the `put()` method.
+
+3. **Polling the Queue**: The `take()` method is used to block the main thread until the first task becomes available (i.e., its delay has expired). Once a task's delay has expired, it is removed from the queue, and the task is executed (in this case, by printing the task's name).
+
+4. **`MyTask` Implementation**: The `MyTask` class implements the `Delayed` interface. The `getDelay()` method calculates the remaining delay for the task, and `compareTo()` determines the order of tasks based on their expiry times.
+
+### Output (example):
+```
+Executing: Task 2
+Executing: Task 1
+Executing: Task 3
+```
+
+- The tasks are executed in the order of their delay times, with the shortest delay being processed first.
+
+### Key Characteristics of `DelayQueue`:
+- **Thread Blocking**: Threads calling `take()` or `poll()` will block until the delay for the element has expired.
+- **Non-blocking Operations**: `poll()` and `peek()` provide non-blocking alternatives, where `poll()` can return `null` if no element is ready, and `peek()` returns the element without removing it.
+- **Task Scheduling**: `DelayQueue` is ideal for scheduling tasks that need to be executed after a delay, such as in retry mechanisms or periodic events.
+
+### Use Cases of `DelayQueue`:
+1. **Task Scheduling**: Implementing a system where tasks are scheduled to be executed after a certain delay.
+2. **Retry Mechanisms**: If a task needs to be retried after a failure, `DelayQueue` can store retry tasks that will automatically be processed after a delay.
+3. **Event Handling**: Handling time-based events, like rate-limited requests or timed expiration of cache entries.
+4. **Timeout Management**: In systems where certain operations should be allowed to expire after a specific delay (e.g., session timeouts, request timeouts).
+
+### When to Use `DelayQueue`:
+- If you need to **schedule tasks** that should be executed after a specified delay.
+- If you want to create **timed retries** or time-based events where tasks need to wait for their respective times to expire before execution.
+
+### When Not to Use `DelayQueue`:
+- If you need **immediate access** to the queue or a simpler queue structure without delay logic, other queues (e.g., `LinkedBlockingQueue`) might be more suitable.
+- If tasks need to be executed **periodically** or with **fixed-rate timing**, consider using `ScheduledExecutorService`.
+
+### Summary:
+- **`DelayQueue`** is a blocking queue that holds elements until their delay has expired. It is ideal for scheduling tasks and managing time-based events.
+- It is implemented with the `Delayed` interface, which allows elements to specify their delay before becoming eligible for retrieval.
+- **`DelayQueue`** is perfect for **delayed task execution**, **retry mechanisms**, and **time-based event handling**.
+
+---
+
+### `SynchronousQueue` in Java
+
+A **`SynchronousQueue`** is a specialized type of `BlockingQueue` in the `java.util.concurrent` package, designed for thread-to-thread handoff. It does not actually hold any elements, meaning it has no capacity to store items. Instead, it functions as a **"hand-off"** mechanism, where a thread puts an item into the queue and immediately waits for another thread to take it. This is useful when you need to transfer an object from one thread to another without storing it in a buffer.
+
+The `SynchronousQueue` is useful in scenarios where tasks are passed directly between threads, such as in thread pools, task scheduling systems, or as a building block for certain types of message-passing or concurrent processing systems.
+
+### Key Characteristics:
+- **Zero Capacity**: A `SynchronousQueue` does not store elements. Each `put()` operation must be matched by a `take()` operation (or vice versa). If there is no thread waiting to take the element, the `put()` operation will block, and if there is no thread to put an element, the `take()` operation will block.
+- **Thread Hand-Off**: It is often used when you need to pass data from one thread to another (thread-to-thread handoff), and only one element can be passed at a time.
+- **Blocking Operations**: Both `put()` and `take()` are blocking operations:
+  - The `put()` operation will block until there is a thread ready to take the element.
+  - The `take()` operation will block until there is a thread ready to put an element into the queue.
+
+### Key Methods of `SynchronousQueue`:
+
+1. **`put(E e)`**:
+   - Puts an element into the queue. This operation blocks until another thread is ready to take the element from the queue.
+   
+   ```java
+   synchronousQueue.put(element);  // Blocks until another thread calls take()
+   ```
+
+2. **`take()`**:
+   - Takes an element from the queue. This operation blocks until another thread puts an element into the queue.
+   
+   ```java
+   E element = synchronousQueue.take();  // Blocks until another thread calls put()
+   ```
+
+3. **`offer(E e)`**:
+   - Attempts to put an element into the queue without blocking. Since `SynchronousQueue` has no capacity, this will always return `false` if there is no thread ready to take the element.
+   
+   ```java
+   boolean success = synchronousQueue.offer(element);  // Will fail unless there's a thread waiting to take
+   ```
+
+4. **`poll(long timeout, TimeUnit unit)`**:
+   - Tries to take an element from the queue within a specified timeout. If the timeout expires before another thread puts an element in the queue, it returns `null`.
+   
+   ```java
+   E element = synchronousQueue.poll(1, TimeUnit.SECONDS);  // Try to take within 1 second
+   ```
+
+5. **`peek()`**:
+   - Returns the element at the head of the queue without removing it. For `SynchronousQueue`, this method always returns `null` because there are no elements stored in the queue.
+   
+   ```java
+   E element = synchronousQueue.peek();  // Always returns null
+   ```
+
+6. **`size()`**:
+   - Returns `0` because `SynchronousQueue` cannot store any elements.
+   
+   ```java
+   int size = synchronousQueue.size();  // Always returns 0
+   ```
+
+### Example: Using `SynchronousQueue`
+
+In this example, we create two threads: one that puts data into the `SynchronousQueue` and another that takes the data from the queue. The thread that puts data will block until the other thread takes the data, and vice versa.
+
+```java
+import java.util.concurrent.*;
+
+public class SynchronousQueueExample {
+    public static void main(String[] args) throws InterruptedException {
+        // Create a SynchronousQueue
+        SynchronousQueue<String> queue = new SynchronousQueue<>();
+
+        // Create a producer thread (puts data into the queue)
+        Thread producer = new Thread(() -> {
+            try {
+                System.out.println("Producer: Putting data into the queue.");
+                queue.put("Data from producer");
+                System.out.println("Producer: Data has been taken from the queue.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // Create a consumer thread (takes data from the queue)
+        Thread consumer = new Thread(() -> {
+            try {
+                System.out.println("Consumer: Waiting to take data from the queue.");
+                String data = queue.take();
+                System.out.println("Consumer: Received data: " + data);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        // Start the threads
+        producer.start();
+        consumer.start();
+
+        // Wait for the threads to finish
+        producer.join();
+        consumer.join();
+    }
+}
+```
+
+### Output (example):
+```
+Consumer: Waiting to take data from the queue.
+Producer: Putting data into the queue.
+Producer: Data has been taken from the queue.
+Consumer: Received data: Data from producer
+```
+
+### Explanation:
+1. **Producer Thread**: The producer thread calls `queue.put()`, which blocks until the consumer thread calls `queue.take()`.
+2. **Consumer Thread**: The consumer thread calls `queue.take()`, which blocks until the producer thread calls `queue.put()`.
+3. **Data Handoff**: The data is transferred directly from the producer thread to the consumer thread. There's no queue storage; the data is handed off immediately.
+
+### Key Use Cases for `SynchronousQueue`:
+1. **Task Delegation**: When tasks need to be handed off between threads without queuing or buffering. For example, in a thread pool, a worker thread may take a task directly from another thread.
+2. **Producer-Consumer**: For scenarios where you need a strict handoff of tasks between a producer and consumer thread, with no task buffering. It ensures that tasks are only processed when the consumer is ready to handle them.
+3. **Pipeline Systems**: In systems where you want to pass data directly between stages in a pipeline (e.g., one thread computes data, and the next thread processes it immediately).
+4. **Event Processing**: When you have one thread generating events and another thread handling them, `SynchronousQueue` is an ideal choice for event handoff.
+
+### When to Use `SynchronousQueue`:
+- **Direct Handoff**: If you need to transfer data or tasks directly between two threads without buffering, use `SynchronousQueue`. It ensures that each element is immediately transferred from one thread to another.
+- **Thread Pooling**: In situations where you want to hand off tasks from a producer thread to a worker thread with no queueing mechanism, it can be used in thread pools.
+- **Event-Driven Programming**: In event-driven systems where events (tasks) need to be processed immediately by an available handler, `SynchronousQueue` can be used to transfer the events between threads.
+
+### When Not to Use `SynchronousQueue`:
+- **Queueing with Capacity**: If you need to store more than one element at a time or want to queue multiple tasks for processing, use a `BlockingQueue` with a buffer (e.g., `LinkedBlockingQueue` or `ArrayBlockingQueue`).
+- **Thread Synchronization**: If you need to synchronize a number of threads beyond just two threads, other synchronization tools (like `CountDownLatch`, `CyclicBarrier`, or `Semaphore`) might be more appropriate.
+- **Non-blocking Operations**: If you want non-blocking queue operations or a timeout-based system, use `LinkedBlockingQueue` or `PriorityBlockingQueue`.
+
+### Summary:
+- **`SynchronousQueue`** is a specialized `BlockingQueue` designed for direct thread-to-thread handoff of data without buffering.
+- It operates with **zero capacity**—there is no queuing of elements, and each `put()` operation must be matched by a `take()` operation.
+- It is ideal for **task delegation**, **producer-consumer** scenarios, **pipeline systems**, and **event-driven programming**.
+- Both `put()` and `take()` block until a matching operation is ready, ensuring that the producer and consumer work in sync.
+
+---
 ### `ReentrantLock` in Java
 
 `ReentrantLock` is a part of the `java.util.concurrent.locks` package and provides a more powerful and flexible locking mechanism than the traditional `synchronized` block. It allows greater control over thread synchronization, including features such as try-lock, timed lock, and the ability to interrupt a thread that is waiting for a lock.
