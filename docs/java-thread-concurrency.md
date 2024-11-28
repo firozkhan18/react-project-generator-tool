@@ -116,7 +116,7 @@ Multithreading allows a program to perform **multiple operations at the same tim
 
 - **Multiple threads** share the same **resources** (e.g., heap memory, code segments) but can **perform tasks independently**. 
 - Each thread can run a separate part of the program, but they can access the shared resources (memory, variables) and can even interact with each other.
-- 
+
 ### 1.2. Benefits of Multithreading
 - **Improved Performance**: Multithreading allows CPU cores to be used more efficiently by executing multiple threads in parallel.
 - **Better Resource Utilization**: In multi-core systems, threads can run on different cores, fully utilizing the hardware resources.
@@ -185,7 +185,6 @@ To handle these issues, **synchronization** is used to control access to shared 
 
 ### 1. **Processes in Java**
 A **process** in Java refers to a program that is executed by the operating system. Each process runs independently, has its own memory space, and interacts with the operating system to perform tasks. Java provides several mechanisms to create and manage processes, such as the `ProcessBuilder` class and the `Runtime` class.
-
 
 ### What is a **Process**?
 A **process** is an instance of a program that is being executed. It represents the environment in which the program runs and includes its code, data, and resources required for execution (like memory, file handles, and other system resources).
