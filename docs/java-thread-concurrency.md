@@ -2999,6 +2999,7 @@ public class SemaphoreExample {
   - **availablePermits()**: Returns the number of available permits.
 
 [Semaphore in depth](#semaphore-in-depth)
+
 ---
 
 #### 10.5. Lock and Condition Interface
