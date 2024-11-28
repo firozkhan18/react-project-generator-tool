@@ -102,16 +102,16 @@ When dealing with large datasets, especially in concurrent programming, you must
 Here’s a conceptual diagram that shows how virtual threads are managed in terms of memory and handling large data:
 
 ```
- +--------------------------------------------+
- |                 JVM (Thread Scheduler)     |          
- |                                            |  
- |  +-----------+  +-----------+  +-----------+  |
- |  | Virtual   |  | Virtual   |  | Virtual   |  |
- |  | Thread 1  |  | Thread 2  |  | Thread 3  |  |
- |  +-----------+  +-----------+  +-----------+  | 
- |        |              |              |        |
+ +-------------------------------------------------+
+ |                 JVM (Thread Scheduler)          |          
+ |                                                 |  
+ |  +-----------+  +-----------+  +-----------+    |
+ |  | Virtual   |  | Virtual   |  | Virtual   |    |
+ |  | Thread 1  |  | Thread 2  |  | Thread 3  |    |
+ |  +-----------+  +-----------+  +-----------+    | 
+ |        |              |              |          |
  |    I/O Blocked     I/O Blocked     I/O Blocked  | 
- +--------------------------------------------+  
+ +-------------------------------------------------+  
             |
      +--------------------+                 
      |    Resource Pool   |   -> Handles resources like DB connections
