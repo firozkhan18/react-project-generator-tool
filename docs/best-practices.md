@@ -583,6 +583,101 @@ graph LR
 
 These diagrams and examples illustrate how Java manages threads and memory, and how proper memory management can prevent common issues like memory leaks.
 
+### Additionally
+
+### Overview of Thread Types in Java
+
+Java supports different types of threads that can be used for concurrent programming. Here's an explanation of each type, followed by a comparison in a tabular format.
+
+### 1. **Main Thread**  
+The **main thread** is the thread that runs when a Java program starts. It is the entry point of the program, where the `main()` method is executed.
+
+### 2. **User Thread**  
+A **user thread** is any thread that is created by the main thread or another thread, other than daemon threads. User threads are typically used for normal tasks, and the program will continue to run as long as there are user threads running.
+
+### 3. **Child Thread**  
+A **child thread** is a thread that is created by another thread, often referred to as the "parent" thread. Child threads can be either user threads or daemon threads, depending on their type.
+
+### 4. **Daemon Thread**  
+A **daemon thread** is a thread that runs in the background to perform auxiliary tasks (e.g., garbage collection, housekeeping). Daemon threads do not prevent the JVM from exiting. The JVM terminates when only daemon threads are left.
+
+### 5. **Worker Thread**  
+A **worker thread** is typically a thread that performs a specific task (usually in parallel with other threads). It is a term commonly used for threads performing background tasks in server applications, GUI applications, or thread pools.
+
+---
+
+### Comparison of Thread Types
+
+| **Thread Type**    | **Description**                                                                                                                                         | **Lifecycle**                                      | **Termination**                                              | **Priority**         | **Example Use Case**                          |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|-------------------------------------------------------------|----------------------|------------------------------------------------|
+| **Main Thread**     | The entry point of a Java program, created automatically by the JVM when the program starts. It runs the `main()` method.                                 | The main thread runs until the program exits.    | The main thread terminates when the `main()` method ends.     | Default priority     | Execution of the program's main logic.         |
+| **User Thread**     | Any thread that is not a daemon thread. These threads perform the program's main tasks.                                                                  | Can run as long as necessary until termination.   | The program will continue to run until all user threads finish. | Can be adjusted       | Performing core tasks such as processing, UI operations, etc. |
+| **Child Thread**    | A thread created by another thread (usually the main thread or another child thread). It can be either a user thread or a daemon thread.                | The lifecycle of the child thread depends on the parent. | The child thread terminates when its task is complete.         | Inherits priority of the parent thread | Running background tasks like calculations, I/O.  |
+| **Daemon Thread**   | A background thread designed to perform low-priority or housekeeping tasks (e.g., garbage collection, finalization). It does not prevent the JVM from shutting down. | Runs as long as the program has other threads (non-daemon threads). | The JVM shuts down when only daemon threads remain.           | Typically low priority | Background maintenance tasks, like GC, logging. |
+| **Worker Thread**   | A thread that performs a specific task, often part of a thread pool. Worker threads are typically used in parallel processing or to handle multiple tasks concurrently. | Runs until its task completes.                   | Terminates once its task is done.                              | Can vary based on pool configuration | Performing concurrent operations like data processing, network requests, etc. |
+
+---
+
+### Key Differences:
+
+| **Aspect**           | **Main Thread**                           | **User Thread**                          | **Child Thread**                       | **Daemon Thread**                        | **Worker Thread**                           |
+|----------------------|-------------------------------------------|------------------------------------------|----------------------------------------|-------------------------------------------|--------------------------------------------|
+| **Definition**        | The primary thread that runs the program's `main()` method. | Threads performing the core tasks of the program. | A thread created by another thread.    | A background thread that performs housekeeping tasks. | A thread created for a specific task, often part of a pool. |
+| **Created by**        | Automatically created by the JVM.         | Can be created by the main or another thread. | Created by another thread.             | Created by the programmer, with `setDaemon(true)`. | Typically created within a thread pool.     |
+| **Lifecycle**         | Runs as long as the `main()` method is executing. | Runs until it finishes its task.         | Same as the parent thread.             | Runs as long as there are non-daemon threads in the JVM. | Runs until its task is complete.            |
+| **Termination**       | Terminates when `main()` finishes.        | Terminates when its task finishes.       | Terminates when the parent thread terminates. | Terminates automatically when all user threads are finished. | Terminates when its task is complete.      |
+| **Priority**          | Default priority (5).                     | Can have its priority adjusted.          | Inherits the priority of the parent thread. | Typically low priority (can be adjusted). | Priority can vary, depending on the pool or task. |
+| **Effect on JVM Exit**| The JVM exits when the main thread finishes. | The program continues until all user threads finish. | The JVM will not exit as long as child threads are running. | The JVM exits even if daemon threads are still running. | The JVM will exit once all worker threads in the pool finish. |
+| **Example**           | Executing the `main()` method.            | Any normal task like file processing, UI updates, etc. | Tasking a child thread to perform calculations. | GC, background tasks, logging.            | Parallel data processing, handling multiple client requests. |
+
+---
+
+### Key Takeaways:
+- **Main Thread**: The entry point of the program, always running until the program ends.
+- **User Thread**: Performs the main tasks of the program, such as processing user input, handling network requests, etc.
+- **Child Thread**: A thread created by another (parent) thread, typically for parallel processing.
+- **Daemon Thread**: A background thread, often used for auxiliary tasks (like garbage collection), that does not prevent JVM shutdown.
+- **Worker Thread**: A specialized thread used to perform tasks, often within a thread pool or as part of parallel processing tasks.
+
+### How They Work Together:
+- The **main thread** starts the program and may create **user threads** or **child threads** to perform various tasks concurrently. 
+- **Daemon threads** run in the background and help with system housekeeping, but they don't prevent the JVM from exiting.
+- **Worker threads** are commonly used in thread pools to manage tasks in parallel or asynchronously.
+
+### The relationships and workflow of different types of threads in Java.
+
+Here's an example of how you could write the Mermaid syntax for a thread lifecycle diagram:
+
+### Mermaid Diagram (Thread Lifecycle Example)
+
+```mermaid
+graph TD
+    A[Main Thread] --> B[User Thread]
+    A --> C[Child Thread]
+    C --> D[Child Thread 2]
+    A --> E[Daemon Thread]
+    A --> F[Worker Thread]
+    F --> G[Task Completed]
+    G --> F[Thread Terminated]
+    E --> H[Background Tasks]
+    H --> E[Daemon Thread Continues]
+    
+    A -->|Program Ends| J[Exit JVM]
+    J -->|All User Threads Finish| I[End Program]
+    J -->|Daemon Thread Only| I
+    B -->|User Task Finished| I
+    C -->|Child Task Finished| I
+    D -->|Child Task Finished| I
+    F -->|Worker Task Finished| I
+```
+
+### Explanation:
+1. **Main Thread** (`A`) is the starting point. It creates **User Threads** (`B`), **Child Threads** (`C`), **Daemon Threads** (`E`), and **Worker Threads** (`F`).
+2. **Child Threads** (`C` → `D`) can spawn additional child threads.
+3. **Daemon Threads** (`E`) run in the background performing auxiliary tasks (like housekeeping or garbage collection).
+4. **Worker Threads** (`F`) are used to perform specific tasks. After completing a task (`G`), they terminate (`G` → `F` → `I`).
+5. **Exit Logic**: When only **Daemon Threads** are left, the JVM shuts down (`J`). If any **User Threads** are still running, the program continues until those finish (`I`).
+
 ---
 
 ### **Permanent Generation vs Metaspace in Java**
