@@ -6174,3 +6174,1147 @@ Thread 2 has passed the barrier.
 - **`CyclicBarrier`** is a synchronization aid that allows threads to wait for each other at a common point (the barrier), and it can be reused once all threads have reached it.
 - It is ideal for scenarios where you need to **synchronize multiple threads at multiple points** during their execution (e.g., iterative tasks).
 - It offers **reusability**, and you can specify an **optional action** to be executed when all threads have reached the barrier.
+
+---
+
+In Java, the **`HashSet`** is a collection class that implements the **Set** interface. It is part of the **Java Collections Framework** and provides an unordered collection of unique elements. This means a **`HashSet`** does not allow duplicate elements and does not guarantee any specific order of the elements.
+
+### Key Characteristics of `HashSet`:
+
+- **Unordered**: The elements are not stored in any particular order. When you iterate over a `HashSet`, the order of the elements may not be the same as their insertion order.
+- **Unique elements**: `HashSet` automatically removes duplicates. If you try to add a duplicate element, the operation will have no effect.
+- **Hashing**: Internally, it uses a hash table to store the elements. This ensures fast access to elements (average time complexity of `O(1)` for add, remove, and contains operations).
+
+### **Constructors of `HashSet`**:
+1. **`HashSet()`**: Creates an empty set with the default initial capacity (16) and load factor (0.75).
+2. **`HashSet(Collection<? extends E> c)`**: Creates a `HashSet` that contains the elements of the specified collection.
+3. **`HashSet(int initialCapacity)`**: Creates a `HashSet` with the specified initial capacity and the default load factor (0.75).
+4. **`HashSet(int initialCapacity, float loadFactor)`**: Creates a `HashSet` with the specified initial capacity and load factor.
+
+### Example of Using `HashSet`:
+
+```java
+import java.util.HashSet;
+
+public class HashSetExample {
+    public static void main(String[] args) {
+        // Create a new HashSet
+        HashSet<String> set = new HashSet<>();
+
+        // Add elements to the HashSet
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Apple");  // Duplicate element (will not be added)
+
+        // Display the elements in the HashSet
+        System.out.println("HashSet: " + set);
+
+        // Check if an element is present in the HashSet
+        boolean hasApple = set.contains("Apple");
+        System.out.println("Contains 'Apple'? " + hasApple);
+
+        // Remove an element from the HashSet
+        set.remove("Banana");
+        System.out.println("After removing 'Banana': " + set);
+
+        // Iterate over the HashSet
+        for (String fruit : set) {
+            System.out.println(fruit);
+        }
+
+        // Check the size of the HashSet
+        System.out.println("Size of HashSet: " + set.size());
+    }
+}
+```
+
+### Output:
+```
+HashSet: [Apple, Banana, Cherry]
+Contains 'Apple'? true
+After removing 'Banana': [Apple, Cherry]
+Apple
+Cherry
+Size of HashSet: 2
+```
+
+### Key Methods of `HashSet`:
+
+1. **`add(E e)`**: Adds an element to the set. If the element is already present, it doesn't add it and returns `false`.
+   ```java
+   set.add("Orange");
+   ```
+   
+2. **`remove(Object o)`**: Removes the specified element from the set. Returns `true` if the element was removed, `false` otherwise.
+   ```java
+   set.remove("Apple");
+   ```
+
+3. **`contains(Object o)`**: Checks if the specified element exists in the set. Returns `true` if the element is found, `false` otherwise.
+   ```java
+   set.contains("Banana");
+   ```
+
+4. **`size()`**: Returns the number of elements in the set.
+   ```java
+   int size = set.size();
+   ```
+
+5. **`clear()`**: Removes all elements from the set.
+   ```java
+   set.clear();
+   ```
+
+6. **`isEmpty()`**: Checks if the set is empty.
+   ```java
+   boolean isEmpty = set.isEmpty();
+   ```
+
+7. **`iterator()`**: Returns an iterator over the elements in the set.
+   ```java
+   Iterator<String> iterator = set.iterator();
+   while (iterator.hasNext()) {
+       System.out.println(iterator.next());
+   }
+   ```
+
+8. **`toArray()`**: Converts the `HashSet` to an array.
+   ```java
+   Object[] array = set.toArray();
+   ```
+
+### **Time Complexity of `HashSet` Operations**:
+- **`add(E e)`**: `O(1)` on average (because it uses hashing).
+- **`remove(Object o)`**: `O(1)` on average.
+- **`contains(Object o)`**: `O(1)` on average.
+- **`size()`**: `O(1)`.
+- **`isEmpty()`**: `O(1)`.
+
+### **HashSet vs. TreeSet vs. LinkedHashSet**:
+
+- **`HashSet`**: Does not maintain any order of elements and does not allow duplicates.
+- **`LinkedHashSet`**: Maintains the insertion order (elements are returned in the order they were added).
+- **`TreeSet`**: Stores elements in a **sorted order** (elements are ordered according to their natural ordering or by a comparator if provided).
+
+### Example: Comparison with `LinkedHashSet`:
+
+```java
+import java.util.LinkedHashSet;
+
+public class LinkedHashSetExample {
+    public static void main(String[] args) {
+        // Create a LinkedHashSet to maintain insertion order
+        LinkedHashSet<String> set = new LinkedHashSet<>();
+        
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Apple"); // Duplicate element (will not be added)
+
+        // Display the elements in the LinkedHashSet
+        System.out.println("LinkedHashSet: " + set);
+    }
+}
+```
+
+### Output:
+```
+LinkedHashSet: [Apple, Banana, Cherry]
+```
+
+In this example, a `LinkedHashSet` preserves the **insertion order**.
+
+### Conclusion:
+- **`HashSet`** is an efficient collection for storing unique elements, providing **fast access** for adding, removing, and checking if an element exists.
+- It's ideal when you need a set of unique elements but do not care about the order.
+- If you need to maintain insertion order or a sorted order, consider using `LinkedHashSet` or `TreeSet`, respectively.
+
+---
+
+In Java, the **`HashMap`** is part of the **Java Collections Framework** and implements the **Map** interface. It is a collection of key-value pairs, where each key is associated with exactly one value. The **`HashMap`** stores the keys and values using a **hash table** and allows fast lookup, insertion, and deletion of key-value pairs.
+
+### Key Characteristics of `HashMap`:
+- **Unordered**: The entries (key-value pairs) are not stored in any particular order. The order may vary when iterating over the `HashMap`.
+- **Unique keys**: A `HashMap` allows **only unique keys**. If you try to insert a new entry with an existing key, the old value is replaced by the new one.
+- **Null values**: `HashMap` allows one `null` key and multiple `null` values.
+- **Hashing**: It uses a hash table internally, which allows for **constant-time average performance** (`O(1)`) for basic operations like `put()`, `get()`, `remove()`, and `containsKey()`.
+
+### **Constructors of `HashMap`**:
+1. **`HashMap()`**: Creates an empty `HashMap` with the default initial capacity (16) and the default load factor (0.75).
+2. **`HashMap(int initialCapacity)`**: Creates a `HashMap` with the specified initial capacity and the default load factor (0.75).
+3. **`HashMap(int initialCapacity, float loadFactor)`**: Creates a `HashMap` with the specified initial capacity and load factor.
+4. **`HashMap(Map<? extends K, ? extends V> m)`**: Creates a `HashMap` with the same mappings as the specified map.
+
+### Basic Operations:
+- **`put(K key, V value)`**: Inserts a key-value pair into the map. If the key already exists, it updates the value.
+- **`get(Object key)`**: Returns the value associated with the specified key.
+- **`remove(Object key)`**: Removes the key-value pair for the specified key.
+- **`containsKey(Object key)`**: Checks if a particular key exists in the map.
+- **`containsValue(Object value)`**: Checks if a particular value exists in the map.
+- **`size()`**: Returns the number of key-value pairs in the map.
+- **`isEmpty()`**: Checks if the map is empty.
+- **`clear()`**: Removes all key-value pairs from the map.
+- **`keySet()`**: Returns a `Set` view of the keys contained in the map.
+- **`values()`**: Returns a `Collection` view of the values contained in the map.
+- **`entrySet()`**: Returns a `Set` view of the key-value pairs contained in the map.
+
+### Example of Using `HashMap`:
+
+```java
+import java.util.*;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        // Create a HashMap
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // Add key-value pairs
+        map.put("Apple", 3);
+        map.put("Banana", 2);
+        map.put("Cherry", 5);
+        map.put("Apple", 4);  // Replaces the old value for key "Apple"
+
+        // Display the HashMap
+        System.out.println("HashMap: " + map);
+
+        // Get a value by key
+        int appleCount = map.get("Apple");
+        System.out.println("Apple count: " + appleCount);
+
+        // Remove a key-value pair
+        map.remove("Banana");
+        System.out.println("After removing 'Banana': " + map);
+
+        // Check if a key exists
+        boolean hasCherry = map.containsKey("Cherry");
+        System.out.println("Contains 'Cherry'? " + hasCherry);
+
+        // Check if a value exists
+        boolean hasValue5 = map.containsValue(5);
+        System.out.println("Contains value 5? " + hasValue5);
+
+        // Size of the HashMap
+        System.out.println("Size of HashMap: " + map.size());
+
+        // Iterate over the HashMap using forEach
+        map.forEach((key, value) -> System.out.println(key + " -> " + value));
+        
+        // Get the keys and values as a set
+        Set<String> keys = map.keySet();
+        Collection<Integer> values = map.values();
+        System.out.println("Keys: " + keys);
+        System.out.println("Values: " + values);
+
+        // Clear the map
+        map.clear();
+        System.out.println("After clearing, HashMap: " + map);
+    }
+}
+```
+
+### Output:
+```
+HashMap: {Apple=4, Banana=2, Cherry=5}
+Apple count: 4
+After removing 'Banana': {Apple=4, Cherry=5}
+Contains 'Cherry'? true
+Contains value 5? true
+Size of HashMap: 2
+Apple -> 4
+Cherry -> 5
+Keys: [Apple, Cherry]
+Values: [4, 5]
+After clearing, HashMap: {}
+```
+
+### Key Methods of `HashMap`:
+
+1. **`put(K key, V value)`**: Adds a key-value pair to the map. If the key already exists, it replaces the existing value with the new one.
+   ```java
+   map.put("Orange", 6);
+   ```
+
+2. **`get(Object key)`**: Retrieves the value associated with the specified key. If the key is not found, it returns `null`.
+   ```java
+   Integer value = map.get("Banana");
+   ```
+
+3. **`remove(Object key)`**: Removes the entry for the specified key.
+   ```java
+   map.remove("Cherry");
+   ```
+
+4. **`containsKey(Object key)`**: Checks if the map contains the specified key.
+   ```java
+   boolean exists = map.containsKey("Apple");
+   ```
+
+5. **`containsValue(Object value)`**: Checks if the map contains the specified value.
+   ```java
+   boolean exists = map.containsValue(3);
+   ```
+
+6. **`size()`**: Returns the number of key-value pairs in the map.
+   ```java
+   int size = map.size();
+   ```
+
+7. **`keySet()`**: Returns a `Set` view of the keys contained in the map.
+   ```java
+   Set<String> keys = map.keySet();
+   ```
+
+8. **`values()`**: Returns a `Collection` view of the values contained in the map.
+   ```java
+   Collection<Integer> values = map.values();
+   ```
+
+9. **`entrySet()`**: Returns a `Set` view of the key-value pairs in the map.
+   ```java
+   Set<Map.Entry<String, Integer>> entries = map.entrySet();
+   for (Map.Entry<String, Integer> entry : entries) {
+       System.out.println(entry.getKey() + " -> " + entry.getValue());
+   }
+   ```
+
+10. **`clear()`**: Removes all the entries from the map.
+    ```java
+    map.clear();
+    ```
+
+11. **`isEmpty()`**: Checks if the map is empty.
+    ```java
+    boolean isEmpty = map.isEmpty();
+    ```
+
+### **Time Complexity of `HashMap` Operations**:
+- **`put(K key, V value)`**: Average time complexity is `O(1)` (constant time) for adding a new entry or updating an existing one.
+- **`get(Object key)`**: Average time complexity is `O(1)` for retrieving a value associated with a key.
+- **`remove(Object key)`**: Average time complexity is `O(1)` for removing an entry by key.
+- **`containsKey(Object key)`**: Average time complexity is `O(1)` for checking if a key exists in the map.
+- **`containsValue(Object value)`**: Worst-case time complexity is `O(n)` where `n` is the number of entries, as it requires scanning through all values.
+- **`size()`**: Time complexity is `O(1)`.
+
+### **HashMap vs TreeMap vs LinkedHashMap**:
+- **`HashMap`**: Stores key-value pairs with no guaranteed order. It is faster than `TreeMap` and `LinkedHashMap` for basic operations because it uses hashing.
+- **`TreeMap`**: Stores key-value pairs in **sorted order** according to the natural ordering of the keys or a custom comparator.
+- **`LinkedHashMap`**: Maintains **insertion order** or access order (if configured) while providing the same `O(1)` lookup performance as `HashMap`.
+
+### Conclusion:
+- **`HashMap`** is ideal when you need fast lookups, insertions, and deletions of key-value pairs, and don't care about maintaining any specific order of the elements.
+- For sorted key-value pairs, consider using `TreeMap`.
+- If maintaining the insertion order is important, use `LinkedHashMap`.
+
+---
+
+In Java, a **`TreeSet`** is a part of the **Java Collections Framework** and implements the **Set** interface. It is a **NavigableSet** that is based on a **Red-Black Tree**. A `TreeSet` stores elements in **sorted order** (either naturally or according to a provided comparator). It does not allow **duplicate elements**, and unlike a `HashSet`, it maintains a **sorted order** of elements.
+
+### Key Characteristics of `TreeSet`:
+
+1. **Sorted Order**: Elements are stored in **ascending order** by default. You can also provide a custom **Comparator** to sort the elements in a different order.
+2. **No Duplicates**: `TreeSet` does not allow duplicate elements. If you try to add an element that is already present in the set, it will not be added.
+3. **Performance**: Since `TreeSet` is backed by a **Red-Black Tree**, the basic operations (`add()`, `remove()`, `contains()`) have a time complexity of `O(log n)` where `n` is the number of elements in the set. This is slower than the `O(1)` time complexity of `HashSet` but provides the benefit of sorted order.
+4. **Null elements**: `TreeSet` does not allow `null` elements. Attempting to add `null` will result in a `NullPointerException` unless a custom comparator is used that allows it.
+
+### Constructors of `TreeSet`:
+
+1. **`TreeSet()`**: Creates an empty `TreeSet` that stores elements in their natural ordering.
+2. **`TreeSet(Comparator<? super E> comparator)`**: Creates an empty `TreeSet` with a custom comparator to define the order of elements.
+3. **`TreeSet(Collection<? extends E> c)`**: Creates a `TreeSet` containing the elements of the specified collection, sorted in natural order.
+4. **`TreeSet(SortedSet<E> set)`**: Creates a `TreeSet` containing the elements of the specified sorted set.
+
+### Example of Using `TreeSet`:
+
+```java
+import java.util.*;
+
+public class TreeSetExample {
+    public static void main(String[] args) {
+        // Create a TreeSet of integers
+        TreeSet<Integer> set = new TreeSet<>();
+
+        // Add elements to the TreeSet
+        set.add(10);
+        set.add(5);
+        set.add(20);
+        set.add(15);
+        set.add(10); // Duplicate element (won't be added)
+
+        // Display the TreeSet (sorted order)
+        System.out.println("TreeSet: " + set); // Output: [5, 10, 15, 20]
+
+        // Get the first (lowest) element
+        System.out.println("First element: " + set.first()); // Output: 5
+
+        // Get the last (highest) element
+        System.out.println("Last element: " + set.last()); // Output: 20
+
+        // Remove an element
+        set.remove(15);
+        System.out.println("After removing 15: " + set); // Output: [5, 10, 20]
+
+        // Check if an element exists
+        boolean contains10 = set.contains(10);
+        System.out.println("Contains 10? " + contains10); // Output: true
+
+        // Get elements less than a specified value
+        System.out.println("Elements less than 15: " + set.headSet(15)); // Output: [5, 10]
+
+        // Get elements greater than or equal to a specified value
+        System.out.println("Elements greater than or equal to 10: " + set.tailSet(10)); // Output: [10, 20]
+
+        // Iterate over the TreeSet using for-each loop
+        System.out.println("Iterating over TreeSet:");
+        for (Integer num : set) {
+            System.out.println(num); // Output: 5, 10, 20
+        }
+    }
+}
+```
+
+### Output:
+```
+TreeSet: [5, 10, 15, 20]
+First element: 5
+Last element: 20
+After removing 15: [5, 10, 20]
+Contains 10? true
+Elements less than 15: [5, 10]
+Elements greater than or equal to 10: [10, 20]
+Iterating over TreeSet:
+5
+10
+20
+```
+
+### Key Methods of `TreeSet`:
+
+1. **`add(E e)`**: Adds an element to the set. If the element is already present, it will not be added.
+   ```java
+   set.add(25); // Adds 25 to the set
+   ```
+
+2. **`remove(Object o)`**: Removes the specified element from the set.
+   ```java
+   set.remove(10); // Removes 10 from the set
+   ```
+
+3. **`contains(Object o)`**: Checks if the specified element is present in the set.
+   ```java
+   boolean exists = set.contains(20);
+   ```
+
+4. **`size()`**: Returns the number of elements in the set.
+   ```java
+   int size = set.size();
+   ```
+
+5. **`isEmpty()`**: Checks if the set is empty.
+   ```java
+   boolean isEmpty = set.isEmpty();
+   ```
+
+6. **`first()`**: Returns the first (lowest) element in the set.
+   ```java
+   Integer first = set.first(); // Retrieves the first element
+   ```
+
+7. **`last()`**: Returns the last (highest) element in the set.
+   ```java
+   Integer last = set.last(); // Retrieves the last element
+   ```
+
+8. **`headSet(E toElement)`**: Returns a view of the portion of the set whose elements are strictly less than the specified element.
+   ```java
+   SortedSet<Integer> headSet = set.headSet(15); // Elements less than 15
+   ```
+
+9. **`tailSet(E fromElement)`**: Returns a view of the portion of the set whose elements are greater than or equal to the specified element.
+   ```java
+   SortedSet<Integer> tailSet = set.tailSet(10); // Elements greater than or equal to 10
+   ```
+
+10. **`clear()`**: Removes all elements from the set.
+    ```java
+    set.clear(); // Clears the set
+    ```
+
+11. **`iterator()`**: Returns an iterator over the elements in the set.
+    ```java
+    Iterator<Integer> iterator = set.iterator();
+    while (iterator.hasNext()) {
+        System.out.println(iterator.next());
+    }
+    ```
+
+12. **`pollFirst()`**: Retrieves and removes the first (lowest) element.
+    ```java
+    Integer first = set.pollFirst(); // Removes and returns the first element
+    ```
+
+13. **`pollLast()`**: Retrieves and removes the last (highest) element.
+    ```java
+    Integer last = set.pollLast(); // Removes and returns the last element
+    ```
+
+### **Time Complexity of `TreeSet` Operations**:
+- **`add(E e)`**: `O(log n)` where `n` is the number of elements in the set. It involves inserting the element into the Red-Black Tree.
+- **`remove(Object o)`**: `O(log n)` for removing an element.
+- **`contains(Object o)`**: `O(log n)` for checking if an element exists in the set.
+- **`size()`**: `O(1)` for retrieving the size.
+- **`isEmpty()`**: `O(1)` for checking if the set is empty.
+- **`first()`** and **`last()`**: `O(1)` as these operations return the root and the farthest leaf of the tree.
+
+### Comparison with `HashSet` and `LinkedHashSet`:
+
+- **`HashSet`**: Unordered, provides constant-time (`O(1)`) complexity for most operations but does not guarantee any specific order of elements.
+- **`TreeSet`**: Elements are **sorted** in natural order (or by a comparator) with a `O(log n)` time complexity for most operations.
+- **`LinkedHashSet`**: Maintains the **insertion order** of elements, providing constant-time (`O(1)`) performance for basic operations.
+
+### Use Cases for `TreeSet`:
+- When you need a **sorted** collection of unique elements.
+- When you want to **retrieve elements in ascending order** or perform **range queries** (e.g., finding elements less than or greater than a certain value).
+- When you need to perform **efficient range-based operations** (e.g., `headSet()`, `tailSet()`, `subSet()`).
+
+### Example of Custom Sorting with `TreeSet`:
+
+```java
+import java.util.*;
+
+public class TreeSetCustomComparatorExample {
+    public static void main(String[] args) {
+        // Create a TreeSet with a custom comparator (descending order)
+        TreeSet<Integer> set = new TreeSet<>(Comparator.reverseOrder());
+
+        set.add(10);
+        set.add(5);
+        set.add(20);
+        set.add(15);
+
+        System.out.println("TreeSet with custom comparator (descending): " + set);
+    }
+}
+```
+
+### Output:
+```
+TreeSet with custom comparator (descending): [20, 15, 10, 5]
+```
+
+In this example, the `TreeSet` is sorted in **descending order** using a custom comparator (`Comparator.reverseOrder()`).
+
+### Conclusion:
+- A **`
+
+TreeSet`** is ideal when you need **sorted** data and **no duplicates**.
+- It offers efficient operations for set manipulation (`O(log n)`), but is slower than `HashSet` in scenarios where sorting is not required.
+- Use `TreeSet` when order matters, such as when you need elements to be returned in ascending or custom order.
+
+---
+
+In Java, a **`TreeMap`** is a part of the **Java Collections Framework** and implements the **`Map`** interface. It is a **SortedMap** that is backed by a **Red-Black tree**. A `TreeMap` stores key-value pairs in **sorted order** (either according to the natural ordering of the keys or by a custom comparator that you provide). Unlike `HashMap`, which does not guarantee any specific order, a `TreeMap` maintains the order of the keys.
+
+### Key Characteristics of `TreeMap`:
+
+1. **Sorted Order**: The keys in a `TreeMap` are stored in **ascending order** by default. You can provide a **custom comparator** to order the keys in a different way.
+2. **Unique Keys**: Similar to other map implementations, `TreeMap` does not allow **duplicate keys**. If you insert a key that already exists, it will update the associated value.
+3. **Null Keys and Values**: `TreeMap` **does not allow null keys**, though it allows `null` values. If you attempt to insert a `null` key, it will throw a `NullPointerException`.
+4. **Red-Black Tree**: Internally, a `TreeMap` is backed by a **Red-Black Tree**, which ensures that the keys are sorted and supports efficient `O(log n)` time complexity for basic operations like `put()`, `get()`, `remove()`, and `containsKey()`.
+
+### Constructors of `TreeMap`:
+
+1. **`TreeMap()`**: Creates an empty `TreeMap` that stores keys in their natural ordering (according to the `Comparable` interface).
+2. **`TreeMap(Comparator<? super K> comparator)`**: Creates an empty `TreeMap` with a custom comparator to define the order of the keys.
+3. **`TreeMap(Map<? extends K, ? extends V> m)`**: Creates a `TreeMap` containing the elements of the specified map, sorted according to the natural ordering of the keys.
+4. **`TreeMap(SortedMap<K, ? extends V> m)`**: Creates a `TreeMap` containing the elements of the specified sorted map.
+
+### Example of Using `TreeMap`:
+
+```java
+import java.util.*;
+
+public class TreeMapExample {
+    public static void main(String[] args) {
+        // Create a TreeMap of integers as keys and strings as values
+        TreeMap<Integer, String> map = new TreeMap<>();
+
+        // Add key-value pairs
+        map.put(10, "Apple");
+        map.put(5, "Banana");
+        map.put(20, "Cherry");
+        map.put(15, "Date");
+        map.put(10, "Elderberry"); // Duplicate key, updates the value for key 10
+
+        // Display the TreeMap (keys are in ascending order)
+        System.out.println("TreeMap: " + map);
+
+        // Get a value by key
+        String value = map.get(10);
+        System.out.println("Value for key 10: " + value); // Output: Elderberry
+
+        // Remove an entry by key
+        map.remove(5);
+        System.out.println("After removing key 5: " + map);
+
+        // Check if a key exists
+        boolean containsKey20 = map.containsKey(20);
+        System.out.println("Contains key 20? " + containsKey20);
+
+        // Check if a value exists
+        boolean containsValueCherry = map.containsValue("Cherry");
+        System.out.println("Contains value 'Cherry'? " + containsValueCherry);
+
+        // Get the first (lowest) key
+        System.out.println("First key: " + map.firstKey());
+
+        // Get the last (highest) key
+        System.out.println("Last key: " + map.lastKey());
+
+        // Get keys less than a specified value
+        System.out.println("Keys less than 15: " + map.headMap(15)); // Excludes 15
+
+        // Get keys greater than or equal to a specified value
+        System.out.println("Keys greater than or equal to 10: " + map.tailMap(10)); // Includes 10
+
+        // Iterate over the TreeMap using for-each loop
+        System.out.println("Iterating over TreeMap:");
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+    }
+}
+```
+
+### Output:
+```
+TreeMap: {5=Banana, 10=Elderberry, 15=Date, 20=Cherry}
+Value for key 10: Elderberry
+After removing key 5: {10=Elderberry, 15=Date, 20=Cherry}
+Contains key 20? true
+Contains value 'Cherry'? true
+First key: 10
+Last key: 20
+Keys less than 15: {10=Elderberry}
+Keys greater than or equal to 10: {10=Elderberry, 15=Date, 20=Cherry}
+Iterating over TreeMap:
+10 -> Elderberry
+15 -> Date
+20 -> Cherry
+```
+
+### Key Methods of `TreeMap`:
+
+1. **`put(K key, V value)`**: Adds a key-value pair to the map. If the key already exists, the value is updated.
+   ```java
+   map.put(25, "Fig");
+   ```
+
+2. **`get(Object key)`**: Retrieves the value associated with the specified key.
+   ```java
+   String value = map.get(15); // Returns the value associated with key 15
+   ```
+
+3. **`remove(Object key)`**: Removes the key-value pair for the specified key.
+   ```java
+   map.remove(10); // Removes the entry with key 10
+   ```
+
+4. **`containsKey(Object key)`**: Checks if the map contains the specified key.
+   ```java
+   boolean exists = map.containsKey(20);
+   ```
+
+5. **`containsValue(Object value)`**: Checks if the map contains the specified value.
+   ```java
+   boolean exists = map.containsValue("Cherry");
+   ```
+
+6. **`size()`**: Returns the number of key-value pairs in the map.
+   ```java
+   int size = map.size();
+   ```
+
+7. **`isEmpty()`**: Checks if the map is empty.
+   ```java
+   boolean isEmpty = map.isEmpty();
+   ```
+
+8. **`firstKey()`**: Returns the first (lowest) key in the map.
+   ```java
+   Integer first = map.firstKey(); // Returns the lowest key in the map
+   ```
+
+9. **`lastKey()`**: Returns the last (highest) key in the map.
+   ```java
+   Integer last = map.lastKey(); // Returns the highest key in the map
+   ```
+
+10. **`headMap(K toKey)`**: Returns a view of the portion of the map whose keys are strictly less than the specified key.
+    ```java
+    SortedMap<Integer, String> headMap = map.headMap(15); // Keys less than 15
+    ```
+
+11. **`tailMap(K fromKey)`**: Returns a view of the portion of the map whose keys are greater than or equal to the specified key.
+    ```java
+    SortedMap<Integer, String> tailMap = map.tailMap(10); // Keys greater than or equal to 10
+    ```
+
+12. **`clear()`**: Removes all key-value pairs from the map.
+    ```java
+    map.clear();
+    ```
+
+13. **`keySet()`**: Returns a `Set` view of the keys contained in the map.
+    ```java
+    Set<Integer> keys = map.keySet();
+    ```
+
+14. **`values()`**: Returns a `Collection` view of the values contained in the map.
+    ```java
+    Collection<String> values = map.values();
+    ```
+
+15. **`entrySet()`**: Returns a `Set` view of the key-value pairs (entries) contained in the map.
+    ```java
+    Set<Map.Entry<Integer, String>> entries = map.entrySet();
+    for (Map.Entry<Integer, String> entry : entries) {
+        System.out.println(entry.getKey() + " -> " + entry.getValue());
+    }
+    ```
+
+### **Time Complexity of `TreeMap` Operations**:
+- **`put(K key, V value)`**: `O(log n)` for adding a new key-value pair (due to the Red-Black tree structure).
+- **`get(Object key)`**: `O(log n)` for retrieving a value associated with the key.
+- **`remove(Object key)`**: `O(log n)` for removing a key-value pair.
+- **`containsKey(Object key)`**: `O(log n)` for checking if the map contains a specified key.
+- **`containsValue(Object value)`**: `O(n)` in the worst case, as it might require scanning through all values.
+- **`size()`**: `O(1)` for retrieving the size of the map.
+- **`isEmpty()`**: `O(1)` for checking if the map is empty.
+- **`firstKey()`** and **`lastKey()`**: `O(1)` for retrieving the first and last keys.
+
+### **TreeMap vs HashMap vs LinkedHashMap**:
+
+- **`HashMap`**: Does not maintain any order of keys. Provides constant-time (`O(1)`) complexity for basic operations.
+- **`TreeMap`**: Maintains the keys in
+
+ **sorted order** and provides `O(log n)` time complexity for basic operations.
+- **`LinkedHashMap`**: Maintains the **insertion order** of the keys and provides constant-time (`O(1)`) complexity for most operations.
+
+### Use Cases for `TreeMap`:
+- When you need to **maintain a sorted map** of keys.
+- When you want to perform **range queries** (e.g., keys greater than or less than a certain value).
+- When you need to **retrieve the first or last key** in the map efficiently.
+
+In summary, **`TreeMap`** is ideal for situations where you need a **sorted map** with **efficient range-based operations**. However, if you don’t need sorting, and you prioritize faster lookups, a **`HashMap`** would be a better choice.
+
+---
+### **ArrayList** in Java
+
+An **`ArrayList`** is part of the **Java Collections Framework** and implements the **List** interface. It is one of the most commonly used data structures in Java for storing a dynamically-sized collection of elements. Unlike arrays, the size of an `ArrayList` can grow or shrink dynamically as elements are added or removed.
+
+### Key Characteristics of `ArrayList`:
+
+1. **Dynamic Size**: Unlike arrays, an `ArrayList` can dynamically grow or shrink in size as elements are added or removed.
+2. **Indexed Access**: Elements in an `ArrayList` are stored in a **contiguous** block of memory and can be accessed by their index, which means you can quickly retrieve elements using their index.
+3. **Allow Duplicates**: `ArrayList` allows duplicate elements. If you add the same element multiple times, it will store multiple occurrences.
+4. **Null Elements**: `ArrayList` allows `null` elements, though it’s generally not recommended to use `null` for storing elements.
+5. **Resizing**: Internally, `ArrayList` uses an **array** to store elements. When the list reaches its capacity, it automatically resizes itself (usually by doubling its size), but resizing can be costly in terms of performance.
+6. **Order**: Elements are stored in the **insertion order** (i.e., the order in which they were added to the list).
+7. **Non-Synchronized**: `ArrayList` is **not synchronized**, meaning it is not thread-safe. If you need to use it in a multithreaded environment, you must synchronize it externally or use a thread-safe alternative like `CopyOnWriteArrayList`.
+
+### Constructor of `ArrayList`:
+
+1. **`ArrayList()`**: Creates an empty `ArrayList` with an initial capacity of 10.
+   ```java
+   ArrayList<Integer> list = new ArrayList<>();
+   ```
+
+2. **`ArrayList(int initialCapacity)`**: Creates an empty `ArrayList` with the specified initial capacity.
+   ```java
+   ArrayList<Integer> list = new ArrayList<>(20);
+   ```
+
+3. **`ArrayList(Collection<? extends E> c)`**: Creates an `ArrayList` that contains the elements of the specified collection.
+   ```java
+   ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3));
+   ```
+
+### Example of Using `ArrayList`:
+
+```java
+import java.util.*;
+
+public class ArrayListExample {
+    public static void main(String[] args) {
+        // Create an ArrayList of integers
+        ArrayList<Integer> list = new ArrayList<>();
+
+        // Add elements to the ArrayList
+        list.add(10);
+        list.add(20);
+        list.add(30);
+        list.add(40);
+        list.add(50);
+        
+        // Add element at a specific index
+        list.add(1, 15); // Adds 15 at index 1
+
+        // Display the ArrayList
+        System.out.println("ArrayList: " + list); // Output: [10, 15, 20, 30, 40, 50]
+
+        // Access element by index
+        System.out.println("Element at index 2: " + list.get(2)); // Output: 20
+
+        // Remove an element by index
+        list.remove(4); // Removes element at index 4
+        System.out.println("After removing element at index 4: " + list); // Output: [10, 15, 20, 30, 50]
+
+        // Remove an element by value
+        list.remove(Integer.valueOf(30)); // Removes the element 30
+        System.out.println("After removing element 30: " + list); // Output: [10, 15, 20, 50]
+
+        // Get the size of the ArrayList
+        System.out.println("Size of ArrayList: " + list.size()); // Output: 4
+
+        // Check if the ArrayList contains a specific element
+        System.out.println("Contains 20? " + list.contains(20)); // Output: true
+        System.out.println("Contains 100? " + list.contains(100)); // Output: false
+
+        // Iterate over the ArrayList using a for-each loop
+        System.out.println("Iterating over ArrayList:");
+        for (Integer num : list) {
+            System.out.println(num); // Output: 10, 15, 20, 50
+        }
+
+        // Clear the ArrayList
+        list.clear();
+        System.out.println("ArrayList after clear: " + list); // Output: []
+    }
+}
+```
+
+### Output:
+```
+ArrayList: [10, 15, 20, 30, 40, 50]
+Element at index 2: 20
+After removing element at index 4: [10, 15, 20, 30, 50]
+After removing element 30: [10, 15, 20, 50]
+Size of ArrayList: 4
+Contains 20? true
+Contains 100? false
+Iterating over ArrayList:
+10
+15
+20
+50
+ArrayList after clear: []
+```
+
+### Key Methods of `ArrayList`:
+
+1. **`add(E e)`**: Appends the specified element to the end of the list.
+   ```java
+   list.add(25); // Adds 25 at the end of the list
+   ```
+
+2. **`add(int index, E element)`**: Inserts the specified element at the specified position in the list.
+   ```java
+   list.add(2, 35); // Adds 35 at index 2
+   ```
+
+3. **`get(int index)`**: Returns the element at the specified index.
+   ```java
+   Integer element = list.get(3); // Returns the element at index 3
+   ```
+
+4. **`remove(Object o)`**: Removes the first occurrence of the specified element from the list.
+   ```java
+   list.remove(Integer.valueOf(20)); // Removes element 20
+   ```
+
+5. **`remove(int index)`**: Removes the element at the specified index.
+   ```java
+   list.remove(2); // Removes the element at index 2
+   ```
+
+6. **`set(int index, E element)`**: Replaces the element at the specified index with the specified element.
+   ```java
+   list.set(1, 45); // Replaces the element at index 1 with 45
+   ```
+
+7. **`contains(Object o)`**: Returns `true` if the list contains the specified element.
+   ```java
+   boolean contains = list.contains(20); // Checks if the list contains 20
+   ```
+
+8. **`indexOf(Object o)`**: Returns the index of the first occurrence of the specified element, or `-1` if the element is not found.
+   ```java
+   int index = list.indexOf(20); // Returns the index of element 20
+   ```
+
+9. **`size()`**: Returns the number of elements in the list.
+   ```java
+   int size = list.size(); // Returns the size of the list
+   ```
+
+10. **`isEmpty()`**: Returns `true` if the list contains no elements.
+    ```java
+    boolean isEmpty = list.isEmpty(); // Returns true if the list is empty
+    ```
+
+11. **`clear()`**: Removes all elements from the list.
+    ```java
+    list.clear(); // Clears the list
+    ```
+
+12. **`toArray()`**: Returns an array containing all of the elements in the list.
+    ```java
+    Object[] array = list.toArray(); // Converts the list to an array
+    ```
+
+13. **`forEach()`**: Performs the given action for each element of the list.
+    ```java
+    list.forEach(e -> System.out.println(e)); // Prints each element in the list
+    ```
+
+### **Time Complexity of `ArrayList` Operations**:
+
+- **`add(E e)`**: `O(1)` on average, but it can be `O(n)` if the internal array needs to be resized.
+- **`add(int index, E element)`**: `O(n)` in the worst case, as it may require shifting elements.
+- **`get(int index)`**: `O(1)`, because `ArrayList` provides indexed access.
+- **`remove(Object o)`**: `O(n)` in the worst case, as it might require shifting elements.
+- **`remove(int index)`**: `O(n)` in the worst case, as elements after the removed index need to be shifted.
+- **`set(int index, E element)`**: `O(1)`, because it directly accesses the element at the specified index.
+- **`contains(Object o)`**: `O(n)`, as it may need to iterate over all elements.
+- **`size()`**: `O(1)`, as it just returns the number of elements in the list.
+- **`clear()`**: `O(n)`, as it needs to remove all elements.
+
+### Comparison with Other List Implementations:
+
+- **`ArrayList`**: Provides fast access to elements (`O(1)`), but may be slow when inserting or deleting elements from the middle of the list (`O(n)`), because elements must be shifted.
+- **`LinkedList`**: Unlike `ArrayList`, it provides fast insertion and removal from both ends (`O(1)`), but slower indexed
+
+ access (`O(n)`).
+- **`Vector`**: Similar to `ArrayList`, but it is **synchronized** and thus thread-safe, at the cost of performance.
+
+### When to Use `ArrayList`:
+- When you need fast access to elements by index.
+- When the list size is not frequently changing (i.e., not many insertions or deletions from the middle).
+- When thread-safety is not a concern or when you can synchronize it externally.
+
+In summary, **`ArrayList`** is the go-to list implementation when you need an **efficient, dynamic array**-like structure for storing ordered elements. It's perfect for situations where you need fast random access and are working with a relatively static set of elements, or where the main operation is adding elements to the end of the list.
+
+---
+
+### **LinkedList** in Java
+
+A **`LinkedList`** is part of the **Java Collections Framework** and implements both the **`List`** and **`Deque`** interfaces. It represents a doubly-linked list data structure, where each element (node) in the list contains references to the previous and next nodes, allowing for efficient insertion and removal of elements from both ends and in the middle.
+
+### Key Characteristics of `LinkedList`:
+
+1. **Doubly Linked**: Each element in the list (node) has two references: one to the next node and one to the previous node, which allows traversal in both directions (from head to tail and vice versa).
+2. **Dynamic Size**: Like `ArrayList`, a `LinkedList` can dynamically grow or shrink as elements are added or removed.
+3. **Non-Contiguous Memory**: Unlike `ArrayList`, which uses a contiguous block of memory (array), a `LinkedList` uses nodes that are connected by links (pointers), meaning elements can be stored in scattered memory locations.
+4. **Allow Duplicates**: Like `ArrayList`, `LinkedList` allows duplicate elements.
+5. **Null Elements**: `LinkedList` allows `null` elements, although using `null` values is generally discouraged in most cases.
+6. **Thread Safety**: `LinkedList` is **not synchronized**, meaning it is not thread-safe. If thread safety is required, external synchronization or a concurrent collection should be used.
+7. **Efficient Insertion and Deletion**: `LinkedList` provides efficient operations for inserting or removing elements at both the beginning and the end (`O(1)`), as well as in the middle (`O(n)`).
+8. **Access Time**: Accessing elements by index is slower in `LinkedList` than in `ArrayList` (`O(n)`), because it requires traversal through the list to reach the desired index.
+
+### Constructor of `LinkedList`:
+
+1. **`LinkedList()`**: Creates an empty `LinkedList`.
+   ```java
+   LinkedList<Integer> list = new LinkedList<>();
+   ```
+
+2. **`LinkedList(Collection<? extends E> c)`**: Creates a `LinkedList` that contains the elements of the specified collection.
+   ```java
+   LinkedList<Integer> list = new LinkedList<>(Arrays.asList(1, 2, 3));
+   ```
+
+### Example of Using `LinkedList`:
+
+```java
+import java.util.*;
+
+public class LinkedListExample {
+    public static void main(String[] args) {
+        // Create a LinkedList of integers
+        LinkedList<Integer> list = new LinkedList<>();
+
+        // Add elements to the LinkedList
+        list.add(10);
+        list.add(20);
+        list.add(30);
+        list.add(40);
+
+        // Display the LinkedList
+        System.out.println("LinkedList: " + list); // Output: [10, 20, 30, 40]
+
+        // Add element at the beginning
+        list.addFirst(5); // Adds 5 at the beginning
+        System.out.println("After addFirst(5): " + list); // Output: [5, 10, 20, 30, 40]
+
+        // Add element at the end
+        list.addLast(50); // Adds 50 at the end
+        System.out.println("After addLast(50): " + list); // Output: [5, 10, 20, 30, 40, 50]
+
+        // Remove the first element
+        list.removeFirst(); // Removes the first element (5)
+        System.out.println("After removeFirst(): " + list); // Output: [10, 20, 30, 40, 50]
+
+        // Remove the last element
+        list.removeLast(); // Removes the last element (50)
+        System.out.println("After removeLast(): " + list); // Output: [10, 20, 30, 40]
+
+        // Access element by index
+        System.out.println("Element at index 2: " + list.get(2)); // Output: 30
+
+        // Remove element by value
+        list.remove(Integer.valueOf(30)); // Removes the first occurrence of element 30
+        System.out.println("After removing 30: " + list); // Output: [10, 20, 40]
+
+        // Get the size of the LinkedList
+        System.out.println("Size of LinkedList: " + list.size()); // Output: 3
+
+        // Check if the LinkedList contains a specific element
+        System.out.println("Contains 20? " + list.contains(20)); // Output: true
+
+        // Iterate over the LinkedList using a for-each loop
+        System.out.println("Iterating over LinkedList:");
+        for (Integer num : list) {
+            System.out.println(num); // Output: 10, 20, 40
+        }
+
+        // Clear the LinkedList
+        list.clear();
+        System.out.println("LinkedList after clear: " + list); // Output: []
+    }
+}
+```
+
+### Output:
+```
+LinkedList: [10, 20, 30, 40]
+After addFirst(5): [5, 10, 20, 30, 40]
+After addLast(50): [5, 10, 20, 30, 40, 50]
+After removeFirst(): [10, 20, 30, 40, 50]
+After removeLast(): [10, 20, 30, 40]
+Element at index 2: 30
+After removing 30: [10, 20, 40]
+Size of LinkedList: 3
+Contains 20? true
+Iterating over LinkedList:
+10
+20
+40
+LinkedList after clear: []
+```
+
+### Key Methods of `LinkedList`:
+
+1. **`add(E e)`**: Adds the specified element at the end of the list.
+   ```java
+   list.add(25); // Adds 25 at the end of the list
+   ```
+
+2. **`addFirst(E e)`**: Adds the specified element at the beginning of the list.
+   ```java
+   list.addFirst(5); // Adds 5 at the beginning
+   ```
+
+3. **`addLast(E e)`**: Adds the specified element at the end of the list (same as `add()`).
+   ```java
+   list.addLast(50); // Adds 50 at the end of the list
+   ```
+
+4. **`get(int index)`**: Returns the element at the specified index.
+   ```java
+   Integer element = list.get(2); // Returns the element at index 2
+   ```
+
+5. **`removeFirst()`**: Removes the first element of the list.
+   ```java
+   list.removeFirst(); // Removes the first element (e.g., 10)
+   ```
+
+6. **`removeLast()`**: Removes the last element of the list.
+   ```java
+   list.removeLast(); // Removes the last element (e.g., 50)
+   ```
+
+7. **`remove(Object o)`**: Removes the first occurrence of the specified element.
+   ```java
+   list.remove(Integer.valueOf(20)); // Removes the first occurrence of 20
+   ```
+
+8. **`size()`**: Returns the number of elements in the list.
+   ```java
+   int size = list.size(); // Returns the size of the list
+   ```
+
+9. **`contains(Object o)`**: Returns `true` if the list contains the specified element.
+   ```java
+   boolean contains = list.contains(30); // Checks if the list contains 30
+   ```
+
+10. **`clear()`**: Removes all elements from the list.
+    ```java
+    list.clear(); // Clears the list
+    ```
+
+11. **`peek()`**: Retrieves, but does not remove, the first element of the list.
+    ```java
+    Integer first = list.peek(); // Retrieves but does not remove the first element
+    ```
+
+12. **`poll()`**: Retrieves and removes the first element of the list, or returns `null` if the list is empty.
+    ```java
+    Integer first = list.poll(); // Retrieves and removes the first element
+    ```
+
+13. **`offer(E e)`**: Adds the specified element to the list, and returns `true` if the element was successfully added.
+    ```java
+    boolean success = list.offer(60); // Adds 60 at the end of the list
+    ```
+
+14. **`toArray()`**: Converts the list to an array.
+    ```java
+    Object[] array = list.toArray(); // Converts the list to an array
+    ```
+
+15. **`forEach()`**: Performs the given action for each element of the list.
+    ```java
+    list.forEach(e -> System.out.println(e)); // Prints each element in the list
+    ```
+
+### **Time Complexity of `LinkedList` Operations**:
+
+- **`add(E e)`**: `O(1)` for adding an element at the end of the list.
+- **`addFirst(E e)`**: `O(1)` for adding an element at the beginning of the list.
+- **`addLast(E e)`**: `O(1)` for adding an element at the end of the list.
+- **`get(int index)`**: `O(n)` because the list must be traversed to reach the specified index.
+- **`removeFirst()`**: `O(1)` for removing the first element.
+- **`removeLast
+
+()`**: `O(1)` for removing the last element.
+- **`remove(Object o)`**: `O(n)` for finding and removing the specified element.
+- **`size()`**: `O(1)` because the size is stored.
+- **`contains(Object o)`**: `O(n)` for checking if an element is in the list.
+- **`clear()`**: `O(n)` for clearing the list.
+
+### Comparison with `ArrayList`:
+
+- **Insertion and Removal**: `LinkedList` provides faster **insertions** and **removals** (especially at the beginning and end) compared to `ArrayList`, where elements need to be shifted. In `LinkedList`, only the node pointers need to be updated (`O(1)`).
+- **Access Time**: `ArrayList` provides faster **random access** (`O(1)`) because it is backed by an array, whereas `LinkedList` requires **sequential access** (`O(n)`).
+- **Memory Usage**: `LinkedList` uses more memory than `ArrayList` because it requires additional space to store references (pointers) to the next and previous nodes.
+
+### When to Use `LinkedList`:
+
+- When you need **efficient insertions and deletions** at the beginning or end of the list.
+- When you need to frequently **add or remove elements** in the middle of the list.
+- When you do not require **fast random access** by index.
+
+In summary, **`LinkedList`** is ideal for scenarios where you need to frequently add or remove elements from the ends or the middle of the list, but if you need **random access** or **faster indexed lookups**, **`ArrayList`** would be a better choice.
