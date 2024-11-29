@@ -6177,6 +6177,310 @@ Thread 2 has passed the barrier.
 
 ---
 
+### **Phaser** in Java
+
+The **`Phaser`** is a synchronization aid introduced in Java 7 as part of the **`java.util.concurrent`** package. It is designed for use in multi-threaded applications to coordinate phases of execution between threads. The `Phaser` allows threads to wait for each other at certain points during their execution and synchronize their activities in a more flexible way compared to older constructs like `CountDownLatch` or `CyclicBarrier`.
+
+The **`Phaser`** is typically used in situations where you have multiple threads performing tasks in **phases**, and you want them to wait for each other before advancing to the next phase.
+
+### Key Features of **`Phaser`**:
+
+1. **Phases**: A phase is a step or stage in a process. Each thread can participate in multiple phases and the `Phaser` will coordinate when they can all advance to the next phase.
+2. **Dynamic Participation**: Unlike `CyclicBarrier`, which has a fixed number of parties, the `Phaser` allows you to dynamically add or remove participants during the execution of the phases.
+3. **Multiple Phases**: Threads can be coordinated across multiple phases. After each phase, the threads wait for all participants to arrive before continuing to the next phase.
+4. **Flexibility**: Threads can join and leave a phase dynamically. For example, if a thread finishes its task early, it can signal the `Phaser` to move forward without waiting for other threads.
+5. **Automatic Reinitialization**: The `Phaser` can automatically reinitialize itself after a phase completes, allowing it to be reused in subsequent phases.
+6. **Thread Safe**: The `Phaser` is thread-safe, which means multiple threads can register, await, and advance through phases without explicit synchronization.
+   
+### Constructor of `Phaser`:
+
+1. **`Phaser()`**: Creates a `Phaser` instance with an initial number of parties (participants).
+   ```java
+   Phaser phaser = new Phaser();
+   ```
+
+2. **`Phaser(int parties)`**: Creates a `Phaser` with the specified number of parties.
+   ```java
+   Phaser phaser = new Phaser(3);  // 3 participants
+   ```
+
+3. **`Phaser(int parties, int phase)`**: Creates a `Phaser` with the specified number of parties and an initial phase number.
+   ```java
+   Phaser phaser = new Phaser(3, 0);  // 3 participants, phase 0
+   ```
+
+### Key Methods of `Phaser`:
+
+- **`register()`**: Registers the current thread with the `Phaser` as a participant. It is required if a thread wants to participate in the phases.
+   ```java
+   phaser.register();  // Registers the current thread
+   ```
+
+- **`arrive()`**: Marks the current thread as having arrived at the current phase. The thread doesn't wait but indicates that it has completed its work for this phase.
+   ```java
+   phaser.arrive();  // Marks this thread's arrival at the current phase
+   ```
+
+- **`arriveAndAwaitAdvance()`**: Marks the current thread as having arrived at the current phase, and then waits until all other threads reach this phase.
+   ```java
+   phaser.arriveAndAwaitAdvance();  // Waits for all parties before advancing
+   ```
+
+- **`arriveAndDeregister()`**: Marks the current thread as having arrived at the current phase and deregisters the thread from the `Phaser`. After deregistering, the thread will no longer participate in subsequent phases.
+   ```java
+   phaser.arriveAndDeregister();  // Marks arrival and deregisters this thread
+   ```
+
+- **`awaitAdvance(int phase)`**: Blocks the current thread until the specified phase is completed. This method is used for synchronization when you want to wait for a specific phase.
+   ```java
+   phaser.awaitAdvance(phaseNumber);  // Wait until the specified phase is completed
+   ```
+
+- **`getPhase()`**: Returns the current phase number.
+   ```java
+   int currentPhase = phaser.getPhase();  // Retrieves the current phase
+   ```
+
+- **`getRegisteredParties()`**: Returns the number of threads (parties) that are currently registered with the `Phaser`.
+   ```java
+   int registeredParties = phaser.getRegisteredParties();  // Gets the number of registered parties
+   ```
+
+- **`getArrivedParties()`**: Returns the number of threads that have arrived at the current phase.
+   ```java
+   int arrivedParties = phaser.getArrivedParties();  // Gets the number of parties that have arrived
+   ```
+
+- **`onAdvance(int phase, int registeredParties)`**: A callback method that allows you to specify a condition for advancing to the next phase. This method is invoked before each phase transition, and you can return `true` to indicate that the phase should automatically advance, or `false` to block further advancement until conditions are met.
+   ```java
+   phaser.register();
+   phaser.onAdvance((phase, registeredParties) -> {
+       return registeredParties == 0;  // Automatically advances when all parties are done
+   });
+   ```
+
+### Example of Using `Phaser`:
+
+```java
+import java.util.concurrent.*;
+
+public class PhaserExample {
+    public static void main(String[] args) {
+        // Create a Phaser with 3 participants
+        Phaser phaser = new Phaser(3);
+
+        // Create three threads (participants)
+        Runnable task = () -> {
+            System.out.println(Thread.currentThread().getName() + " is starting.");
+            // Wait for the other threads to arrive at the first phase
+            phaser.arriveAndAwaitAdvance();
+
+            // Perform some work in the first phase
+            System.out.println(Thread.currentThread().getName() + " completed phase 1.");
+            
+            // Move to the next phase
+            phaser.arriveAndAwaitAdvance();
+
+            // Perform work in the second phase
+            System.out.println(Thread.currentThread().getName() + " completed phase 2.");
+        };
+
+        // Start the threads
+        Thread t1 = new Thread(task, "Thread-1");
+        Thread t2 = new Thread(task, "Thread-2");
+        Thread t3 = new Thread(task, "Thread-3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        try {
+            // Wait for all threads to finish phase 2 before terminating
+            t1.join();
+            t2.join();
+            t3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("All threads completed.");
+    }
+}
+```
+
+### Output:
+```
+Thread-1 is starting.
+Thread-2 is starting.
+Thread-3 is starting.
+Thread-1 completed phase 1.
+Thread-2 completed phase 1.
+Thread-3 completed phase 1.
+Thread-1 completed phase 2.
+Thread-2 completed phase 2.
+Thread-3 completed phase 2.
+All threads completed.
+```
+
+### Key Points from the Example:
+- Each thread waits for the other threads to arrive at the **first phase** using `arriveAndAwaitAdvance()`.
+- Once all threads reach the first phase, they move on to the next phase.
+- This is repeated for each phase, ensuring that all threads complete the required work before proceeding to the next phase.
+
+### Use Cases for `Phaser`:
+- **Parallel task execution with multiple phases**: When you have a series of tasks where multiple threads need to perform operations in phases, such as in a multi-step pipeline.
+- **Dynamic thread participation**: When the number of threads participating in each phase can change dynamically.
+- **Waiting for all threads**: When threads need to wait for each other to complete tasks at a particular stage before advancing to the next stage.
+
+### Advantages of `Phaser`:
+1. **Dynamic Participation**: Unlike `CyclicBarrier`, which requires a fixed number of participants, the `Phaser` allows for dynamic addition and removal of threads during execution.
+2. **Multiple Phases**: It is suitable for use cases where tasks are divided into multiple phases, with synchronization required between the phases.
+3. **Fine-grained Control**: The ability to register and deregister threads dynamically, along with the callback (`onAdvance`), provides more flexibility compared to older synchronization aids like `CyclicBarrier` or `CountDownLatch`.
+
+### When to Use `Phaser`:
+- When you need to synchronize threads through multiple phases, and the number of participants can change during execution.
+- When the tasks are divided into discrete phases and you want to control the advancement of the tasks between these phases.
+
+---
+### **Exchanger** in Java
+
+The **`Exchanger`** is a synchronization construct introduced in **Java 5** as part of the **`java.util.concurrent`** package. It is designed for **pairwise** exchange of data between two threads. It allows two threads to exchange objects at a specific synchronization point, ensuring that both threads are ready to swap their data.
+
+The **`Exchanger`** is useful in situations where two threads need to exchange data at a specific point in their execution, such as in scenarios involving **two-way communication** or **data handoffs** between threads.
+
+### Key Features of **`Exchanger`**:
+
+1. **Pairwise Synchronization**: The `Exchanger` is designed to exchange data between two threads at a time. It blocks each thread until the other thread reaches the synchronization point, and then the threads exchange their data.
+   
+2. **Data Exchange**: The primary purpose of the `Exchanger` is to allow two threads to exchange objects. This can be useful when threads need to pass control or data to one another.
+
+3. **Blocking**: Both threads involved in the exchange are blocked until the other thread reaches the exchange point. If only one thread reaches the exchange point, it will block until the other thread arrives.
+
+4. **Return Values**: The `Exchanger` allows both threads to exchange objects. Each thread provides an object that it wants to exchange, and in return, it receives the object provided by the other thread.
+
+### Constructor of `Exchanger`:
+- **`Exchanger()`**: Creates an `Exchanger` that does not initially contain any data.
+   ```java
+   Exchanger<String> exchanger = new Exchanger<>();
+   ```
+
+### Key Method of `Exchanger`:
+
+- **`exchange(V item)`**: Each thread calls this method to exchange an object. The method blocks until both threads are ready to exchange the objects. Once both threads call `exchange()`, they swap their objects and both are unblocked.
+   - **`item`**: The item to be exchanged.
+   - **Return Value**: The method returns the object passed by the other thread.
+   - If either thread is interrupted while waiting for the other, an `InterruptedException` will be thrown.
+
+   ```java
+   V exchange(V item) throws InterruptedException;
+   ```
+
+### Example of Using `Exchanger`:
+
+Here’s a basic example of using the `Exchanger` to demonstrate how two threads can exchange data:
+
+```java
+import java.util.concurrent.*;
+
+public class ExchangerExample {
+    public static void main(String[] args) {
+        // Create an Exchanger instance to exchange String objects
+        Exchanger<String> exchanger = new Exchanger<>();
+
+        // Thread 1 that will send "Hello" and receive a message from thread 2
+        Thread thread1 = new Thread(() -> {
+            try {
+                System.out.println("Thread 1 sending: Hello");
+                String response = exchanger.exchange("Hello");  // Send "Hello" and wait for response
+                System.out.println("Thread 1 received: " + response);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Thread 2 that will send "World" and receive a message from thread 1
+        Thread thread2 = new Thread(() -> {
+            try {
+                System.out.println("Thread 2 sending: World");
+                String response = exchanger.exchange("World");  // Send "World" and wait for response
+                System.out.println("Thread 2 received: " + response);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Start both threads
+        thread1.start();
+        thread2.start();
+
+        try {
+            // Wait for both threads to complete
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Both threads have completed the exchange.");
+    }
+}
+```
+
+### Output:
+```
+Thread 1 sending: Hello
+Thread 2 sending: World
+Thread 1 received: World
+Thread 2 received: Hello
+Both threads have completed the exchange.
+```
+
+### How It Works:
+
+1. **Thread 1** sends the string `"Hello"` using the `exchange()` method.
+2. **Thread 2** sends the string `"World"` using the same `exchange()` method.
+3. The threads block and wait until they both reach the `exchange()` call.
+4. Once both threads are ready, they exchange their data:
+   - **Thread 1** receives `"World"` (the data sent by **Thread 2**).
+   - **Thread 2** receives `"Hello"` (the data sent by **Thread 1**).
+5. Both threads print the received data and complete the exchange.
+
+### Key Points of the `Exchanger`:
+
+1. **Blocking**: Both threads block until the other thread is ready to exchange data.
+2. **Return Value**: The `exchange()` method returns the data sent by the other thread.
+3. **Interruption Handling**: If a thread is interrupted while waiting for the exchange, it throws an `InterruptedException`.
+4. **Synchronization**: The `Exchanger` guarantees that both threads exchange their data at the same point of execution.
+
+### When to Use `Exchanger`:
+
+1. **Two-Way Communication**: When two threads need to exchange information or control at a specific point in time. For example, when one thread needs data from another thread to proceed with its task.
+   
+2. **Data Handoff**: In scenarios where one thread generates data and hands it off to another thread for further processing, such as in pipeline designs.
+
+3. **Mutual Synchronization**: When two threads need to synchronize their execution by passing objects back and forth in a controlled manner.
+
+### Advantages of `Exchanger`:
+
+1. **Thread Synchronization**: Ensures that both threads are synchronized at a specific point where they exchange data.
+2. **Simple Interface**: The `exchange()` method provides a simple mechanism for data exchange between two threads.
+3. **Blocking Mechanism**: Helps avoid race conditions by blocking threads until both participants are ready to proceed with the exchange.
+
+### Limitations:
+
+1. **Pairwise**: The `Exchanger` only supports **pairwise** exchanges. It is not designed for multiple threads exchanging data simultaneously (e.g., more than two threads at once).
+2. **Blocking**: Threads will block until both participants arrive at the exchange point, which may not be desirable in all scenarios.
+
+### Alternative for More than Two Threads:
+
+If you need a synchronization mechanism for more than two threads, you might want to consider using other constructs like `CyclicBarrier`, `CountDownLatch`, or `Phaser` that support synchronization of multiple threads simultaneously.
+
+### Conclusion:
+
+The **`Exchanger`** is a simple yet powerful synchronization tool for **pairwise communication** between threads. It is useful when two threads need to exchange data and synchronize their execution at a specific point in time. It provides a clean and efficient way for threads to hand off data to each other in a synchronized manner, making it ideal for use cases like data pipelines and communication-based coordination between threads.
+
+---
+
 In Java, the **`HashSet`** is a collection class that implements the **Set** interface. It is part of the **Java Collections Framework** and provides an unordered collection of unique elements. This means a **`HashSet`** does not allow duplicate elements and does not guarantee any specific order of the elements.
 
 ### Key Characteristics of `HashSet`:
