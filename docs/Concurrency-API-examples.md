@@ -805,7 +805,7 @@ Java 8 introduced a significant performance improvement to `HashMap` by converti
 
 ---
 
-It looks like you've shared a YouTube link to a video about the internal workings of `HashMap` and enhancements in Java 8. Since I can't view videos, I can help explain the topics covered in the video based on the title and common concepts surrounding `HashMap` and its changes in Java 8.
+The internal workings of `HashMap` and enhancements in Java 8. Since I can't view videos, I can help explain the topics covered in the video based on the title and common concepts surrounding `HashMap` and its changes in Java 8.
 
 ### 1. **Internal Working of `HashMap`**
 A `HashMap` in Java is a part of the Java Collections Framework and stores data in key-value pairs. Here's how it works internally:
