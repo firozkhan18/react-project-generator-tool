@@ -158,7 +158,7 @@ As the preceding example shows, the CyclicBarrier offers a streamlined solution 
 Perhaps the most interesting of the synchronization classes is Exchanger. It is designed to simplify the exchange of data between two threads. The operation of an Exchanger is astoundingly simple: it simply waits until two separate threads call its **`exchange()`** method. When that occurs, it exchanges the data supplied by the threads. This mechanism is both elegant and easy to use. Uses for Exchanger are easy to imagine. For example, one thread might prepare a buffer for receiving information over a network connection. Another thread might fill that buffer with the information from the connection. The two threads work together so that each time a new buffer is needed, an exchange is made.
 Exchanger is a generic class that is declared as shown here:
 
-### Exchanger<V>
+- Exchanger<V>
 Here, V specifies the type of the data being exchanged.
 The only method defined by Exchanger is exchange( ), which has the two forms
 shown here:
