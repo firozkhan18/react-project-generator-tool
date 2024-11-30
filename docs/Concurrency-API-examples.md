@@ -729,3 +729,251 @@ The `java.util.concurrent` package in Java, which provides thread-safe collectio
     - A special kind of queue that doesn’t hold any elements. Instead, it facilitates direct handoffs between threads.
     - When a thread attempts to `put()` an element into the queue, it blocks until another thread attempts to `take()` an element, and vice versa.
 
+---
+
+### 1. **Internal Memory Structure of `HashMap`:**
+   - A `HashMap` is an implementation of the `Map` interface that stores key-value pairs in an array of **buckets**.
+   - The **hash function** determines which bucket an entry belongs to. This hash function is applied to the key to compute its hash code, which is then used to determine the index in the bucket array.
+   - If multiple keys map to the same bucket (a **hash collision**), the bucket stores a **linked list** or, in the case of Java 8+, a **red-black tree** (more on that later).
+
+### 2. **How `Map.put()` Method Works in `HashMap`:**
+   The `put()` method in `HashMap` works as follows:
+   1. **Hashing the Key:** When a key-value pair is inserted, the `HashMap` first computes the hash code of the key using the `hashCode()` method.
+   2. **Determining the Bucket:** The hash code is used to determine the index of the array (bucket) where the key-value pair should be placed.
+   3. **Collision Handling:** If there is already an entry in the bucket (i.e., another key hashes to the same bucket), the `HashMap` checks whether the keys are equal by using the `equals()` method.
+   4. **Insertion or Replacement:** If the keys are equal, the value is replaced with the new value. If not, the new entry is added to the bucket (usually a linked list or tree, depending on the number of elements).
+   5. **Resize and Rehash:** If the number of entries exceeds the threshold (based on load factor), the `HashMap` will resize (grow the array) and rehash the entries.
+
+### 3. **What is a Hash Collision?**
+   A **hash collision** occurs when two or more keys produce the same hash code and thus map to the same bucket index in the hash table. Since the bucket can only hold one element, the `HashMap` must handle collisions by chaining multiple key-value pairs together (linked list) or using more sophisticated structures like a red-black tree in the case of Java 8+.
+
+### 4. **What is the Use of `Object.equals()` Method in `HashMap`?**
+   The `equals()` method in `HashMap` is used to compare keys that hash to the same bucket index. After the hash code of a key is computed and a bucket is located, the `equals()` method is used to check whether two keys are logically equal. If they are, the existing value for that key is replaced with the new one.
+
+### 5. **Summary of Internal Working of `Map.put()` Method in `HashMap`:**
+   - **Step 1:** Compute the hash code of the key using the `hashCode()` method.
+   - **Step 2:** Use the hash code to determine the bucket index.
+   - **Step 3:** If the bucket is empty, insert the new key-value pair.
+   - **Step 4:** If the bucket already contains an entry, compare the new key with existing keys using `equals()`.
+   - **Step 5:** If the key already exists, replace the value. Otherwise, add the new key-value pair to the bucket (handling collisions).
+   - **Step 6:** If the size exceeds the threshold, resize the underlying array and rehash the entries.
+
+### 6. **How to Search for an Element in a LinkedList?**
+   - To search for an element in a `LinkedList`, iterate through the list from the head node to the tail. For each node, compare the element’s value with the target value.
+   - The search time complexity is **O(n)**, where `n` is the number of elements in the list.
+
+### 7. **How `Map.get()` Method Internally Works in `HashMap`:**
+   The `get()` method works as follows:
+   1. **Hashing the Key:** The method first computes the hash code of the key using the `hashCode()` method.
+   2. **Determining the Bucket:** The hash code is used to locate the appropriate bucket.
+   3. **Equality Check:** If there are multiple key-value pairs in the bucket (due to collisions), the `equals()` method is used to compare the requested key with the keys in the bucket.
+   4. **Return the Value:** If a matching key is found, its corresponding value is returned; otherwise, `null` is returned.
+
+### 8. **Why We Need Enhancement in Java 8 `HashMap`? What Was the Problem Before?**
+   Before Java 8, `HashMap` handled collisions using a **linked list**. This could degrade performance significantly if there were many hash collisions, as searching, inserting, or deleting from a long linked list takes **O(n)** time.
+   
+   **Problem:**
+   - When multiple keys hashed to the same bucket, the bucket would store these entries as a linked list, causing performance issues due to long chains in case of high collision.
+
+### 9. **Java 8 Enhancement in `HashMap` (Storing Elements from LinkedList into Tree Structure):**
+   In Java 8, if a bucket exceeds a certain threshold (default 8), the linked list is **"treeified"** into a **red-black tree**. This significantly improves performance from **O(n)** to **O(log n)** for operations like searching, inserting, and deleting.
+
+   **Benefits:**
+   - **Improved Performance:** Reduces the worst-case time complexity in case of high collision rates.
+   - **More Efficient Collision Handling:** Collisions are managed better with a balanced tree rather than a linked list.
+
+### 10. **What is Treefy Threshold in `HashMap`?**
+   The **treefy threshold** is the number of entries in a bucket after which the `HashMap` will convert the linked list in that bucket into a **red-black tree**. By default, this threshold is set to 8. If there are more than 8 entries in a bucket, the linked list is converted into a tree to improve performance (i.e., from O(n) to O(log n)).
+
+### 11. **What is Red-Black Tree in `HashMap`?**
+   A **red-black tree** is a type of **self-balancing binary search tree**. It ensures that the tree remains balanced, with the following properties:
+   - Every node is either red or black.
+   - The root is always black.
+   - Red nodes cannot have red children.
+   - Every path from a node to its descendant NULL nodes has the same number of black nodes.
+   
+   **In `HashMap`:**
+   - Red-black trees are used in the buckets when the number of entries exceeds the treefy threshold. This ensures that the operations of searching, inserting, and deleting have a time complexity of **O(log n)**, improving efficiency in case of hash collisions.
+
+### 12. **Binary Search Tree vs. Self-Balancing Tree:**
+   - A **Binary Search Tree (BST)** is a tree in which each node has at most two children, and for every node, the left child is smaller and the right child is larger than the parent. However, a normal BST can become unbalanced, leading to worst-case time complexity of **O(n)**.
+   - A **Self-balancing Tree**, like the **red-black tree**, ensures that the tree remains balanced, maintaining a time complexity of **O(log n)** for most operations (insert, delete, search). It automatically adjusts itself during insertions and deletions to maintain balance.
+
+### Conclusion:
+Java 8 introduced a significant performance improvement to `HashMap` by converting long linked lists into red-black trees in cases of hash collisions. This enhancement improved the worst-case performance of `HashMap` from O(n) (with linked lists) to O(log n) (with red-black trees). The treefy threshold of 8 elements in a bucket is the key trigger for this optimization.
+
+
+---
+
+It looks like you've shared a YouTube link to a video about the internal workings of `HashMap` and enhancements in Java 8. Since I can't view videos, I can help explain the topics covered in the video based on the title and common concepts surrounding `HashMap` and its changes in Java 8.
+
+### 1. **Internal Working of `HashMap`**
+A `HashMap` in Java is a part of the Java Collections Framework and stores data in key-value pairs. Here's how it works internally:
+
+- **Hashing:** The `HashMap` uses a hash function to compute an index (called the "bucket") where the value for a given key is stored. The index is calculated based on the hash code of the key. 
+    - For example, if the key is `"apple"`, the hash code of the key is computed, and a modulo operation with the number of buckets determines the index.
+
+- **Buckets:** The internal storage of `HashMap` is an array of `Node` objects, called buckets. Each bucket holds a linked list (or tree structure in case of high collisions, more on that below). If two different keys hash to the same index, they are stored in the same bucket, creating a "collision." These collisions are resolved using linked lists or trees.
+
+- **Collision Handling:** When multiple keys have the same hash code, a linked list is used at that bucket index to store the key-value pairs. In Java 8, this approach was enhanced to use a **balanced tree** (like a red-black tree) if the number of elements in a bucket exceeds a threshold (usually 8), which improves the time complexity from O(n) to O(log n) for lookups.
+
+- **Resize and Rehashing:** When the number of entries exceeds the load factor (default is 0.75), the `HashMap` is resized (usually doubled in size) and all elements are rehashed to new buckets.
+
+### 2. **Java 8 Enhancements to `HashMap`**
+Java 8 introduced several important changes to `HashMap`, particularly to improve performance in case of collisions:
+
+- **Treeification of Buckets:** In Java 7 and earlier, if multiple keys hash to the same bucket, a linked list was used. In Java 8, if the number of entries in a bucket exceeds a threshold (typically 8), the linked list is replaced with a balanced tree structure (red-black tree). This helps reduce the time complexity for lookups from O(n) to O(log n) in the case of hash collisions.
+
+- **Use of `forEach`, `compute`, `computeIfAbsent`, and other new methods:** Java 8 introduced several useful methods to work with `Map` objects, such as:
+  - `forEach()`: Used to iterate over the entries in the map.
+  - `compute()`: Allows you to update a value based on its existing value.
+  - `computeIfAbsent()`: Allows you to compute and insert a value if the key is not already present.
+  - `merge()`: Used for combining values based on some logic.
+
+- **Performance Improvements:** The changes in the handling of collisions (treeification) and new methods for efficiently handling updates contributed to overall performance improvements, especially in cases where many collisions occur.
+
+### Recap of Key Points:
+- A `HashMap` works by hashing keys and storing them in an array of buckets.
+- Collisions are handled with linked lists or, in Java 8 and beyond, a red-black tree.
+- Java 8 introduces treeification of buckets for better collision handling, and new methods like `forEach`, `compute`, and `merge` for more functional-style operations.
+
+Here’s a detailed breakdown of how a `HashMap` works internally, including a diagram that shows the various stages, such as bucket array, collision handling, treeification (Java 8), and rehashing.
+
+### Internal Working of `HashMap`
+
+1. **Hashing the Key**:
+   - A key in a `HashMap` is first passed through a hash function, which produces a hash code.
+   - The hash code is then mapped to an index in the array of buckets (by performing `hashCode % array.length`).
+   - If two keys hash to the same index, a collision occurs.
+
+2. **Buckets**:
+   - A `HashMap` uses an array of "buckets" (usually an array of linked lists or trees).
+   - Each bucket stores key-value pairs.
+   - If two different keys hash to the same bucket, they are stored in a linked list at that bucket index (Java 7 and below).
+
+3. **Collision Resolution (Linked List or Tree)**:
+   - If multiple keys collide at the same index, they are linked in a **linked list**.
+   - Java 8 introduced **treeification**: if the number of entries in a bucket exceeds a threshold (usually 8), the linked list is replaced by a balanced tree (a red-black tree), improving search performance from O(n) to O(log n).
+
+4. **Resizing and Rehashing**:
+   - When the `HashMap` size grows and exceeds a load factor threshold (default is 0.75), the entire map is resized, and all the entries are rehashed to new buckets.
+   - The resizing helps reduce collisions by increasing the number of available buckets.
+
+### Diagram: **Internal Working of a HashMap**
+
+Here’s how this works with a simplified diagram:
+
+```
+1. Initial State: (Assume 4 Buckets)
++---------------------+
+| Index 0 | Index 1 | Index 2 | Index 3 |
++---------------------+------------------------+
+|   -     |   -     |   -     |   -      |
++---------------------+------------------------+
+
+2. After Adding Keys (Key "A", "B", "C", "D"):
++---------------------+
+| Index 0 | Index 1 | Index 2 | Index 3 |
++---------------------+------------------------+
+| Key-A |   -     | Key-B | Key-C |
++---------------------+------------------------+
+|         |         |         | Key-D |
++---------------------+------------------------+
+
+3. After Collision Occurs (Key "B" and Key "C" Hash to Same Index):
+(Linked List for Collisions)
++---------------------+
+| Index 0 | Index 1 | Index 2 | Index 3 |
++---------------------+------------------------+
+| Key-A  | Key-B -> Key-C |   -     | Key-D |
++---------------------+------------------------+
+
+4. Treeification (Java 8, when bucket has more than 8 elements):
+(If there are too many collisions in a bucket, it will become a balanced tree)
++---------------------+
+| Index 0 | Index 1 | Index 2 | Index 3 |
++---------------------+------------------------+
+| Key-A  |    (Tree)   |   -     | Key-D |
++---------------------+------------------------+
+                      | Root   |
+                      +-------+
+                        |
+                  +-----+------+
+                  |  Key-B     |
+                  +------------+
+                        |
+                   +----+----+
+                   | Key-C    |
+                   +----------+
+
+5. Resizing (When Threshold Exceeds, Bucket Size Doubles):
++---------------------+---------------------+---------------------+---------------------+
+| Index 0 | Index 1 | Index 2 | Index 3 | Index 4 | Index 5 | Index 6 | Index 7 |
++---------------------+---------------------+---------------------+---------------------+
+| Key-A  |   -     | Key-B |   -     | Key-C  |   -     |   -     | Key-D |
++---------------------+---------------------+---------------------+---------------------+
+
+```
+
+### Explanation of the Diagram:
+
+1. **Initial State**: A `HashMap` starts with an array of a fixed size (4 buckets in this example).
+2. **After Adding Keys**: As keys `"A"`, `"B"`, `"C"`, and `"D"` are added, each key is placed in a bucket according to its hash code.
+3. **Collision Handling**: When `Key-B` and `Key-C` hash to the same index (Index 1), they are stored in a linked list.
+4. **Treeification** (Java 8): If the number of elements in the same bucket exceeds a threshold (8), the linked list is transformed into a balanced tree (e.g., a red-black tree), which allows faster lookups.
+5. **Resizing**: When the size of the `HashMap` exceeds a certain load factor (default is 0.75), the bucket array is resized, and existing entries are rehashed into the new array. In this case, the array size is doubled.
+
+### Java 8 Enhancements:
+- **Treeification of Buckets**: In cases of high collision, linked lists are replaced with balanced trees (red-black trees).
+- **Improved Lookup Time**: With treeification, searching within a bucket takes logarithmic time, instead of linear time, improving performance when there are many collisions.
+  
+This diagram should give you a clear understanding of the internal structure and changes in Java 8's `HashMap` implementation.
+
+Here's a **diagram** that represents the internal working of a `HashMap` in Java, including the stages of bucket array, collision handling, treeification (Java 8), and resizing.
+
+```mermaid
+graph TD;
+    A[Initial State (Empty Map)] --> B[Add Key "A"]
+    B --> C[Add Key "B"]
+    C --> D[Add Key "C"]
+    D --> E[Add Key "D"]
+    
+    E --> F[Collision Occurs: Key "B" and Key "C" Hash to Same Bucket]
+    F --> G[Linked List in Bucket at Index 1]
+    G --> H[Key "B" -> Key "C" in Linked List]
+    
+    H --> I[Treeification: Bucket Size Exceeds Threshold (Java 8)]
+    I --> J[Bucket Becomes a Red-Black Tree]
+    J --> K[Key "B" and Key "C" are Nodes in the Tree]
+
+    K --> L[Resizing: Load Factor Exceeded (Threshold 0.75)]
+    L --> M[Rehashing: Map is Resized and Entries are Rehashed]
+
+    subgraph A1 [HashMap with Buckets]
+        direction TB
+        A1_0[Bucket 0]
+        A1_1[Bucket 1]
+        A1_2[Bucket 2]
+        A1_3[Bucket 3]
+        A1_4[Bucket 4]
+        A1_5[Bucket 5]
+        A1_6[Bucket 6]
+        A1_7[Bucket 7]
+    end
+
+    A1_0 -->|Key "A"| B
+    A1_1 -->|Key "B" -> Key "C"| F
+    A1_2 -->|Key "D"| C
+    A1_3 -->|Empty| A
+    A1_4 -->|Empty| B
+    A1_5 -->|Empty| C
+    A1_6 -->|Empty| D
+    A1_7 -->|Empty| E
+```
+
+### Key Steps in the Diagram:
+- **A1 (Initial State)**: Represents an empty `HashMap` with 4 buckets (array of buckets).
+- **B, C, D, E (Adding Keys)**: As keys `"A"`, `"B"`, `"C"`, and `"D"` are added, they get placed in the respective buckets based on their hash.
+- **F (Collision Handling)**: If `Key "B"` and `Key "C"` collide (i.e., they hash to the same index), they are stored in a linked list at index 1.
+- **I (Treeification)**: If there are more than 8 entries in a bucket, the linked list gets replaced by a balanced tree (red-black tree).
+- **L (Resizing and Rehashing)**: When the map exceeds the load factor (default 0.75), it resizes, doubling the number of buckets and rehashing the entries.
