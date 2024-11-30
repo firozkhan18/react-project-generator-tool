@@ -944,7 +944,7 @@ graph TD;
     
     H --> I[Treeification: Bucket Size Exceeds Threshold - Java 8]
     I --> J[Bucket Becomes a Red-Black Tree]
-    J --> K[Key "B" and Key "C" are Nodes in the Tree]
+    J --> K[Key B and Key C are Nodes in the Tree]
 
     K --> L[Resizing: Load Factor Exceeded (Threshold 0.75)]
     L --> M[Rehashing: Map is Resized and Entries are Rehashed]
@@ -963,7 +963,7 @@ graph TD;
 
     A1_0 -->|Key A| B
     A1_1 -->|Key B -> Key C| F
-    A1_2 -->|Key "D"| C
+    A1_2 -->|Key D| C
     A1_3 -->|Empty| A
     A1_4 -->|Empty| B
     A1_5 -->|Empty| C
