@@ -192,12 +192,13 @@ arriveAndAwaitAdvance(). After all parties have arrived, the phase is complete, 
 following sections explain the process in detail.
 
 To register parties after a Phaser has been constructed, call register(). It is shown here:
-int register()
+- int register()
 It returns the phase number of the phase to which it is registered.
 
 To signal that a party has completed a phase, it must call arrive() or some variation of arrive(). When the number of arrivals equals the number of registered
 parties, the phase is completed and the Phaser moves on to the next phase (if there is one). The arrive() method has this general form:
-int arrive()
+
+- int arrive()
 
 This method signals that a party (normally a thread of execution) has completed some task (or portion of a task). It returns the current phase number. If the phaser has
 been terminated, then it returns a negative value. The arrive( ) method does not suspend execution of the calling thread. This means that it does not wait for the
@@ -205,20 +206,21 @@ phase to be completed. This method should be called only by a registered party.
 
 If you want to indicate the completion of a phase and then wait until all other registrants have also completed that phase, use arriveAndAwaitAdvance( ). It is
 shown here:
-int arriveAndAwaitAdvance()
+- int arriveAndAwaitAdvance()
 
 It waits until all parties have arrived. It returns the next phase number or a negative value if the phaser has been terminated. This method should be called only by a
 registered party.
 
 A thread can arrive and then deregister itself by calling arriveAndDeregister().
 It is shown here:
-int arriveAndDeregister()
+- int arriveAndDeregister()
 
 It returns the current phase number or a negative value if the phaser has been terminated. It does not wait until the phase is complete. This method should be called
 only by a registered party.
 
 To obtain the current phase number, call getPhase( ), which is shown here:
-final int getPhase()
+
+- final int getPhase()
 
 When a Phaser is created, the first phase will be 0, the second phase 1, the third phase 2, and so on. A negative value is returned if the invoking Phaser has been
 terminated.
@@ -276,7 +278,8 @@ Before moving on, it is useful to point out that you don’t necessarily need to
 onAdvance(). In some cases, more compact code can be created by using an anonymous inner class to override onAdvance().
 
 Phaser has additional capabilities that may be of use in your applications. You can wait for a specific phase by calling awaitAdvance( ), which is shown here:
-int awaitAdvance(int phase)
+
+- int awaitAdvance(int phase)
 
 Here, phase indicates the phase number on which awaitAdvance() will wait until a transition to the next phase takes place. It will return immediately if the argument passed to phase is not equal to the current phase. It will also return immediately if the phaser is terminated. However, if phase is passed the current phase, then it will wait until the phase increments. This method should be called only by a registered party. There is also an interruptible version of this method called awaitAdvanceInterruptibly().
 
@@ -288,12 +291,12 @@ Using an Executor The concurrent API supplies a feature called an executor that 
 threads through the Thread class.
 
 At the core of an executor is the Executor interface. It defines the following method:
-void execute(Runnable thread)
+- void execute(Runnable thread)
 
 The thread specified by thread is executed. Thus, execute( ) starts the specified thread.
 
 The ExecutorService interface extends Executor by adding methods that help manage and control the execution of threads. For example, ExecutorService defines shutdown( ), shown here, which stops the invoking ExecutorService.
-void shutdown( )
+- void shutdown( )
 
 ExecutorService also defines methods that execute threads that return results, that execute a set of threads, and that determine the shutdown status. We will look at
 several of these methods a little later.
@@ -304,20 +307,21 @@ ThreadPoolExecutor and ScheduledThreadPoolExecutor, and ForkJoinPool.
 ThreadPoolExecutor implements the Executor and ExecutorService interfaces and provides support for a managed pool of threads.
 ScheduledThreadPoolExecutor also implements the ScheduledExecutorService interface to allow a pool of threads to be scheduled. ForkJoinPool implements the
 Executor and ExecutorService interfaces and is used by the Fork/Join Framework.
+
 It is described later in this chapter.
 A thread pool provides a set of threads that is used to execute various tasks.
 
 Instead of each task using its own thread, the threads in the pool are used. This reduces the overhead associated with creating many separate threads. Although you
 can use ThreadPoolExecutor and ScheduledThreadPoolExecutor directly, most often you will want to obtain an executor by calling one of the following static
 factory methods defined by the Executors utility class. Here are some examples:
-static ExecutorService newCachedThreadPool( )
-static ExecutorService newFixedThreadPool(int numThreads)
-static ScheduledExecutorService newScheduledThreadPool(int numThreads)
-newCachedThreadPool( ) creates a thread pool that adds threads as needed but reuses threads if possible. newFixedThreadPool( ) creates a thread pool that
+- static ExecutorService newCachedThreadPool( )
+- static ExecutorService newFixedThreadPool(int numThreads)
+- static ScheduledExecutorService newScheduledThreadPool(int numThreads)
+newCachedThreadPool() creates a thread pool that adds threads as needed but reuses threads if possible. newFixedThreadPool() creates a thread pool that
 consists of a specified number of threads. newScheduledThreadPool( ) creates a thread pool that supports thread scheduling. Each returns a reference to an
 ExecutorService that can be used to manage the pool.
 
-A Simple Executor Example
+### A Simple Executor Example
 Before going any further, a simple example that uses an executor will be of value.
 The following program creates a fixed thread pool that contains two threads. It then uses that pool to execute four tasks. Thus, four tasks share the two threads that are in
 the pool. After the tasks finish, the pool is shut down and the program ends.
@@ -328,33 +332,36 @@ wait until one of the pooled threads is available for use.
 The call to shutdown( ) is important. If it were not present in the program, then the program would not terminate because the executor would remain active. To try
 this for yourself, simply comment out the call to shutdown( ) and observe the result.
 
-Using Callable and Future
+### Using Callable and Future
 One of the most interesting features of the concurrent API is the Callable interface.
+
 This interface represents a thread that returns a value. An application can use Callable objects to compute results that are then returned to the invoking thread.
+
 This is a powerful mechanism because it facilitates the coding of many types of numerical computations in which partial results are computed simultaneously. It can
 also be used to run a thread that returns a status code that indicates the successful completion of the thread.
+
 Callable is a generic interface that is defined like this:
 
-interface Callable<V>
+### interface Callable<V>
 Here, V indicates the type of data returned by the task. Callable defines only one method, call( ), which is shown here:
-V call( ) throws Exception
-Inside call( ), you define the task that you want performed. After that task completes, you return the result. If the result cannot be computed, call( ) must throw an
-exception.
-A Callable task is executed by an ExecutorService, by calling its submit()
-method. There are three forms of submit( ), but only one is used to execute a Callable. It is shown here:
+- V call() throws Exception
 
-<T> Future<T> submit(Callable<T> task)
+Inside call(), you define the task that you want performed. After that task completes, you return the result. If the result cannot be computed, call( ) must throw an
+exception.
+
+A Callable task is executed by an ExecutorService, by calling its submit() method. There are three forms of submit( ), but only one is used to execute a Callable. It is shown here:
+
+### <T> Future<T> submit(Callable<T> task)
 Here, task is the Callable object that will be executed in its own thread. The result is returned through an object of type Future.
 Future is a generic interface that represents the value that will be returned by a Callable object. Because this value is obtained at some future time, the name Future
 is appropriate. Future is defined like this:
-interface Future<V>
+
+### interface Future<V>
 Here, V specifies the type of the result.
 
 To obtain the returned value, you will call Future’s get( ) method, which has these two forms:
-V get( )
-throws InterruptedException, ExecutionException
-V get(long wait, TimeUnit tu)
-throws InterruptedException, ExecutionException, TimeoutException
+- V get() throws InterruptedException, ExecutionException
+- V get(long wait, TimeUnit tu) throws InterruptedException, ExecutionException, TimeoutException
 
 The first form waits for the result indefinitely. The second form allows you to specify a timeout period in wait. The units of wait are passed in tu, which is an
 object of the TimeUnit enumeration, described later in this chapter.
@@ -366,13 +373,13 @@ The output is shown here:
 
 The TimeUnit Enumeration
 The concurrent API defines several methods that take an argument of type TimeUnit, which indicates a time-out period. TimeUnit is an enumeration that is used to specify the granularity (or resolution) of the timing. TimeUnit is defined within java.util.concurrent. It can be one of the following values:
-DAYS
-HOURS
-MINUTES
-SECONDS
-MICROSECONDS
-MILLISECONDS
-NANOSECONDS
+- DAYS
+- HOURS
+- MINUTES
+- SECONDS
+- MICROSECONDS
+- MILLISECONDS
+- NANOSECONDS
 
 Although TimeUnit lets you specify any of these values in calls to methods that take a timing argument, there is no guarantee that the system is capable of the specified resolution.
 Here is an example that uses TimeUnit. The CallableDemo class, shown in the previous section, is modified as shown next to use the second form of get( ) that takes a TimeUnit argument.
@@ -380,40 +387,42 @@ In this version, no call to get( ) will wait more than 10 milliseconds.
 
 The TimeUnit enumeration defines various methods that convert between units.
 These are shown here:
-long convert(long tval, TimeUnit tu)
-long toMicros(long tval)
-long toMillis(long tval)
-long toNanos(long tval)
-long toSeconds(long tval)
-long toDays(long tval)
-long toHours(long tval)
-long toMinutes(long tval)
+- long convert(long tval, TimeUnit tu)
+- long toMicros(long tval)
+- long toMillis(long tval)
+- long toNanos(long tval)
+- long toSeconds(long tval)
+- long toDays(long tval)
+- long toHours(long tval)
+- long toMinutes(long tval)
 
 The convert( ) method converts tval into the specified unit and returns the result.
 The to methods perform the indicated conversion and return the result. JDK 9 adds the methods toChronoUnit( ) and of( ), which convert between java.time.temporal.ChronoUnits and TimeUnits.
 
 TimeUnit also defines the following timing methods:
 
-void sleep(long delay) throws InterruptedExecution
-void timedJoin(Thread thrd, long delay) throws InterruptedExecution
-void timedWait(Object obj, long delay) throws InterruptedExecution
+- void sleep(long delay) throws InterruptedExecution
+- void timedJoin(Thread thrd, long delay) throws InterruptedExecution
+- void timedWait(Object obj, long delay) throws InterruptedExecution
 
 Here, sleep( ) pauses execution for the specified delay period, which is specified in terms of the invoking enumeration constant. It translates into a call to Thread.sleep(). The timedJoin( ) method is a specialized version of Thread.join( ) in which thrd pauses for the time period specified by delay, which is described in terms of the invoking time unit. The timedWait( ) method is a specialized version of Object.wait( ) in which obj is waited on for the period of time specified by delay, which is described in terms of the invoking time unit.
 The Concurrent Collections
 
 As explained, the concurrent API defines several collection classes that have been engineered for concurrent operation. They include:
-ArrayBlockingQueue
-ConcurrentHashMap
-ConcurrentLinkedDeque ConcurrentLinkedQueue
-ConcurrentSkipListMap
-ConcurrentSkipListSet
-CopyOnWriteArrayList
-CopyOnWriteArraySet
-DelayQueue
-LinkedBlockingDeque
-LinkedBlockingQueue
-LinkedTransferQueue PriorityBlockingQueue
-SynchronousQueue
+- ArrayBlockingQueue
+- ConcurrentHashMap
+- ConcurrentLinkedDeque
+- ConcurrentLinkedQueue
+- ConcurrentSkipListMap
+- ConcurrentSkipListSet
+- CopyOnWriteArrayList
+- CopyOnWriteArraySet
+- DelayQueue
+- LinkedBlockingDeque
+- LinkedBlockingQueue
+- LinkedTransferQueue
+- PriorityBlockingQueue
+- SynchronousQueue
 
 These offer concurrent alternatives to their related classes defined by the Collections Framework. These collections work much like the other collections except that they
 provide concurrency support. Programmers familiar with the Collections Framework will have no trouble using these concurrent collections.
