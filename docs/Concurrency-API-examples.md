@@ -671,6 +671,293 @@ Given the power and flexibility found in the concurrency utilities, it is natura
 
 ---
 
+### 1) **What is Multi-threading?**
+
+**Multi-threading** is a technique in computer programming where multiple threads run concurrently within a single program or process. Each thread represents a separate path of execution, and multi-threading allows the CPU to handle multiple tasks at once, improving the efficiency and performance of the application.
+
+In Java, threads can be implemented by:
+- Extending the `Thread` class.
+- Implementing the `Runnable` interface.
+
+For example:
+
+```java
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is running");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread t = new MyThread();
+        t.start(); // Start the thread
+    }
+}
+```
+
+Multi-threading is useful in tasks like parallel processing, handling multiple user requests, or improving responsiveness in applications, like web servers or GUIs.
+
+---
+
+### 2) **What is a Race Condition with Example?**
+
+A **race condition** occurs in multi-threaded programs when two or more threads attempt to update shared resources simultaneously, and the final outcome depends on the order in which the threads are executed. This can lead to inconsistent or incorrect results.
+
+#### **Example of Race Condition:**
+
+```java
+class Counter {
+    private int count = 0;
+
+    public void increment() {
+        count++; // Incrementing count
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionExample {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+
+        // Thread 1
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+```
+
+In the above example, the `increment()` method is not synchronized, so the final `count` value might be incorrect, because both threads may read and modify the `count` variable simultaneously, resulting in a race condition.
+
+---
+
+### 3) **How to Solve Race Condition Using Synchronized?**
+
+The **synchronized** keyword ensures that only one thread at a time can execute a block of code. By synchronizing methods or blocks of code that modify shared resources, you can avoid race conditions.
+
+#### **Example using Synchronized:**
+
+```java
+class Counter {
+    private int count = 0;
+
+    // Synchronized method to avoid race condition
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+public class RaceConditionExample {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+
+        // Thread 1
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+```
+
+In this example, the `increment()` method is synchronized, ensuring that only one thread can modify the `count` value at a time, thus preventing race conditions.
+
+---
+
+### 4) **What is Cache Incoherence?**
+
+**Cache incoherence** occurs in multi-threaded systems when multiple processors or cores maintain copies of the same memory location in their local caches. When one thread modifies a value, other threads may be working with stale or outdated values from their cache, leading to inconsistent behavior and incorrect results.
+
+For example, in a multi-core system, each core might cache values from shared memory. If one core updates a value in memory, the other cores may not immediately see the updated value because they are using their cached version.
+
+---
+
+### 5) **How It Is Solved Using Volatile with Example?**
+
+In Java, **volatile** is a keyword that ensures that a variable's value is directly read from and written to the main memory, rather than being cached in a thread’s local memory. This helps solve cache incoherence issues by ensuring all threads see the most up-to-date value of the variable.
+
+#### **Example of Volatile:**
+
+```java
+class SharedResource {
+    private volatile boolean flag = false;
+
+    public void setFlagTrue() {
+        flag = true;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+}
+
+public class VolatileExample {
+    public static void main(String[] args) {
+        SharedResource resource = new SharedResource();
+
+        // Thread 1
+        Thread t1 = new Thread(() -> {
+            resource.setFlagTrue();
+        });
+
+        // Thread 2
+        Thread t2 = new Thread(() -> {
+            while (!resource.isFlag()) {
+                // Busy wait until flag is true
+            }
+            System.out.println("Flag is true!");
+        });
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+In this example, the `flag` variable is marked as `volatile`, which ensures that changes made by one thread are visible to all other threads immediately, thus solving the cache incoherence problem.
+
+---
+
+### 6) **What is Atomic?**
+
+**Atomic operations** are operations that are completed in a single step from the perspective of other threads. In multi-threading, atomic operations prevent threads from interfering with each other when they access shared resources.
+
+Java provides the **`java.util.concurrent.atomic`** package, which includes classes like `AtomicInteger`, `AtomicLong`, and `AtomicBoolean`, which provide atomic operations for manipulating variables.
+
+For example, the `AtomicInteger` class allows atomic updates to an integer value without needing synchronization.
+
+#### **Example of Atomic:**
+
+```java
+import java.util.concurrent.atomic.AtomicInteger;
+
+class Counter {
+    private AtomicInteger count = new AtomicInteger(0);
+
+    public void increment() {
+        count.incrementAndGet(); // Atomic increment
+    }
+
+    public int getCount() {
+        return count.get();
+    }
+}
+
+public class AtomicExample {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+
+        // Thread 1
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // Thread 2
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Count: " + counter.getCount());
+    }
+}
+```
+
+In this example, `AtomicInteger` ensures thread-safe updates to the `count` variable without the need for synchronization.
+
+---
+
+### 7) **Differences Between Volatile, Atomic, and Synchronized**
+
+| Feature           | **Volatile**                                   | **Atomic**                                    | **Synchronized**                              |
+|-------------------|------------------------------------------------|-----------------------------------------------|-----------------------------------------------|
+| **Purpose**       | Ensures visibility of variables across threads | Ensures atomicity of operations               | Ensures mutual exclusion for shared resources |
+| **Thread Safety** | Only ensures visibility, not atomicity        | Provides atomic operations for variables      | Ensures exclusive access to critical sections |
+| **Performance**   | Very lightweight and fast                     | Efficient for simple atomic operations        | Can be slower due to context switching       |
+| **Use Case**      | When variable visibility is required (e.g., flags) | When atomic operations like incrementing counters are needed | When complex operations need to be performed atomically |
+| **Examples**      | `volatile boolean flag;`                       | `AtomicInteger count = new AtomicInteger(0);`  | `synchronized void increment() { count++; }` |
+| **Behavior**      | Guarantees visibility but does not ensure atomicity | Guarantees atomicity of the operation         | Locks a block of code to ensure only one thread executes it at a time |
+
+---
+
+### 8) **When to Use Volatile, Atomic, and Synchronized**
+
+- **Volatile**: Use `volatile` when you need to ensure visibility of a variable across threads, but don't need atomicity for operations on that variable. It is ideal for flags or state indicators that are updated by one thread and read by others.
+  
+  **Example Use Case**: A shared flag to indicate when a thread should stop.
+  
+- **Atomic**: Use **atomic variables** when you need atomicity for specific operations, like incrementing or updating a value, without requiring the overhead of synchronization.
+  
+  **Example Use Case**: Counting events or processing a queue with atomic increments.
+
+- **Synchronized**: Use **synchronized** blocks or methods when you need to ensure that only one thread can access a particular section of code at a time, particularly for complex operations involving multiple shared resources or when atomic operations aren't sufficient.
+  
+  **Example Use Case**: Updating multiple fields in an object or performing multiple steps that must be executed atomically (e.g., transferring money between accounts).
+
+---
+
 The `java.util.concurrent` package in Java, which provides thread-safe collections and utilities for concurrent programming. Here’s an overview of each one:
 
 1. **ArrayBlockingQueue**:  
