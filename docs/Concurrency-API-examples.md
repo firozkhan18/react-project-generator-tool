@@ -946,7 +946,7 @@ graph TD;
     I --> J[Bucket Becomes a Red-Black Tree]
     J --> K[Key B and Key C are Nodes in the Tree]
 
-    K --> L[Resizing: Load Factor Exceeded (Threshold 0.75)]
+    K --> L[Resizing: Load Factor Exceeded - Threshold 0.75]
     L --> M[Rehashing: Map is Resized and Entries are Rehashed]
 
     subgraph A1 [HashMap with Buckets]
