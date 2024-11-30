@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/276189e2-3222-4020-ba6a-ddb7d74c6cdc)## Concurrency API
+## Concurrency API
 
 The concurrency utilities are contained in the java.util.concurrent package and in its two subpackages: **`java.util.concurrent.atomic`** and **`java.util.concurrent.locks`**.
 
@@ -69,7 +69,7 @@ To acquire a permit, call the **`acquire()`** method, which has these two forms:
 The first form acquires one permit. The second form acquires num permits. Most often, the first form is used. If the permit cannot be granted at the time of the call,
 then the invoking thread suspends until the permit is available.
 
-To release a permit, call **`release( ), which has these two forms:
+To release a permit, call **`release()`**, which has these two forms:
 - void release()
 - void release(int num)
 
@@ -79,7 +79,7 @@ To use a semaphore to control access to a resource, each thread that wants to us
 
 The output from the program is shown here. (The precise order in which the threads execute may vary.)
 
-The program uses a semaphore to control access to the count variable, which is a static variable within the Shared class. Shared.count is incremented five times by the run( ) method of IncThread and decremented five times by DecThread. To prevent these two threads from accessing Shared.count at the same time, access is allowed only after a permit is acquired from the controlling semaphore. After access is complete, the permit is released. In this way, only one thread at a time will access Shared.count, as the output shows.
+The program uses a semaphore to control access to the count variable, which is a static variable within the Shared class. Shared.count is incremented five times by the run() method of IncThread and decremented five times by DecThread. To prevent these two threads from accessing Shared.count at the same time, access is allowed only after a permit is acquired from the controlling semaphore. After access is complete, the permit is released. In this way, only one thread at a time will access Shared.count, as the output shows.
 
 In both IncThread and DecThread, notice the call to sleep() within run(). It is used to “prove” that accesses to Shared.count are synchronized by the semaphore.
 In run()`**, the call to sleep() causes the invoking thread to pause between each access to Shared.count. This would normally enable the second thread to run.
@@ -92,8 +92,8 @@ Although many uses of a semaphore are as straightforward as that shown in the pr
 
 - A portion of the output is shown here:
 
-As you can see, the calls to **`put()`** and get()`** are synchronized. That is, each call to put() is followed by a call to get()`** and no values are missed. Without the semaphores, multiple calls to put()`** would have occurred without matching calls to get(), resulting in values being missed. (To prove this, remove the semaphore code and observe the results.)
-The sequencing of **`put() and **`get() calls is handled by two semaphores: semProd and semCon. Before **`put() can produce a value, it must acquire a permit from semProd. After it has set the value, it releases semCon. Before get()`** can consume a value, it must acquire a permit from semCon. After it consumes the value, it releases semProd. This “give and take” mechanism ensures that each call to **`put() must be followed by a call to get().
+As you can see, the calls to **`put()`** and **`get()`** are synchronized. That is, each call to put() is followed by a call to **`get()`** and no values are missed. Without the semaphores, multiple calls to **`put()`** would have occurred without matching calls to get(), resulting in values being missed. (To prove this, remove the semaphore code and observe the results.)
+The sequencing of **`put()`** and **`get()`** calls is handled by two semaphores: semProd and semCon. Before **`put()`** can produce a value, it must acquire a permit from semProd. After it has set the value, it releases semCon. Before **`get()`** can consume a value, it must acquire a permit from semCon. After it consumes the value, it releases semProd. This “give and take” mechanism ensures that each call to **`put()`** must be followed by a call to get().
 
 Notice that semCon is initialized with no available permits. This ensures that put() executes first. The ability to set the initial synchronization state is one of the more powerful aspects of a semaphore.
 
@@ -120,7 +120,7 @@ The following program demonstrates CountDownLatch. It creates a latch that requi
 The output produced by the program is shown here:
 
 Inside **`main()`**, a CountDownLatch called cdl is created with an initial count of five. Next, an instance of MyThread is created, which begins execution of a new
-thread. Notice that cdl is passed as a parameter to MyThread’s constructor and stored in the latch instance variable. Then, the main thread calls await()`** on cdl, which causes execution of the main thread to pause until cdl’s count has been decremented five times.
+thread. Notice that cdl is passed as a parameter to MyThread’s constructor and stored in the latch instance variable. Then, the main thread calls **`await()`** on cdl, which causes execution of the main thread to pause until cdl’s count has been decremented five times.
 
 Inside the **`run()`** method of MyThread, a loop is created that iterates five times.
 
@@ -137,7 +137,7 @@ A situation not uncommon in concurrent programming occurs when a set of two or m
 
 Here, numThreads specifies the number of threads that must reach the barrier before execution continues. In the second form, action specifies a thread that will be executed when the barrier is reached.
 
-Here is the general procedure that you will follow to use CyclicBarrier. First, create a CyclicBarrier object, specifying the number of threads that you will be waiting for. Next, when each thread reaches the barrier, have it call **`await() on that object. This will pause execution of the thread until all of the other threads also call await()`**. Once the specified number of threads has reached the barrier, await()`** will return and execution will resume. Also, if you have specified an action, then that thread is executed.
+Here is the general procedure that you will follow to use CyclicBarrier. First, create a CyclicBarrier object, specifying the number of threads that you will be waiting for. Next, when each thread reaches the barrier, have it call **`await()`** on that object. This will pause execution of the thread until all of the other threads also call **`await()`**. Once the specified number of threads has reached the barrier, await()`** will return and execution will resume. Also, if you have specified an action, then that thread is executed.
 
 The await() method has the following two forms:
 - int await() throws InterruptedException, BrokenBarrierException
@@ -149,7 +149,7 @@ Here is an example that illustrates CyclicBarrier. It waits until a set of three
 executes.
 
 The output is shown here. (The precise order in which the threads execute may vary.)
-A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls await()`**. For example, if you change main()`** in the preceding program so that it looks like this:
+A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls **`await()`**. For example, if you change **`main()`** in the preceding program so that it looks like this:
 
 the following output will be produced. (The precise order in which the threads execute may vary.)
 As the preceding example shows, the CyclicBarrier offers a streamlined solution to what was previously a complicated problem.
@@ -183,13 +183,13 @@ The first creates a phaser that has a registration count of zero. The second set
 
 In general, here is how you use Phaser. First, create a new instance of Phaser.
 
-Next, register one or more parties with the phaser, either by calling **`register()`** or by specifying the number of parties in the constructor. For each registered party, have the phaser wait until all registered parties complete a phase. A party signals this by calling one of a variety of methods supplied by Phaser, such as arrive()`** or **`arriveAndAwaitAdvance()`**. After all parties have arrived, the phase is complete, and the phaser can move on to the next phase (if there is one), or terminate. The following sections explain the process in detail.
+Next, register one or more parties with the phaser, either by calling **`register()`** or by specifying the number of parties in the constructor. For each registered party, have the phaser wait until all registered parties complete a phase. A party signals this by calling one of a variety of methods supplied by Phaser, such as **`arrive()`** or **`arriveAndAwaitAdvance()`**. After all parties have arrived, the phase is complete, and the phaser can move on to the next phase (if there is one), or terminate. The following sections explain the process in detail.
 
 To register parties after a Phaser has been constructed, call register(). It is shown here:
 - int register()
 It returns the phase number of the phase to which it is registered.
 
-To signal that a party has completed a phase, it must call arrive()`** or some variation of arrive()`**. When the number of arrivals equals the number of registered parties, the phase is completed and the Phaser moves on to the next phase (if there is one). The arrive() method has this general form:
+To signal that a party has completed a phase, it must call **`arrive()`** or some variation of **`arrive()`**. When the number of arrivals equals the number of registered parties, the phase is completed and the Phaser moves on to the next phase (if there is one). The arrive() method has this general form:
 
 - int arrive()
 
@@ -216,17 +216,17 @@ Here is an example that shows Phaser in action. It creates three threads, each o
 
 Sample output is shown here. (Your output may vary.)
 
-Let’s look closely at the key sections of the program. First, in **`main()`**, a Phaser called phsr is created with an initial party count of 1 (which corresponds to the main thread). Then three threads are started by creating three MyThread objects. Notice that MyThread is passed a reference to phsr (the phaser). The MyThread objects use this phaser to synchronize their activities. Next, **`main()`** calls getPhase()`** to obtain the current phase number (which is initially zero) and then calls **`arriveAndAwaitAdvance()`**. This causes **`main()`** to suspend until phase zero has completed. This won’t happen until all MyThreads also call **`arriveAndAwaitAdvance()`**. When this occurs, **`main()`** will resume execution, at which point it displays that phase zero has completed, and it moves on to the next phase. This process repeats until all three phases have finished. Then, main()`** calls arriveAndDeregister()`**. 
+Let’s look closely at the key sections of the program. First, in **`main()`**, a Phaser called phsr is created with an initial party count of 1 (which corresponds to the main thread). Then three threads are started by creating three MyThread objects. Notice that MyThread is passed a reference to phsr (the phaser). The MyThread objects use this phaser to synchronize their activities. Next, **`main()`** calls **`getPhase()`** to obtain the current phase number (which is initially zero) and then calls **`arriveAndAwaitAdvance()`**. This causes **`main()`** to suspend until phase zero has completed. This won’t happen until all MyThreads also call **`arriveAndAwaitAdvance()`**. When this occurs, **`main()`** will resume execution, at which point it displays that phase zero has completed, and it moves on to the next phase. This process repeats until all three phases have finished. Then, **`main()`** calls **`arriveAndDeregister()`**. 
 
 At that point, all three MyThreads have also deregistered.
 Since this results in there being no registered parties when the phaser advances to the next phase, the phaser is terminated.
 
-Now look at MyThread. First, notice that the constructor is passed a reference to the phaser that it will use and then registers with the new thread as a party on that phaser. Thus, each new MyThread becomes a party registered with the passed-in phaser. Also notice that each thread has three phases. In this example, each phase consists of a placeholder that simply displays the name of the thread and what it is doing. Obviously, in real-world code, the thread would be performing more meaningful actions. Between the first two phases, the thread calls arriveAndAwaitAdvance()`**. Thus, each thread waits until all threads have completed the phase (and the main thread is ready). After all threads have arrived (including the main thread), the phaser moves on to the next phase. After the third phase, each thread deregisters itself with a call to **`arriveAndDeregister()`**. As the comments in MyThread explain, the calls to sleep()`** are used for the purposes of illustration to ensure that the output is not jumbled because of the multithreading.
+Now look at MyThread. First, notice that the constructor is passed a reference to the phaser that it will use and then registers with the new thread as a party on that phaser. Thus, each new MyThread becomes a party registered with the passed-in phaser. Also notice that each thread has three phases. In this example, each phase consists of a placeholder that simply displays the name of the thread and what it is doing. Obviously, in real-world code, the thread would be performing more meaningful actions. Between the first two phases, the thread calls **`arriveAndAwaitAdvance()`**. Thus, each thread waits until all threads have completed the phase (and the main thread is ready). After all threads have arrived (including the main thread), the phaser moves on to the next phase. After the third phase, each thread deregisters itself with a call to **`arriveAndDeregister()`**. As the comments in MyThread explain, the calls to **`sleep()`** are used for the purposes of illustration to ensure that the output is not jumbled because of the multithreading.
 
 They are not needed to make the phaser work properly. If you remove them, the output may look a bit jumbled, but the phases will still be synchronized correctly.
 One other point: Although the preceding example used three threads that were all of the same type, this is not a requirement. Each party that uses a phaser can be unique, with each performing some separate task.
 
-It is possible to take control of precisely what happens when a phase advance occurs. To do this, you must override the **`onAdvance() method. This method is called by the run time when a Phaser advances from one phase to the next. It is shown here:
+It is possible to take control of precisely what happens when a phase advance occurs. To do this, you must override the **`onAdvance()`** method. This method is called by the run time when a Phaser advances from one phase to the next. It is shown here:
 - protected boolean onAdvance(int phase, int numParties)
 
 Here, phase will contain the current phase number prior to being incremented and numParties will contain the number of registered parties. To terminate the phaser, onAdvance() must return true. To keep the phaser alive, onAdvance( ) must return false. The default version of onAdvance() returns true (thus terminating the phaser) when there are no registered parties. As a general rule, your override should also follow this practice.
@@ -243,7 +243,7 @@ This loop simply calls **`arriveAndAwaitAdvance()`** until the phaser is termina
 
 The phaser won’t terminate until the specified number of phases have been executed.
 
-In this case, the loop continues to execute until four phases have run. Next, notice that the threads also call arriveAndAwaitAdvance()`** within a loop that runs until the phaser is terminated. This means that they will execute until the specified number of phases has been completed.
+In this case, the loop continues to execute until four phases have run. Next, notice that the threads also call **`arriveAndAwaitAdvance()`** within a loop that runs until the phaser is terminated. This means that they will execute until the specified number of phases has been completed.
 
 Now, look closely at the code for onAdvance(). Each time **`onAdvance()`** is called, it is passed the current phase and the number of registered parties. If the current phase equals the specified phase, or if the number of registered parties is zero, **`onAdvance()`** returns true, thus stopping the phaser. This is accomplished with this line of code:
 
@@ -251,7 +251,7 @@ As you can see, very little code is needed to accommodate the desired outcome.
 
 Before moving on, it is useful to point out that you don’t necessarily need to explicitly extend Phaser as the previous example does to simply override onAdvance(). In some cases, more compact code can be created by using an anonymous inner class to override **`onAdvance()`**.
 
-Phaser has additional capabilities that may be of use in your applications. You can wait for a specific phase by calling awaitAdvance()`**, which is shown here:
+Phaser has additional capabilities that may be of use in your applications. You can wait for a specific phase by calling **`awaitAdvance()`**, which is shown here:
 
 - int awaitAdvance(int phase)
 
@@ -265,9 +265,9 @@ Using an Executor The concurrent API supplies a feature called an executor that 
 At the core of an executor is the Executor interface. It defines the following method:
 - void execute(Runnable thread)
 
-The thread specified by thread is executed. Thus, execute()`** starts the specified thread.
+The thread specified by thread is executed. Thus, **`execute()`** starts the specified thread.
 
-The ExecutorService interface extends Executor by adding methods that help manage and control the execution of threads. For example, ExecutorService defines shutdown()`**, shown here, which stops the invoking ExecutorService.
+The ExecutorService interface extends Executor by adding methods that help manage and control the execution of threads. For example, ExecutorService defines **`shutdown()`**, shown here, which stops the invoking ExecutorService.
 - void shutdown()
 
 ExecutorService also defines methods that execute threads that return results, that execute a set of threads, and that determine the shutdown status. We will look at several of these methods a little later.
@@ -294,7 +294,7 @@ The following program creates a fixed thread pool that contains two threads. It 
 The output from the program is shown here. (The precise order in which the threads execute may vary.)
 As the output shows, even though the thread pool contains only two threads, all four tasks are still executed. However, only two can run at the same time. The others must wait until one of the pooled threads is available for use.
 
-The call to **`shutdown() is important. If it were not present in the program, then the program would not terminate because the executor would remain active. To try this for yourself, simply comment out the call to shutdown( ) and observe the result.
+The call to **`shutdown()`** is important. If it were not present in the program, then the program would not terminate because the executor would remain active. To try this for yourself, simply comment out the call to shutdown( ) and observe the result.
 
 ### Using Callable and Future
 One of the most interesting features of the concurrent API is the Callable interface.
@@ -309,7 +309,7 @@ Callable is a generic interface that is defined like this:
 Here, V indicates the type of data returned by the task. Callable defines only one method, call()`**, which is shown here:
 - V call() throws Exception
 
-Inside call()`**, you define the task that you want performed. After that task completes, you return the result. If the result cannot be computed, **`call()`** must throw an exception.
+Inside **`call()`**, you define the task that you want performed. After that task completes, you return the result. If the result cannot be computed, **`call()`** must throw an exception.
 
 A Callable task is executed by an ExecutorService, by calling its **`submit()`** method. There are three forms of **`submit()`**, but only one is used to execute a Callable. It is shown here:
 
