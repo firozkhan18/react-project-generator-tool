@@ -933,7 +933,7 @@ Here's a **diagram** that represents the internal working of a `HashMap` in Java
 
 ```mermaid
 graph TD;
-    A[Initial State (Empty Map)] --> B[Add Key "A"]
+    A[Initial State - Empty Map] --> B[Add Key "A"]
     B --> C[Add Key "B"]
     C --> D[Add Key "C"]
     D --> E[Add Key "D"]
@@ -942,7 +942,7 @@ graph TD;
     F --> G[Linked List in Bucket at Index 1]
     G --> H[Key "B" -> Key "C" in Linked List]
     
-    H --> I[Treeification: Bucket Size Exceeds Threshold (Java 8)]
+    H --> I[Treeification: Bucket Size Exceeds Threshold - Java 8]
     I --> J[Bucket Becomes a Red-Black Tree]
     J --> K[Key "B" and Key "C" are Nodes in the Tree]
 
