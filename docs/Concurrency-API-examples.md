@@ -666,3 +666,64 @@ One last point: Except under unusual circumstances, do not make assumptions abou
 
 #### Traditional Approach
 Given the power and flexibility found in the concurrency utilities, it is natural to ask the following question: Do they replace Java’s traditional approach to multithreading and synchronization? The answer is a resounding no! The original support for multithreading and the built-in synchronization features are still the mechanism that should be employed for many, many Java programs. For example, synchronized, **`wait()`**, and **`notify()`** offer elegant solutions to a wide range of problems. However, when extra control is needed, the concurrency utilities are available to handle the chore. Furthermore, the Fork/Join Framework offers a powerful way to integrate parallel programming techniques into your more sophisticated applications.
+
+---
+
+The `java.util.concurrent` package in Java, which provides thread-safe collections and utilities for concurrent programming. Here’s an overview of each one:
+
+1. **ArrayBlockingQueue**:  
+   - A bounded blocking queue backed by an array. 
+   - It has a fixed capacity and blocks threads when it’s full (when adding) or empty (when removing).
+
+2. **ConcurrentHashMap**:  
+   - A thread-safe, high-performance hash map designed for concurrent use. 
+   - It allows concurrent read and write operations without locking the entire map. The map is partitioned internally into segments to allow thread-local locking.
+
+3. **ConcurrentLinkedDeque**:  
+   - A non-blocking, thread-safe double-ended queue.
+   - It supports lock-free operations and is optimized for low-latency concurrent access.
+
+4. **ConcurrentLinkedQueue**:  
+   - A non-blocking, thread-safe queue based on a lock-free algorithm. 
+   - It’s suitable for cases where many threads are adding and removing elements concurrently.
+
+5. **ConcurrentSkipListMap**:  
+   - A thread-safe map implemented using a skip list. 
+   - It provides log(n) time complexity for insertion, deletion, and lookup, and maintains the elements in a sorted order.
+
+6. **ConcurrentSkipListSet**:  
+   - A thread-safe set implementation based on a skip list, providing ordered elements.
+   - Similar to `ConcurrentSkipListMap`, but it only stores keys (unique elements) and doesn't store values.
+
+7. **CopyOnWriteArrayList**:  
+   - A thread-safe list implementation where modifications (like `add()`, `remove()`) result in a copy of the underlying array being created.
+   - Ideal for use cases where reads are far more frequent than writes.
+
+8. **CopyOnWriteArraySet**:  
+   - A thread-safe set based on `CopyOnWriteArrayList`. 
+   - Similar to `CopyOnWriteArrayList`, but it does not allow duplicate elements.
+
+9. **DelayQueue**:  
+   - A blocking queue that holds elements until they become eligible for processing based on their delay time.
+   - Often used for scheduling tasks where a task can be delayed until its expiration time.
+
+10. **LinkedBlockingDeque**:  
+    - A blocking deque (double-ended queue) that supports both blocking and non-blocking operations on both ends (front and back).
+    - It can be bounded or unbounded.
+
+11. **LinkedBlockingQueue**:  
+    - A blocking queue that stores elements in a linked list structure.
+    - It supports a bounded or unbounded queue and provides blocking operations when the queue is full or empty.
+
+12. **LinkedTransferQueue**:  
+    - A high-performance, unbounded, thread-safe queue that supports transferring elements directly between threads.
+    - It’s similar to `LinkedBlockingQueue` but with enhanced capabilities for transferring elements directly.
+
+13. **PriorityBlockingQueue**:  
+    - A blocking queue that orders its elements according to their natural ordering or by a comparator provided at the time of creation.
+    - It does not support capacity limits and can hold any number of elements.
+
+14. **SynchronousQueue**:  
+    - A special kind of queue that doesn’t hold any elements. Instead, it facilitates direct handoffs between threads.
+    - When a thread attempts to `put()` an element into the queue, it blocks until another thread attempts to `take()` an element, and vice versa.
+
