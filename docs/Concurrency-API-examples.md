@@ -142,8 +142,7 @@ Here is the general procedure that you will follow to use CyclicBarrier. First, 
 
 The await() method has the following two forms:
 - int await() throws InterruptedException, BrokenBarrierException
-- int await(long wait, TimeUnit tu)
-throws InterruptedException, BrokenBarrierException, TimeoutException
+- int await(long wait, TimeUnit tu) throws InterruptedException, BrokenBarrierException, TimeoutException
 
 The first form waits until all the threads have reached the barrier point. The second form waits only for the period of time specified by wait. The units represented by wait are specified by tu. Both forms return a value that indicates the order that the threads arrive at the barrier point. The first thread returns a value equal to the number of threads waited upon minus one. The last thread returns zero.
 
@@ -323,6 +322,7 @@ the pool. After the tasks finish, the pool is shut down and the program ends.
 The output from the program is shown here. (The precise order in which the threads execute may vary.)
 As the output shows, even though the thread pool contains only two threads, all four tasks are still executed. However, only two can run at the same time. The others must
 wait until one of the pooled threads is available for use.
+
 The call to shutdown( ) is important. If it were not present in the program, then the program would not terminate because the executor would remain active. To try
 this for yourself, simply comment out the call to shutdown( ) and observe the result.
 
@@ -359,6 +359,7 @@ To obtain the returned value, you will call Future’s get( ) method, which has 
 
 The first form waits for the result indefinitely. The second form allows you to specify a timeout period in wait. The units of wait are passed in tu, which is an
 object of the TimeUnit enumeration, described later in this chapter.
+
 The following program illustrates Callable and Future by creating three tasks that perform three different computations. The first returns the summation of a value,
 the second computes the length of the hypotenuse of a right triangle given the length of its sides, and the third computes the factorial of a value. All three computations
 occur simultaneously.
@@ -474,9 +475,11 @@ ForkJoinTask<V> is an abstract class that defines a task that can be managed by 
 ForkJoinTask differs from Thread in that ForkJoinTask represents lightweight abstraction of a task, rather than a thread of execution. ForkJoinTasks are executed
 by threads managed by a thread pool of type ForkJoinPool. This mechanism allows a large number of tasks to be managed by a small number of actual threads. Thus,
 ForkJoinTasks are very efficient when compared to threads.
+
 ForkJoinTask defines many methods. At the core are fork( ) and join( ), shown here:
 - final ForkJoinTask<V> fork( )
 - final V join( )
+
 The fork( ) method submits the invoking task for asynchronous execution of the invoking task. This means that the thread that calls fork( ) continues to run. The
 fork( ) method returns this after the task is scheduled for execution. Prior to JDK 8, fork( ) could be executed only from within the computational portion of another
 ForkJoinTask, which is running within a ForkJoinPool. (You will see how to create the computational portion of a task shortly.) However, with the advent of JDK
@@ -489,6 +492,7 @@ The result of the invoking task is returned.
 You can invoke more than one task at a time by using invokeAll( ). Two of its forms are shown here:
 - static void invokeAll(ForkJoinTask<?> taskA, ForkJoinTask<?> taskB)
 - static void invokeAll(ForkJoinTask<?> … taskList)
+
 In the first case, taskA and taskB are executed. In the second case, all specified tasks are executed. In both cases, the calling thread waits until all of the specified tasks
 have terminated. Prior to JDK 8, the invokeAll( ) method could be executed only from within the computational portion of another ForkJoinTask, which is running within a ForkJoinPool. JDK 8’s inclusion of the common pool relaxed this requirement.
 
@@ -610,6 +614,7 @@ It returns the parallelism level currently in effect. Recall that for pools that
 obtain the parallelism level for the common pool, you can also use getCommonPoolParallelism( ). Second, you can obtain the number of processors available in the system by calling availableProcessors(), which is defined by the Runtime class. It is shown here:
 - int availableProcessors()
 The value returned may change from one call to the next because of other system demands.
+
 An Example that Uses RecursiveTask<V>
 
 The two preceding examples are based on RecursiveAction, which means that they concurrently execute tasks that do not return results. To create a task that returns a result, use RecursiveTask. In general, solutions are designed in the same manner as just shown. The key difference is that the compute( ) method returns a result. Thus, you must aggregate the results, so that when the first invocation finishes, it returns the overall result. Another difference is that you will typically start a subtask by calling fork( ) and join( ) explicitly (rather than implicitly by calling invokeAll(), for example).
@@ -647,10 +652,12 @@ A task can be cancelled by calling cancel( ), which is defined by ForkJoinTask. 
 
 It returns true if the task on which it was called is cancelled. It returns false if the task has ended or can’t be cancelled. At this time, the interruptOK parameter is not
 used by the default implementation. In general, cancel( ) is intended to be called from code outside the task because a task can easily cancel itself by returning.
+
 You can determine if a task has been cancelled by calling isCancelled( ), as shown here:
 - final boolean isCancelled( )
 It returns true if the invoking task has been cancelled prior to completion and false otherwise.
-Determining a Task’s Completion Status
+
+#### Determining a Task’s Completion Status
 
 In addition to isCancelled( ), which was just described, ForkJoinTask includes two other methods that you can use to determine a task’s completion status. The first is
 isCompletedNormally( ), which is shown here:
@@ -680,11 +687,14 @@ occasionally, you may have code that can be executed from either inside or outsi
 
 You can convert a Runnable or Callable object into a ForkJoinTask by using the adapt( ) method defined by ForkJoinTask. It has three forms, one for converting a Callable, one for a Runnable that does not return a result, and one for a Runnable that does return a result. In the case of a Callable, the call() method is run. In the case of Runnable, the run() method is run.
 
-You can obtain an approximate count of the number of tasks that are in the queue of the invoking thread by calling getQueuedTaskCount(). You can obtain an approximate count of how many tasks the invoking thread has in its queue that are in excess of the number of other threads in the pool that might “steal” them, by calling getSurplusQueuedTaskCount( ). Remember, in the Fork/Join Framework, workstealing is one way in which a high level of efficiency is obtained. Although this process is automatic, in some cases, the information may prove helpful in optimizing through-put.
+You can obtain an approximate count of the number of tasks that are in the queue of the invoking thread by calling getQueuedTaskCount(). You can obtain an approximate count of how many tasks the invoking thread has in its queue that are in excess of the number of other threads in the pool that might “steal” them, by calling getSurplusQueuedTaskCount( ). Remember, in the Fork/Join Framework, work stealing is one way in which a high level of efficiency is obtained. Although this process is automatic, in some cases, the information may prove helpful in optimizing through-put.
 
 ForkJoinTask defines the following variants of join() and invoke() that begin with the prefix quietly. They are shown here:
+
 In essence, these methods are similar to their non-quiet counterparts except they don’t return values or throw exceptions.
+
 You can attempt to “un-invoke” (in other words, unschedule) a task by calling tryUnfork().
+
 Several methods, such as getForkJoinTaskTag( ) and setForkJoinTaskTag(), support tags. Tags are short integer values that are linked with a task. They may be useful in specialized applications.
 ForkJoinTask implements Serializable. Thus, it can be serialized. However, serialization is not used during execution.
 
@@ -695,9 +705,10 @@ When you run the program, you will see a series of messages on the screen that d
 vary, based on the number of processors, threshold values, task load, and so on.
 
 You can determine if a pool is currently idle by calling isQuiescent(). It returns true if the pool has no active threads and false otherwise.
-You can obtain the number of worker threads currently in the pool by calling getPoolSize( ). You can obtain an approximate count of the active threads in the pool by calling getActiveThreadCount( ).
 
-To shut down a pool, call shutdown( ). Currently active tasks will still be executed, but no new tasks can be started. To stop a pool immediately, call shutdownNow( ). In this case, an attempt is made to cancel currently active tasks. (It is important to point out, however, that neither of these methods affects the common pool.) You can determine if a pool is shut down by calling isShutdown( ). It returns true if the pool has been shut down and false otherwise. To determine if the pool has been shut down and all tasks have been completed, call isTerminated( ). Some Fork/Join Tips
+You can obtain the number of worker threads currently in the pool by calling getPoolSize( ). You can obtain an approximate count of the active threads in the pool by calling getActiveThreadCount().
+
+To shut down a pool, call shutdown(). Currently active tasks will still be executed, but no new tasks can be started. To stop a pool immediately, call shutdownNow( ). In this case, an attempt is made to cancel currently active tasks. (It is important to point out, however, that neither of these methods affects the common pool.) You can determine if a pool is shut down by calling isShutdown( ). It returns true if the pool has been shut down and false otherwise. To determine if the pool has been shut down and all tasks have been completed, call isTerminated(). Some Fork/Join Tips
 
 Here are a few tips to help you avoid some of the more troublesome pitfalls associated with using the Fork/Join Framework. First, avoid using a sequential threshold that is too low. In general, erring on the high side is better than erring on the low side. If the threshold is too low, more time can be consumed generating and switching tasks than in processing the tasks. Second, usually it is best to use the default level of parallelism. If you specify a smaller number, it may significantly reduce the benefits of using the Fork/Join Framework.
 
