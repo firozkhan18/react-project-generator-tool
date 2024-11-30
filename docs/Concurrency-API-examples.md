@@ -508,7 +508,7 @@ There are two basic ways to start a task using the common pool. First, you can o
 
 ForkJoinPool manages the execution of its threads using an approach called work-stealing. Each worker thread maintains a queue of tasks. If one worker thread’s queue is empty, it will take a task from another worker thread. This adds to overall efficiency and helps maintain a balanced load. (Because of demands on CPU time by other processes in the system, even two worker threads with identical tasks in their respective queues may not complete at the same time.)
 
-One other point: ForkJoinPool uses daemon threads. A daemon thread is automatically terminated when all user threads have terminated. Thus, there is no need to explicitly shut down a ForkJoinPool. However, with the exception of the common pool, it is possible to do so by calling shutdown ). The **`shutdown() method has no effect on the common pool.
+One other point: ForkJoinPool uses daemon threads. A daemon thread is automatically terminated when all user threads have terminated. Thus, there is no need to explicitly shut down a ForkJoinPool. However, with the exception of the common pool, it is possible to do so by calling shutdown ). The **`shutdown()`** method has no effect on the common pool.
 
 #### The Divide-and-Conquer Strategy
 
@@ -589,8 +589,7 @@ Another alternative is to have subTaskB call **`compute()`** directly, as shown 
 
 #### Executing a Task Asynchronously
 
-The preceding programs have called **`invoke()`** on a ForkJoinPool to initiate a task. This approach is commonly used when the calling thread must wait until the task has completed (which is often the case) because **`invoke()`** does not return until the task has terminated. However, you can start a task asynchronously. In this approach, the calling thread continues to execute. Thus, both the calling thread and the task execute simultaneously. To start a task asynchronously, use **`execute()`**, which is also
-defined by ForkJoinPool. It has the two forms shown here:
+The preceding programs have called **`invoke()`** on a ForkJoinPool to initiate a task. This approach is commonly used when the calling thread must wait until the task has completed (which is often the case) because **`invoke()`** does not return until the task has terminated. However, you can start a task asynchronously. In this approach, the calling thread continues to execute. Thus, both the calling thread and the task execute simultaneously. To start a task asynchronously, use **`execute()`**, which is also defined by ForkJoinPool. It has the two forms shown here:
 - void execute(ForkJoinTask<?> task)
 - void execute(Runnable task)
 
@@ -605,6 +604,7 @@ It returns true if the task on which it was called is cancelled. It returns fals
 
 You can determine if a task has been cancelled by calling **`isCancelled()`**, as shown here:
 - final boolean isCancelled()
+
 It returns true if the invoking task has been cancelled prior to completion and false otherwise.
 
 #### Determining a Task’s Completion Status
@@ -640,21 +640,23 @@ ForkJoinTask defines the following variants of **`join()`** and **`invoke()`** t
 
 In essence, these methods are similar to their non-quiet counterparts except they don’t return values or throw exceptions.
 
-You can attempt to “un-invoke” (in other words, unschedule) a task by calling **`tryUnfork()`**.
+You can attempt to **`“un-invoke”`** (in other words, unschedule) a task by calling **`tryUnfork()`**.
 
 Several methods, such as **`getForkJoinTaskTag()`** and **`setForkJoinTaskTag()`**, support tags. Tags are short integer values that are linked with a task. They may be useful in specialized applications.
 ForkJoinTask implements Serializable. Thus, it can be serialized. However, serialization is not used during execution.
 
 #### A Sampling of Other ForkJoinPool Features
 
-One method that is quite useful when tuning fork/join applications is ForkJoinPool’s override of **`toString()`**. It displays a “user-friendly” synopsis of the state of the pool. To see it in action, use this sequence to start and then wait for the task in the FJExperiment class of the task experimenter program shown earlier:
+One method that is quite useful when tuning fork/join applications is ForkJoinPool’s override of **`toString()`**. It displays a **`“user-friendly”`** synopsis of the state of the pool. To see it in action, use this sequence to start and then wait for the task in the FJExperiment class of the task experimenter program shown earlier:
 When you run the program, you will see a series of messages on the screen that describe the state of the pool. Here is an example of one. Of course, your output may vary, based on the number of processors, threshold values, task load, and so on.
 
 You can determine if a pool is currently idle by calling **`isQuiescent()`**. It returns true if the pool has no active threads and false otherwise.
 
 You can obtain the number of worker threads currently in the pool by calling **`getPoolSize()`**. You can obtain an approximate count of the active threads in the pool by calling getActiveThreadCount()`**.
 
-To shut down a pool, call **`shutdown()`**. Currently active tasks will still be executed, but no new tasks can be started. To stop a pool immediately, call **`shutdownNow()`**. In this case, an attempt is made to cancel currently active tasks. (It is important to point out, however, that neither of these methods affects the common pool.) You can determine if a pool is shut down by calling **`isShutdown()`**. It returns true if the pool has been shut down and false otherwise. To determine if the pool has been shut down and all tasks have been completed, call **`isTerminated()`**. Some Fork/Join Tips
+To shut down a pool, call **`shutdown()`**. Currently active tasks will still be executed, but no new tasks can be started. To stop a pool immediately, call **`shutdownNow()`**. In this case, an attempt is made to cancel currently active tasks. (It is important to point out, however, that neither of these methods affects the common pool.) You can determine if a pool is shut down by calling **`isShutdown()`**. It returns true if the pool has been shut down and false otherwise. To determine if the pool has been shut down and all tasks have been completed, call **`isTerminated()`**. 
+
+### Some Fork/Join Tips
 
 Here are a few tips to help you avoid some of the more troublesome pitfalls associated with using the Fork/Join Framework. First, avoid using a sequential threshold that is too low. In general, erring on the high side is better than erring on the low side. If the threshold is too low, more time can be consumed generating and switching tasks than in processing the tasks. Second, usually it is best to use the default level of parallelism. If you specify a smaller number, it may significantly reduce the benefits of using the Fork/Join Framework.
 
