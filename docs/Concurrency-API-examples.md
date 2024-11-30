@@ -977,3 +977,341 @@ graph TD;
 - **F (Collision Handling)**: If `Key "B"` and `Key "C"` collide (i.e., they hash to the same index), they are stored in a linked list at index 1.
 - **I (Treeification)**: If there are more than 8 entries in a bucket, the linked list gets replaced by a balanced tree (red-black tree).
 - **L (Resizing and Rehashing)**: When the map exceeds the load factor (default 0.75), it resizes, doubling the number of buckets and rehashing the entries.
+
+---
+
+It looks like you've shared a YouTube link to a video about the **`equals()` and `hashCode()` contract** and their **different variations**. Since I can't watch videos directly, I'll summarize the key concepts related to the `equals()` and `hashCode()` methods, their contract, and various use cases in Java based on common practices.
+
+### **The `equals()` and `hashCode()` Contract in Java**
+
+In Java, the `equals()` and `hashCode()` methods are crucial for objects that are used in collections like `HashMap`, `HashSet`, and `Hashtable`, where hashing and object comparison are involved. These methods follow a **contract** that must be adhered to for correct behavior.
+
+#### 1. **`equals()` Method:**
+
+The `equals()` method is used to compare two objects for equality. The method signature is:
+
+```java
+public boolean equals(Object obj);
+```
+
+The general contract of `equals()` specifies that:
+
+- **Reflexive:** For any non-null reference `x`, `x.equals(x)` should return `true`.
+- **Symmetric:** For any non-null references `x` and `y`, if `x.equals(y)` returns `true`, then `y.equals(x)` must also return `true`.
+- **Transitive:** For any non-null references `x`, `y`, and `z`, if `x.equals(y)` returns `true` and `y.equals(z)` returns `true`, then `x.equals(z)` must return `true`.
+- **Consistent:** For any non-null references `x` and `y`, multiple calls to `x.equals(y)` should consistently return the same result, as long as the objects' properties don't change.
+- **Null comparison:** For any non-null reference `x`, `x.equals(null)` should return `false`.
+
+#### 2. **`hashCode()` Method:**
+
+The `hashCode()` method provides an integer hash value that represents an object. This method is used by hash-based collections, such as `HashMap`, `HashSet`, and `Hashtable`.
+
+The general contract of `hashCode()` specifies that:
+
+- **Consistency:** For any object, the `hashCode()` method should consistently return the same integer value, provided that no information used in `equals()` comparisons has been modified.
+- **Equality Consistency:** If two objects are considered equal according to the `equals()` method, then the `hashCode()` method must return the same integer value for both objects.
+
+#### **Contract Between `equals()` and `hashCode()`**:
+- If two objects are **equal** according to the `equals()` method, they must have the **same hash code**.
+- If two objects have the **same hash code**, they may or may not be equal according to the `equals()` method. However, the reverse is not true — equal objects must have the same hash code.
+  
+This is critical for hash-based collections like `HashMap`. If `equals()` is overridden, `hashCode()` should also be overridden to maintain the contract.
+
+### **Examples of `equals()` and `hashCode()` Overriding**
+
+#### **Basic Example of Overriding `equals()` and `hashCode()`**:
+
+```java
+import java.util.Objects;
+
+public class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age);
+    }
+}
+```
+
+In this example:
+- The `equals()` method checks if two `Person` objects have the same `name` and `age`.
+- The `hashCode()` method generates a hash based on the `name` and `age` fields using `Objects.hash()`. This ensures that equal objects have the same hash code.
+
+#### **Variation 1: Override `equals()` but Not `hashCode()`**
+This is a common mistake and leads to unpredictable behavior in hash-based collections.
+
+```java
+public class Person {
+    private String name;
+    private int age;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && name.equals(person.name);
+    }
+
+    // Not overriding hashCode(), will cause problems
+}
+```
+- If `equals()` is overridden without overriding `hashCode()`, the `Person` objects that are considered equal may not behave as expected in collections like `HashMap` or `HashSet`. This is because the hash code is used for efficient searching in those collections, and inconsistent hash codes can cause incorrect behavior.
+
+#### **Variation 2: `hashCode()` without `equals()`**
+In some cases, overriding only `hashCode()` and not `equals()` is possible if equality checking is not required. For example, when objects are used only as keys in a `HashMap` and there's no need to compare them for equality (just store/retrieve based on the hash code).
+
+#### **Variation 3: Custom `hashCode()` Implementation**
+Sometimes, you might want to customize the `hashCode()` implementation. For instance, if you know that some fields are much more likely to change than others, you might exclude those fields from the hash calculation to optimize performance.
+
+```java
+@Override
+public int hashCode() {
+    return Objects.hash(name); // Only use the 'name' field for hash code
+}
+```
+
+### **Best Practices for `equals()` and `hashCode()`**
+
+1. **Always Override Both `equals()` and `hashCode()` Together**: If you override one, you should override the other to maintain the consistency of the contract.
+2. **Use `Objects.equals()` and `Objects.hash()`**: These utility methods make it easier and safer to implement `equals()` and `hashCode()`.
+3. **Avoid `hashCode()` Implementation Based on Mutable Fields**: Using mutable fields in `hashCode()` can lead to unpredictable behavior, as changing the mutable field will result in a different hash code, breaking the contract.
+
+### **Visualizing the `equals()` and `hashCode()` Contract with a Diagram**
+
+Here’s a **Mermaid** diagram that illustrates the `equals()` and `hashCode()` contract:
+
+```mermaid
+graph LR
+    A[Object A] --> B[Object B]
+    A --> C{equals(A, B) = true?}
+    B --> C
+    C -->|Yes| D[hashCode(A) = hashCode(B)]
+    C -->|No| E[hashCode(A) ≠ hashCode(B)]
+
+    subgraph Contract
+        direction TB
+        F[If equals(A, B) = true, hashCode(A) = hashCode(B)]
+        G[If hashCode(A) = hashCode(B), equals(A, B) might be true or false]
+    end
+
+    D --> F
+    E --> G
+```
+
+### Key Takeaways:
+- **Equality & Hash Code Consistency**: If two objects are equal (via `equals()`), they must have the same hash code.
+- **Symmetry & Reflexivity**: If two objects are equal, the comparison must be symmetric and reflexive.
+- **Hash Map Behavior**: For collections like `HashMap`, the hash code plays a crucial role in locating the object, and overriding `equals()` without `hashCode()` can lead to unexpected behavior.
+
+Certainly! Here's a **Mermaid diagram** that visually represents the **contract between `equals()` and `hashCode()`** in Java, and how they work together:
+
+```mermaid
+graph TD
+    A[Object A] --> B[Object B]
+    A --> C{Is equals(A, B) true?}
+    B --> C
+    C -->|Yes| D[hashCode(A) = hashCode(B)]
+    C -->|No| E[hashCode(A) != hashCode(B)]
+
+    subgraph Equals & HashCode Contract
+        direction TB
+        F[If equals(A, B) is true, hashCode(A) must be equal to hashCode(B)]
+        G[If hashCode(A) = hashCode(B), equals(A, B) may or may not be true]
+    end
+
+    D --> F
+    E --> G
+
+    style F fill:#c0e0c0
+    style G fill:#e0e0e0
+```
+
+### Explanation of the Diagram:
+- **Equality Check (`equals(A, B)`)**:
+  - If `equals(A, B)` returns **true**, then `hashCode(A)` must be equal to `hashCode(B)` (this is the key part of the contract).
+- **Hash Code Check (`hashCode(A) == hashCode(B)`)**:
+  - If `hashCode(A)` equals `hashCode(B)`, it does **not necessarily** mean that `equals(A, B)` is true, but if `equals(A, B)` is true, then `hashCode(A)` must also be equal to `hashCode(B)`.
+
+### Key Points:
+- **Consistency**: Equal objects must have equal hash codes.
+- **Symmetry**: If `equals(A, B)` is true, `hashCode(A)` must equal `hashCode(B)`.
+- **Optional Symmetry for Hash Codes**: If `hashCode(A)` equals `hashCode(B)`, it does **not necessarily** mean that `equals(A, B)` is true (because hash codes can collide).
+
+This diagram helps visualize how `equals()` and `hashCode()` are tied together and what the contract between them entails.
+
+---
+
+Explain the key concepts around **static and default methods** in Java 8, which are commonly asked in interviews.
+
+### **Static Methods in Interfaces (Java 8)**
+
+Before Java 8, **interfaces** in Java could not have **static methods**. However, Java 8 introduced **static methods in interfaces**. These methods are part of the interface and are invoked using the interface name, not via instances of the implementing classes.
+
+#### **Key Characteristics of Static Methods in Interfaces:**
+- **Interface Static Methods** are defined inside an interface but can be called using the interface name.
+- They cannot be overridden by the implementing classes.
+- Static methods in interfaces can have any access modifier (e.g., `public`, `private`).
+  
+#### **Syntax for Static Methods in an Interface:**
+
+```java
+interface MyInterface {
+    // Static method in interface
+    static void staticMethod() {
+        System.out.println("Static method in interface");
+    }
+}
+
+public class MyClass implements MyInterface {
+    // Can't override static methods in interfaces
+    // This is invalid: public void staticMethod() { }
+
+    public static void main(String[] args) {
+        MyInterface.staticMethod(); // Accessing static method via interface
+    }
+}
+```
+
+**Explanation:**
+- In this example, the static method `staticMethod()` is defined inside the `MyInterface` interface.
+- It is called using the interface name `MyInterface.staticMethod()` inside the `main()` method.
+  
+**Important Points**:
+- You **cannot** override static methods in Java. Static methods belong to the class or interface where they are defined.
+- They can be accessed directly via the interface name, not through objects.
+
+### **Default Methods in Interfaces (Java 8)**
+
+Another significant feature introduced in **Java 8** was **default methods**. These are methods with a default implementation in interfaces, which allows developers to add new methods to interfaces without breaking the existing implementations.
+
+#### **Key Characteristics of Default Methods in Interfaces:**
+- **Default Methods** provide a default implementation that can be overridden by implementing classes if needed.
+- They are defined using the `default` keyword in the interface.
+- Default methods help in extending interfaces without breaking backward compatibility.
+  
+#### **Syntax for Default Methods in Interfaces:**
+
+```java
+interface MyInterface {
+    // Default method with a body
+    default void defaultMethod() {
+        System.out.println("Default method in interface");
+    }
+}
+
+public class MyClass implements MyInterface {
+    // Overriding default method (optional)
+    @Override
+    public void defaultMethod() {
+        System.out.println("Overridden default method");
+    }
+
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.defaultMethod(); // Calls the overridden method
+    }
+}
+```
+
+**Explanation:**
+- The interface `MyInterface` defines a default method `defaultMethod()`, which provides a default implementation.
+- The class `MyClass` can **override** the `defaultMethod()` but is not required to.
+- If `MyClass` does not override the `defaultMethod()`, the default implementation from the interface will be used.
+  
+**Important Points**:
+- **Default methods** allow interfaces to provide behavior without requiring that all implementing classes provide their own implementation.
+- A class can override a default method if it wants a custom implementation.
+- Default methods can co-exist with abstract methods in interfaces.
+
+### **Static vs. Default Methods in Java 8**
+
+Here’s a comparison of **static** and **default** methods in interfaces:
+
+| **Feature**               | **Static Methods**                            | **Default Methods**                               |
+|---------------------------|-----------------------------------------------|---------------------------------------------------|
+| **Definition**             | Defined using the `static` keyword.           | Defined using the `default` keyword.              |
+| **Invocation**             | Invoked by interface name.                    | Invoked by an instance of the implementing class. |
+| **Overriding**             | Cannot be overridden.                         | Can be overridden by the implementing class.      |
+| **Use Case**               | To provide utility methods related to the interface. | To provide a default behavior that can be customized. |
+| **Accessed via**           | Interface name (e.g., `InterfaceName.method()`) | Instance of the class (e.g., `obj.method()`)      |
+
+### **When to Use Static Methods?**
+- **Static methods** in interfaces are typically used for utility methods that are closely related to the interface but do not depend on the instance. For example, a factory method or a helper function related to the interface.
+
+### **When to Use Default Methods?**
+- **Default methods** are useful when you need to add functionality to an interface without breaking existing code. They allow interfaces to evolve without requiring all implementing classes to provide new implementations.
+  
+#### **Example: Static and Default Methods in an Interface**
+
+```java
+interface Animal {
+    // Default method
+    default void eat() {
+        System.out.println("This animal eats food.");
+    }
+
+    // Static method
+    static void breathe() {
+        System.out.println("This animal breathes air.");
+    }
+}
+
+class Dog implements Animal {
+    // Overriding the default method
+    @Override
+    public void eat() {
+        System.out.println("The dog eats bones.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal.breathe(); // Calling static method via interface
+
+        Dog dog = new Dog();
+        dog.eat(); // Calling overridden default method
+    }
+}
+```
+
+**Explanation:**
+- The interface `Animal` has a default method `eat()` and a static method `breathe()`.
+- The class `Dog` overrides the `eat()` method but doesn't need to override the static method.
+- In `main()`, `breathe()` is called via the interface name, and `eat()` is called on the instance of `Dog`.
+
+### **Interview Questions Related to Static and Default Methods**
+
+1. **What is the difference between static and default methods in Java 8 interfaces?**
+   - Static methods are called on the interface name and cannot be overridden, while default methods provide a default implementation that can be overridden by implementing classes.
+
+2. **Can a static method in an interface be overridden?**
+   - No, static methods in interfaces cannot be overridden. They are called on the interface itself, not instances of the implementing classes.
+
+3. **What happens if a class implements an interface that has a default method but the class does not provide an implementation?**
+   - The default method from the interface will be used.
+
+4. **Can you call a default method from a static context?**
+   - No, default methods can only be called on instances of implementing classes, not from static contexts.
+
+5. **Can an interface have both static and default methods?**
+   - Yes, an interface can have both static and default methods.
+
+### **Conclusion**
+
+The introduction of **static** and **default methods** in Java 8 was a significant enhancement to interfaces, allowing developers to add functionality to interfaces without breaking existing code. **Static methods** are useful for utility functions that don't rely on instance data, while **default methods** provide default behavior that can be overridden by implementing classes.
