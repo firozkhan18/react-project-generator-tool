@@ -87,13 +87,15 @@ In run(), the call to sleep() causes the invoking thread to pause between each a
 However, because of the semaphore, the second thread must wait until the first has released the permit, which happens only after all accesses by the first thread are
 complete. Thus, Shared.count is incremented five times by IncThread and decremented five times by DecThread. The increments and decrements are not intermixed.
 
-Without the use of the semaphore, accesses to Shared.count by both threads would have occurred simultaneously, and the increments and decrements would be intermixed. To confirm this, try commenting out the calls to acquire( ) and release(). When you run the program, you will see that access to Shared.count is no longer synchronized, and each thread accesses it as soon as it gets a timeslice.
+Without the use of the semaphore, accesses to Shared.count by both threads would have occurred simultaneously, and the increments and decrements would be intermixed. To confirm this, try commenting out the calls to acquire() and release(). When you run the program, you will see that access to Shared.count is no longer synchronized, and each thread accesses it as soon as it gets a timeslice.
 
-Although many uses of a semaphore are as straightforward as that shown in the preceding program, more intriguing uses are also possible. Here is an example. The following program reworks the producer/consumer program shown in Chapter 11 so that it uses two semaphores to regulate the producer and consumer threads, ensuring that each call to put( ) is followed by a corresponding call to get( ):
+Although many uses of a semaphore are as straightforward as that shown in the preceding program, more intriguing uses are also possible. Here is an example. The following program reworks the producer/consumer program shown in Chapter 11 so that it uses two semaphores to regulate the producer and consumer threads, ensuring that each call to put( ) is followed by a corresponding call to get():
 
 - A portion of the output is shown here:
-As you can see, the calls to put( ) and get( ) are synchronized. That is, each call to put( ) is followed by a call to get( ) and no values are missed. Without the semaphores, multiple calls to put( ) would have occurred without matching calls to get( ), resulting in values being missed. (To prove this, remove the semaphore code and observe the results.)
-The sequencing of put( ) and get( ) calls is handled by two semaphores: semProd and semCon. Before put( ) can produce a value, it must acquire a permit from semProd. After it has set the value, it releases semCon. Before get( ) can consume a value, it must acquire a permit from semCon. After it consumes the value, it releases semProd. This “give and take” mechanism ensures that each call to put( ) must be followed by a call to get( ).
+
+As you can see, the calls to put() and get() are synchronized. That is, each call to put() is followed by a call to get() and no values are missed. Without the semaphores, multiple calls to put() would have occurred without matching calls to get(), resulting in values being missed. (To prove this, remove the semaphore code and observe the results.)
+The sequencing of put() and get() calls is handled by two semaphores: semProd and semCon. Before put() can produce a value, it must acquire a permit from semProd. After it has set the value, it releases semCon. Before get() can consume a value, it must acquire a permit from semCon. After it consumes the value, it releases semProd. This “give and take” mechanism ensures that each call to put() must be followed by a call to get().
+
 Notice that semCon is initialized with no available permits. This ensures that put() executes first. The ability to set the initial synchronization state is one of the more powerful aspects of a semaphore.
 
 ### CountDownLatch
@@ -112,19 +114,20 @@ The units represented by wait are specified by tu, which is an object the TimeUn
 limit is reached and true if the countdown reaches zero.
 
 To signal an event, call the countDown( ) method, shown next:
-- void countDown( )
+- void countDown()
 Each call to countDown( ) decrements the count associated with the invoking object.
 The following program demonstrates CountDownLatch. It creates a latch that requires five events to occur before it opens.
 
 The output produced by the program is shown here:
 
-Inside main( ), a CountDownLatch called cdl is created with an initial count of five. Next, an instance of MyThread is created, which begins execution of a new
+Inside main(), a CountDownLatch called cdl is created with an initial count of five. Next, an instance of MyThread is created, which begins execution of a new
 thread. Notice that cdl is passed as a parameter to MyThread’s constructor and stored in the latch instance variable. Then, the main thread calls await( ) on cdl, which causes execution of the main thread to pause until cdl’s count has been decremented five times.
 
-Inside the run( ) method of MyThread, a loop is created that iterates five times.
+Inside the run() method of MyThread, a loop is created that iterates five times.
 
-With each iteration, the countDown( ) method is called on latch, which refers to cdl in main( ). After the fifth iteration, the latch opens, which allows the main thread to
+With each iteration, the countDown() method is called on latch, which refers to cdl in main( ). After the fifth iteration, the latch opens, which allows the main thread to
 resume.
+
 CountDownLatch is a powerful yet easy-to-use synchronization object that is appropriate whenever a thread must wait for one or more events to occur.
 
 ### CyclicBarrier
@@ -148,8 +151,7 @@ Here is an example that illustrates CyclicBarrier. It waits until a set of three
 executes.
 
 The output is shown here. (The precise order in which the threads execute may vary.)
-A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls await( ). For example, if you change main( ) in
-the preceding program so that it looks like this:
+A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls await( ). For example, if you change main( ) in the preceding program so that it looks like this:
 
 the following output will be produced. (The precise order in which the threads execute may vary.)
 As the preceding example shows, the CyclicBarrier offers a streamlined solution to what was previously a complicated problem.
@@ -167,8 +169,7 @@ shown here:
 
 Here, objRef is a reference to the data to exchange. The data received from the other thread is returned. The second form of exchange() allows a time-out period to be specified. The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, exchange() synchronizes the exchange of the data.
 
-Here is an example that demonstrates Exchanger. It creates two threads. One thread creates an empty buffer that will receive the data put into it by the second thread. In this case, the data is a string. Thus, the first thread exchanges an empty string for a full one.
-Here is the output produced by the program:
+Here is an example that demonstrates Exchanger. It creates two threads. One thread creates an empty buffer that will receive the data put into it by the second thread. In this case, the data is a string. Thus, the first thread exchanges an empty string for a full one. Here is the output produced by the program:
 
 In the program, the main() method creates an Exchanger for strings. This object is then used to synchronize the exchange of strings between the MakeString and UseString classes. The MakeString class fills a string with data. The UseString exchanges an empty string for a full one. It then displays the contents of the newly constructed string. The exchange of empty and full buffers is synchronized by the exchange() method, which is called by both classes’ run( ) method.
 
@@ -229,28 +230,21 @@ Here is an example that shows Phaser in action. It creates three threads, each o
 
 Sample output is shown here. (Your output may vary.)
 
-Let’s look closely at the key sections of the program. First, in main( ), a Phaser called phsr is created with an initial party count of 1 (which corresponds to the main
-thread). Then three threads are started by creating three MyThread objects. Notice that MyThread is passed a reference to phsr (the phaser). The MyThread objects
-use this phaser to synchronize their activities. Next, main() calls getPhase() to obtain the current phase number (which is initially zero) and then calls
-arriveAndAwaitAdvance(). This causes main() to suspend until phase zero has completed. This won’t happen until all MyThreads also call
-arriveAndAwaitAdvance(). When this occurs, main() will resume execution, at which point it displays that phase zero has completed, and it moves on to the next
-phase. This process repeats until all three phases have finished. Then, main() calls arriveAndDeregister(). 
+Let’s look closely at the key sections of the program. First, in main( ), a Phaser called phsr is created with an initial party count of 1 (which corresponds to the main thread). Then three threads are started by creating three MyThread objects. Notice that MyThread is passed a reference to phsr (the phaser). The MyThread objects use this phaser to synchronize their activities. Next, main() calls getPhase() to obtain the current phase number (which is initially zero) and then calls arriveAndAwaitAdvance(). This causes main() to suspend until phase zero has completed. This won’t happen until all MyThreads also call arriveAndAwaitAdvance(). When this occurs, main() will resume execution, at which point it displays that phase zero has completed, and it moves on to the next phase. This process repeats until all three phases have finished. Then, main() calls arriveAndDeregister(). 
 
 At that point, all three MyThreads have also deregistered.
 Since this results in there being no registered parties when the phaser advances to the next phase, the phaser is terminated.
 
-Now look at MyThread. First, notice that the constructor is passed a reference to the phaser that it will use and then registers with the new thread as a party on that
-phaser. Thus, each new MyThread becomes a party registered with the passed-in phaser. Also notice that each thread has three phases. In this example, each phase consists of a placeholder that simply displays the name of the thread and what it is doing. Obviously, in real-world code, the thread would be performing more meaningful actions. Between the first two phases, the thread calls arriveAndAwaitAdvance(). Thus, each thread waits until all threads have completed the phase (and the main thread is ready). After all threads have arrived (including the main thread), the phaser moves on to the next phase. After the third phase, each thread deregisters itself with a call to arriveAndDeregister( ). As the comments in MyThread explain, the calls to sleep() are used for the purposes of illustration to ensure that the output is not jumbled because of the multithreading.
+Now look at MyThread. First, notice that the constructor is passed a reference to the phaser that it will use and then registers with the new thread as a party on that phaser. Thus, each new MyThread becomes a party registered with the passed-in phaser. Also notice that each thread has three phases. In this example, each phase consists of a placeholder that simply displays the name of the thread and what it is doing. Obviously, in real-world code, the thread would be performing more meaningful actions. Between the first two phases, the thread calls arriveAndAwaitAdvance(). Thus, each thread waits until all threads have completed the phase (and the main thread is ready). After all threads have arrived (including the main thread), the phaser moves on to the next phase. After the third phase, each thread deregisters itself with a call to arriveAndDeregister(). As the comments in MyThread explain, the calls to sleep() are used for the purposes of illustration to ensure that the output is not jumbled because of the multithreading.
 
 They are not needed to make the phaser work properly. If you remove them, the output may look a bit jumbled, but the phases will still be synchronized correctly.
 One other point: Although the preceding example used three threads that were all of the same type, this is not a requirement. Each party that uses a phaser can be
 unique, with each performing some separate task.
 
 It is possible to take control of precisely what happens when a phase advance occurs. To do this, you must override the onAdvance( ) method. This method is called by the run time when a Phaser advances from one phase to the next. It is shown here:
-protected boolean onAdvance(int phase, int numParties)
+- protected boolean onAdvance(int phase, int numParties)
 
-Here, phase will contain the current phase number prior to being incremented and numParties will contain the number of registered parties. To terminate the phaser,
-onAdvance() must return true. To keep the phaser alive, onAdvance( ) must return false. The default version of onAdvance() returns true (thus terminating the phaser)
+Here, phase will contain the current phase number prior to being incremented and numParties will contain the number of registered parties. To terminate the phaser, onAdvance() must return true. To keep the phaser alive, onAdvance( ) must return false. The default version of onAdvance() returns true (thus terminating the phaser)
 when there are no registered parties. As a general rule, your override should also follow this practice.
 
 One reason to override onAdvance() is to enable a phaser to execute a specific number of phases and then stop. The following example gives you the flavor of this usage. It creates a class called MyPhaser that extends Phaser so that it will run a specified number of phases. It does this by overriding the onAdvance( ) method.
@@ -427,7 +421,7 @@ As explained, the concurrent API defines several collection classes that have be
 These offer concurrent alternatives to their related classes defined by the Collections Framework. These collections work much like the other collections except that they
 provide concurrency support. Programmers familiar with the Collections Framework will have no trouble using these concurrent collections.
 
-Locks
+### Locks
 The java.util.concurrent.locks package provides support for locks, which are objects that offer an alternative to using synchronized to control access to a shared resource. In general, here is how a lock works. Before accessing a shared resource, the lock that protects that resource is acquired. When access to the resource is complete, the lock is released. If a second thread attempts to acquire the lock when it is in use by another thread, the second thread will suspend until the lock is released.
 
 In this way, conflicting access to a shared resource is prevented.
@@ -447,7 +441,7 @@ enables multiple locks to be granted for readers of a resource as long as the re
 NOTE There is a specialized lock called StampedLock. It does not implement the Lock or ReadWriteLock interfaces. It does, however, provide a mechanism
 that enables aspects of it to be used like a Lock or ReadWriteLock.
 
-Atomic Operations
+### Atomic Operations
 java.util.concurrent.atomic offers an alternative to the other synchronization features when reading or writing the value of some types of variables. This package offers methods that get, set, or compare the value of a variable in one uninterruptible (that is, atomic) operation. This means that no lock or other synchronization mechanism is required.
 Atomic operations are accomplished through the use of classes, such as AtomicInteger and AtomicLong, and methods such as get(), set(), compareAndSet( ), decrementAndGet( ), and getAndSet( ), which perform the action indicated by their names.
 
@@ -459,7 +453,7 @@ threads from writing to ai at the same time.
 In general, the atomic operations offer a convenient (and possibly more efficient) alternative to the other synchronization mechanisms when only a single variable is
 involved. Among other features, java.util.concurrent.atomic also provides four classes that support lock-free cumulative operations. These are DoubleAccumulator, DoubleAdder, LongAccumulator, and LongAdder. The accumulator classes support a series of user-specified operations. The adder classes maintain a cumulative sum.
 
-Parallel Programming via the Fork/Join Framework
+#### Parallel Programming via the Fork/Join Framework
 
 In recent years, an important trend has emerged in software development: parallel programming. Parallel programming is the name commonly given to the techniques that take advantage of computers that contain two or more processors (multicore). As most readers will know, multicore computers have become commonplace. The advantage that multi-processor environments offer is the ability to significantly increase program performance. As a result, there had been a growing need for a mechanism that gives Java programmers a simple, yet effective way to make use of multiple processors in a clean, scalable manner. To answer this need, JDK 7 added several new classes and interfaces that support parallel programming. They are commonly referred to as the Fork/Join Framework. The Fork/Join Framework is defined in the java.util.concurrent package.
 
@@ -468,19 +462,21 @@ The Fork/Join Framework enhances multithreaded programming in two important ways
 Before continuing, it is important to point out the distinction between traditional multithreading and parallel programming. In the past, most computers had a single CPU and multithreading was primarily used to take advantage of idle time, such as when a program is waiting for user input. Using this approach, one thread can execute while another is waiting. In other words, on a single-CPU system, multithreading is used to allow two or more tasks to share the CPU. This type of multithreading is typically supported by an object of type Thread (as described in Chapter 11). Although this type of multithreading will always remain quite useful, it was not optimized for situations in which two or more CPUs are available (multicore computers).
 
 When multiple CPUs are present, a second type of multithreading capability that supports true parallel execution is required. With two or more CPUs, it is possible to execute portions of a program simultaneously, with each part executing on its own CPU. This can be used to significantly speed up the execution of some types of operations, such as sorting, transforming, or searching a large array. In many cases, these types of operations can be broken down into smaller pieces (each acting on a portion of the array), and each piece can be run on its own CPU. As you can imagine, the gain in efficiency can be enormous. Simply put: Parallel programming will be part of nearly every programmer’s future because it offers a way to dramatically improve program performance.
-The Main Fork/Join Classes
+
+#### The Main Fork/Join Classes
 The Fork/Join Framework is packaged in java.util.concurrent. At the core of the Fork/Join Framework are the following four classes:
 Here is how they relate. A ForkJoinPool manages the execution of ForkJoinTasks.
 ForkJoinTask is an abstract class that is extended by the abstract classes RecursiveAction and RecursiveTask. Typically, your code will extend these classes to create a task. Before looking at the process in detail, an overview of the key aspects of each class will be helpful.
 NOTE The class CountedCompleter also extends ForkJoinTask. However, a discussion of CountedCompleter is beyond the scope of this book.
-ForkJoinTask<V>
+
+#### ForkJoinTask<V>
 ForkJoinTask<V> is an abstract class that defines a task that can be managed by a ForkJoinPool. The type parameter V specifies the result type of the task.
 ForkJoinTask differs from Thread in that ForkJoinTask represents lightweight abstraction of a task, rather than a thread of execution. ForkJoinTasks are executed
 by threads managed by a thread pool of type ForkJoinPool. This mechanism allows a large number of tasks to be managed by a small number of actual threads. Thus,
 ForkJoinTasks are very efficient when compared to threads.
 ForkJoinTask defines many methods. At the core are fork( ) and join( ), shown here:
-final ForkJoinTask<V> fork( )
-final V join( )
+- final ForkJoinTask<V> fork( )
+- final V join( )
 The fork( ) method submits the invoking task for asynchronous execution of the invoking task. This means that the thread that calls fork( ) continues to run. The
 fork( ) method returns this after the task is scheduled for execution. Prior to JDK 8, fork( ) could be executed only from within the computational portion of another
 ForkJoinTask, which is running within a ForkJoinPool. (You will see how to create the computational portion of a task shortly.) However, with the advent of JDK
@@ -488,64 +484,69 @@ ForkJoinTask, which is running within a ForkJoinPool. (You will see how to creat
 called terminates. The result of the task is returned. Thus, through the use of fork() and join( ), you can start one or more new tasks and then wait for them to finish.
 Another important ForkJoinTask method is invoke( ). It combines the fork and join operations into a single call because it begins a task and then waits for it to end.
 It is shown here:
-final V invoke()
+- final V invoke()
 The result of the invoking task is returned.
 You can invoke more than one task at a time by using invokeAll( ). Two of its forms are shown here:
-static void invokeAll(ForkJoinTask<?> taskA, ForkJoinTask<?> taskB)
-static void invokeAll(ForkJoinTask<?> … taskList)
+- static void invokeAll(ForkJoinTask<?> taskA, ForkJoinTask<?> taskB)
+- static void invokeAll(ForkJoinTask<?> … taskList)
 In the first case, taskA and taskB are executed. In the second case, all specified tasks are executed. In both cases, the calling thread waits until all of the specified tasks
 have terminated. Prior to JDK 8, the invokeAll( ) method could be executed only from within the computational portion of another ForkJoinTask, which is running within a ForkJoinPool. JDK 8’s inclusion of the common pool relaxed this requirement.
-RecursiveAction
+
+#### RecursiveAction
 A subclass of ForkJoinTask is RecursiveAction. This class encapsulates a task that does not return a result. Typically, your code will extend RecursiveAction to create a task that has a void return type. RecursiveAction specifies four methods, but only one is usually of interest: the abstract method called compute( ). When you extend RecursiveAction to create a concrete class, you will put the code that defines the task inside compute( ). The compute( ) method represents the computational portion of the task.
 The compute( ) method is defined by RecursiveAction like this:
-protected abstract void compute( )
+- protected abstract void compute( )
+
 Notice that compute( ) is protected and abstract. This means that it must be implemented by a subclass (unless that subclass is also abstract).
 In general, RecursiveAction is used to implement a recursive, divide-andconquer strategy for tasks that don’t return results. (See “The Divide-and-Conquer Strategy” later in this chapter.)
-RecursiveTask<V>
-Another subclass of ForkJoinTask is RecursiveTask<V>. This class encapsulates a task that returns a result. The result type is specified by V. Typically, your code will extend RecursiveTask<V> to create a task that returns a value. Like RecursiveAction, it too specifies four methods, but often only the abstract compute(
-) method is used, which represents the computational portion of the task. When you extend RecursiveTask<V> to create a concrete class, put the code that represents
-the task inside compute( ). This code must also return the result of the task.
+
+#### RecursiveTask<V>
+Another subclass of ForkJoinTask is RecursiveTask<V>. This class encapsulates a task that returns a result. The result type is specified by V. Typically, your code will extend RecursiveTask<V> to create a task that returns a value. Like RecursiveAction, it too specifies four methods, but often only the abstract compute() method is used, which represents the computational portion of the task. When you extend RecursiveTask<V> to create a concrete class, put the code that represents the task inside compute( ). This code must also return the result of the task.
 The compute( ) method is defined by RecursiveTask<V> like this:
-protected abstract V compute( )
+- protected abstract V compute( )
 Notice that compute( ) is protected and abstract. This means that it must be implemented by a subclass. When implemented, it must return the result of the task.
 In general, RecursiveTask is used to implement a recursive, divide-and-conquer strategy for tasks that return results. (See “The Divide-and-Conquer Strategy” later in this chapter.)
-ForkJoinPool
+
+#### ForkJoinPool
 The execution of ForkJoinTasks takes place within a ForkJoinPool, which also manages the execution of the tasks. Therefore, in order to execute a ForkJoinTask,
 you must first have a ForkJoinPool. Beginning with JDK 8, there are two ways to acquire a ForkJoinPool. First, you can explicitly create one by using a ForkJoinPool constructor. Second, you can use what is referred to as the common pool. The common pool (which was added by JDK 8) is a static ForkJoinPool that is automatically available for your use. Each method is introduced here, beginning with manually constructing a pool.
 ForkJoinPool defines several constructors. Here are two commonly used ones:
-ForkJoinPool( )
-ForkJoinPool(int pLevel)
+- ForkJoinPool( )
+- ForkJoinPool(int pLevel)
 
-The first creates a default pool that supports a level of parallelism equal to the number of processors available in the system. The second lets you specify the level of parallelism. Its value must be greater than zero and not more than the limits of the implementation. The level of parallelism determines the number of threads that can execute concurrently. As a result, the level of parallelism effectively determines the number of tasks that can be executed simultaneously. (Of course, the number of tasks that can execute simultaneously cannot exceed the number of processors.) It is important to understand that the level of parallelism does not, however, limit the number of tasks that can be managed by the pool. A ForkJoinPool can manage many more tasks than its level of parallelism. Also, the level of parallelism is only a target. It is not a guarantee.
+The first creates a default pool that supports a level of parallelism equal to the number of processors available in the system. The second lets you specify the level of parallelism. Its value must be greater than zero and not more than the limits of the implementation. The level of parallelism determines the number of threads that can execute concurrently. 
+
+As a result, the level of parallelism effectively determines the number of tasks that can be executed simultaneously. (Of course, the number of tasks that can execute simultaneously cannot exceed the number of processors.) It is important to understand that the level of parallelism does not, however, limit the number of tasks that can be managed by the pool. A ForkJoinPool can manage many more tasks than its level of parallelism. Also, the level of parallelism is only a target. It is not a guarantee.
+
 After you have created an instance of ForkJoinPool, you can start a task in a number of different ways. The first task started is often thought of as the main task.
 Frequently, the main task begins subtasks that are also managed by the pool. 
 
-One common way to begin a main task is to call invoke( ) on the ForkJoinPool. It is shown here:
-<T> T invoke(ForkJoinTask<T> task)
+One common way to begin a main task is to call invoke() on the ForkJoinPool. It is shown here:
+- <T> T invoke(ForkJoinTask<T> task)
 This method begins the task specified by task, and it returns the result of the task.
-This means that the calling code waits until invoke( ) returns.
-To start a task without waiting for its completion, you can use execute( ). 
+This means that the calling code waits until invoke() returns.
+To start a task without waiting for its completion, you can use execute(). 
 Here is one of its forms:
-void execute(ForkJoinTask<?> task)
+- void execute(ForkJoinTask<?> task)
 In this case, task is started, but the calling code does not wait for its completion.
 Rather, the calling code continues execution asynchronously.
 
-Beginning with JDK 8, it is not necessary to explicitly construct a ForkJoinPool because a common pool is available for your use. In general, if you are not using a
-pool that you explicitly created, then the common pool will automatically be used.
-Although it won’t always be necessary, you can obtain a reference to the common pool by calling commonPool( ), which is defined by ForkJoinPool. 
+Beginning with JDK 8, it is not necessary to explicitly construct a ForkJoinPool because a common pool is available for your use. In general, if you are not using a pool that you explicitly created, then the common pool will automatically be used.
+
+Although it won’t always be necessary, you can obtain a reference to the common pool by calling commonPool(), which is defined by ForkJoinPool. 
 
 It is shown here:
-static ForkJoinPool commonPool( )
+- static ForkJoinPool commonPool( )
 
 A reference to the common pool is returned. The common pool provides a default level of parallelism. It can be set by use of a system property. (See the API documentation for details.) Typically, the default common pool is a good choice for many applications. Of course, you can always construct your own pool.
 
-There are two basic ways to start a task using the common pool. First, you can obtain a reference to the pool by calling commonPool( ) and then use that reference to call invoke( ) or execute( ), as just described. Second, you can call ForkJoinTask methods such as fork( ) or invoke( ) on the task from outside its computational portion. In this case, the common pool will automatically be used. In other words, fork( ) and invoke( ) will start a task using the common pool if the task is not already running within a ForkJoinPool.
+There are two basic ways to start a task using the common pool. First, you can obtain a reference to the pool by calling commonPool() and then use that reference to call invoke( ) or execute(), as just described. Second, you can call ForkJoinTask methods such as fork() or invoke( ) on the task from outside its computational portion. In this case, the common pool will automatically be used. In other words, fork( ) and invoke() will start a task using the common pool if the task is not already running within a ForkJoinPool.
 
 ForkJoinPool manages the execution of its threads using an approach called work-stealing. Each worker thread maintains a queue of tasks. If one worker thread’s queue is empty, it will take a task from another worker thread. This adds to overall efficiency and helps maintain a balanced load. (Because of demands on CPU time by other processes in the system, even two worker threads with identical tasks in their respective queues may not complete at the same time.)
 
 One other point: ForkJoinPool uses daemon threads. A daemon thread is automatically terminated when all user threads have terminated. Thus, there is no need to explicitly shut down a ForkJoinPool. However, with the exception of the common pool, it is possible to do so by calling shutdown ). The shutdown() method has no effect on the common pool.
 
-The Divide-and-Conquer Strategy
+#### The Divide-and-Conquer Strategy
 
 As a general rule, users of the Fork/Join Framework will employ a divide-and conquer strategy that is based on recursion. This is why the two subclasses of ForkJoinTask are called RecursiveAction and RecursiveTask. It is anticipated that you will extend one of these classes when creating your own fork/join task.
 
@@ -560,7 +561,8 @@ It is also important to understand that the optimal threshold value is also affe
 However, for applications that will be running on a variety of systems, the capabilities of which are not known in advance, you can make no assumptions about the execution environment.
 
 One other point: Although multiple processors may be available on a system, other tasks (and the operating system, itself) will be competing with your application for CPU time. Thus, it is important not to assume that your program will have unrestricted access to all CPUs. Furthermore, different runs of the same program may display different run time characteristics because of varying task loads.
-A Simple First Fork/Join Example
+
+#### A Simple First Fork/Join Example
 
 At this point, a simple example that demonstrates the Fork/Join Framework and the divide-and-conquer strategy will be helpful. Following is a program that transforms the elements in an array of double into their square roots. It does so via a subclass of RecursiveAction. Notice that it creates its own ForkJoinPool.
 
@@ -569,11 +571,11 @@ As you can see, the values of the array elements have been transformed into thei
 
 Let’s look closely at how this program works. First, notice that SqrtTransform is a class that extends RecursiveAction. As explained, RecursiveAction extends ForkJoinTask for tasks that do not return results. Next, notice the final variable seqThreshold. This is the value that determines when sequential processing will take place. This value is set (somewhat arbitrarily) to 1,000. Next, notice that a reference to the array to be processed is stored in data and that the fields start and end are used to indicate the boundaries of the elements to be accessed.
 
-The main action of the program takes place in compute( ). It begins by checking if the number of elements to be processed is below the sequential processing threshold. If it is, then those elements are processed (by computing their square root in this example). If the sequential processing threshold has not been reached, then two new tasks are started by calling invokeAll( ). In this case, each subtask processes half the elements. As explained earlier, invokeAll( ) waits until both tasks return. After all of the recursive calls unwind, each element in the array will have been modified, with much of the action taking place in parallel (if multiple processors are available).
+The main action of the program takes place in compute(). It begins by checking if the number of elements to be processed is below the sequential processing threshold. If it is, then those elements are processed (by computing their square root in this example). If the sequential processing threshold has not been reached, then two new tasks are started by calling invokeAll(). In this case, each subtask processes half the elements. As explained earlier, invokeAll() waits until both tasks return. After all of the recursive calls unwind, each element in the array will have been modified, with much of the action taking place in parallel (if multiple processors are available).
 
-As mentioned, beginning with JDK 8, it is not necessary to explicitly construct a ForkJoinPool because a common pool is available for your use. Furthermore, using the common pool is a simple matter. For example, you can obtain a reference to the common pool by calling the static commonPool( ) method defined by ForkJoinPool. Therefore, the preceding program could be rewritten to use the common pool by replacing the call to the ForkJoinPool constructor with a call to commonPool( ), as shown here:
+As mentioned, beginning with JDK 8, it is not necessary to explicitly construct a ForkJoinPool because a common pool is available for your use. Furthermore, using the common pool is a simple matter. For example, you can obtain a reference to the common pool by calling the static commonPool() method defined by ForkJoinPool. Therefore, the preceding program could be rewritten to use the common pool by replacing the call to the ForkJoinPool constructor with a call to commonPool(), as shown here:
 
-Alternatively, there is no need to explicitly obtain a reference to the common pool because calling the ForkJoinTask methods invoke( ) or fork( ) on a task that is not
+Alternatively, there is no need to explicitly obtain a reference to the common pool because calling the ForkJoinTask methods invoke() or fork() on a task that is not
 already part of a pool will cause it to execute within the common pool automatically.
 For example, in the preceding program, you can eliminate the fjp variable entirely and start the task using this line:
 
@@ -583,152 +585,98 @@ Understanding the Impact of the Level of Parallelism Before moving on, it is imp
 
 In the preceding example, the default level of parallelism was used. However, you can specify the level of parallelism that you want. One way is to specify it when you
 create a ForkJoinPool using this constructor:
-ForkJoinPool(int pLevel)
+- ForkJoinPool(int pLevel)
 
 Here, pLevel specifies the level of parallelism, which must be greater than zero and less than the implementation defined limit.
 
 The following program creates a fork/join task that transforms an array of doubles. The transformation is arbitrary, but it is designed to consume several CPU cycles. This was done to ensure that the effects of changing the threshold or the level of parallelism would be more clearly displayed. To use the program, specify the threshold value and the level of parallelism on the command line. The program then runs the tasks. It also displays the amount of time it takes the tasks to run. To do this, it uses System.nanoTime( ), which returns the value of the JVM’s high-resolution timer.
 
-
-To use the program, specify the level of parallelism followed by the threshold
-limit. You should try experimenting with different values for each, observing the
-results. Remember, to be effective, you must run the code on a computer with at least
-two processors. Also, understand that two different runs may (almost certainly will)
-produce different results because of the effect of other processes in the system
-consuming CPU time.
+To use the program, specify the level of parallelism followed by the threshold limit. You should try experimenting with different values for each, observing the results. Remember, to be effective, you must run the code on a computer with at least two processors. Also, understand that two different runs may (almost certainly will) produce different results because of the effect of other processes in the system consuming CPU time.
 
 To give you an idea of the difference that parallelism makes, try this experiment.
 First, execute the program like this:
-This requests 1 level of parallelism (essentially sequential execution) with a
-threshold of 1,000. Here is a sample run produced on a dual-core computer:
+This requests 1 level of parallelism (essentially sequential execution) with a threshold of 1,000. Here is a sample run produced on a dual-core computer:
 Now, specify 2 levels of parallelism like this:
 
 Here is sample output from this run produced by the same dual-core computer:
-As is evident, adding parallelism substantially decreases execution time, thus
-increasing the speed of the program. You should experiment with varying the
+As is evident, adding parallelism substantially decreases execution time, thus increasing the speed of the program. You should experiment with varying the
 threshold and parallelism on your own computer. The results may surprise you.
-Here are two other methods that you might find useful when experimenting with
-the execution characteristics of a fork/join program. First, you can obtain the level of
-parallelism by calling getParallelism( ), which is defined by ForkJoinPool. It is
-shown here:
-int getParallelism( )
 
-It returns the parallelism level currently in effect. Recall that for pools that you
-create, by default, this value will equal the number of available processors. (To
-obtain the parallelism level for the common pool, you can also use
-getCommonPoolParallelism( ). Second, you can obtain the number of processors
-available in the system by calling availableProcessors( ), which is defined by the
-Runtime class. It is shown here:
-int availableProcessors( )
-The value returned may change from one call to the next because of other system
-demands.
+Here are two other methods that you might find useful when experimenting with the execution characteristics of a fork/join program. First, you can obtain the level of
+parallelism by calling getParallelism( ), which is defined by ForkJoinPool. It is shown here:
+- int getParallelism()
+
+It returns the parallelism level currently in effect. Recall that for pools that you create, by default, this value will equal the number of available processors. (To
+obtain the parallelism level for the common pool, you can also use getCommonPoolParallelism( ). Second, you can obtain the number of processors available in the system by calling availableProcessors(), which is defined by the Runtime class. It is shown here:
+- int availableProcessors()
+The value returned may change from one call to the next because of other system demands.
 An Example that Uses RecursiveTask<V>
 
-The two preceding examples are based on RecursiveAction, which means that they
-concurrently execute tasks that do not return results. To create a task that returns a
-result, use RecursiveTask. In general, solutions are designed in the same manner as
-just shown. The key difference is that the compute( ) method returns a result. Thus,
-you must aggregate the results, so that when the first invocation finishes, it returns
-the overall result. Another difference is that you will typically start a subtask by
-calling fork( ) and join( ) explicitly (rather than implicitly by calling invokeAll( ),
-for example).
+The two preceding examples are based on RecursiveAction, which means that they concurrently execute tasks that do not return results. To create a task that returns a result, use RecursiveTask. In general, solutions are designed in the same manner as just shown. The key difference is that the compute( ) method returns a result. Thus, you must aggregate the results, so that when the first invocation finishes, it returns the overall result. Another difference is that you will typically start a subtask by calling fork( ) and join( ) explicitly (rather than implicitly by calling invokeAll(), for example).
 
-The following program demonstrates RecursiveTask. It creates a task called Sum
-that returns the summation of the values in an array of double. In this example, the
-array consists of 5,000 elements. However, every other value is negative. Thus, the
-first values in the array are 0, –1, 2, –3, 4, and so on. (Notice that this example
-creates its own pool. You might try changing it to use the common pool as an
-exercise.)
+The following program demonstrates RecursiveTask. It creates a task called Sum that returns the summation of the values in an array of double. In this example, the array consists of 5,000 elements. However, every other value is negative. Thus, the first values in the array are 0, –1, 2, –3, 4, and so on. (Notice that this example creates its own pool. You might try changing it to use the common pool as an exercise.)
 
 Here’s the output from the program:
-There are a couple of interesting items in this program. First, notice that the two
-subtasks are executed by calling fork( ), as shown here:
+There are a couple of interesting items in this program. First, notice that the two subtasks are executed by calling fork( ), as shown here:
 In this case, fork( ) is used because it starts a task but does not wait for it to finish.
-(Thus, it asynchronously runs the task.) The result of each task is obtained by calling
-join( ), as shown here:
+(Thus, it asynchronously runs the task.) The result of each task is obtained by calling join( ), as shown here:
 
-This statement waits until each task ends. It then adds the results of each and assigns
-the total to sum. Thus, the summation of each subtask is added to the running total.
-Finally, compute( ) ends by returning sum, which will be the final total when the
-first invocation returns.
-There are other ways to approach the handling of the asynchronous execution of
-the subtasks. For example, the following sequence uses fork( ) to start subTaskA
+This statement waits until each task ends. It then adds the results of each and assigns the total to sum. Thus, the summation of each subtask is added to the running total.
+Finally, compute( ) ends by returning sum, which will be the final total when the first invocation returns.
+There are other ways to approach the handling of the asynchronous execution of the subtasks. For example, the following sequence uses fork( ) to start subTaskA
 and uses invoke( ) to start and wait for subTaskB:
 Another alternative is to have subTaskB call compute( ) directly, as shown here:
-Executing a Task Asynchronously
 
-The preceding programs have called invoke( ) on a ForkJoinPool to initiate a task.
-This approach is commonly used when the calling thread must wait until the task has
-completed (which is often the case) because invoke( ) does not return until the task
-has terminated. However, you can start a task asynchronously. In this approach, the
-calling thread continues to execute. Thus, both the calling thread and the task
-execute simultaneously. To start a task asynchronously, use execute( ), which is also
+#### Executing a Task Asynchronously
+
+The preceding programs have called invoke( ) on a ForkJoinPool to initiate a task. This approach is commonly used when the calling thread must wait until the task has
+completed (which is often the case) because invoke( ) does not return until the task has terminated. However, you can start a task asynchronously. In this approach, the
+calling thread continues to execute. Thus, both the calling thread and the task execute simultaneously. To start a task asynchronously, use execute( ), which is also
 defined by ForkJoinPool. It has the two forms shown here:
-void execute(ForkJoinTask<?> task)
-void execute(Runnable task)
+- void execute(ForkJoinTask<?> task)
+- void execute(Runnable task)
 
-In both forms, task specifies the task to run. Notice that the second form lets you
-specify a Runnable rather than a ForkJoinTask task. Thus, it forms a bridge
-between Java’s traditional approach to multithreading and the new Fork/Join
-Framework. It is important to remember that the threads used by a ForkJoinPool are
-daemon. Thus, they will end when the main thread ends. As a result, you may need
-to keep the main thread alive until the tasks have finished.
-Cancelling a Task
+In both forms, task specifies the task to run. Notice that the second form lets you specify a Runnable rather than a ForkJoinTask task. Thus, it forms a bridge
+between Java’s traditional approach to multithreading and the new Fork/Join Framework. It is important to remember that the threads used by a ForkJoinPool are
+daemon. Thus, they will end when the main thread ends. As a result, you may need to keep the main thread alive until the tasks have finished.
 
-A task can be cancelled by calling cancel( ), which is defined by ForkJoinTask. It
-has this general form:
-boolean cancel(boolean interuptOK)
+#### Cancelling a Task
 
-It returns true if the task on which it was called is cancelled. It returns false if the
-task has ended or can’t be cancelled. At this time, the interruptOK parameter is not
-used by the default implementation. In general, cancel( ) is intended to be called
-from code outside the task because a task can easily cancel itself by returning.
-You can determine if a task has been cancelled by calling isCancelled( ), as
-shown here:
-final boolean isCancelled( )
-It returns true if the invoking task has been cancelled prior to completion and false
-otherwise.
+A task can be cancelled by calling cancel( ), which is defined by ForkJoinTask. It has this general form:
+- boolean cancel(boolean interuptOK)
+
+It returns true if the task on which it was called is cancelled. It returns false if the task has ended or can’t be cancelled. At this time, the interruptOK parameter is not
+used by the default implementation. In general, cancel( ) is intended to be called from code outside the task because a task can easily cancel itself by returning.
+You can determine if a task has been cancelled by calling isCancelled( ), as shown here:
+- final boolean isCancelled( )
+It returns true if the invoking task has been cancelled prior to completion and false otherwise.
 Determining a Task’s Completion Status
 
-In addition to isCancelled( ), which was just described, ForkJoinTask includes two
-other methods that you can use to determine a task’s completion status. The first is
+In addition to isCancelled( ), which was just described, ForkJoinTask includes two other methods that you can use to determine a task’s completion status. The first is
 isCompletedNormally( ), which is shown here:
-final boolean isCompletedNormally( )
+- final boolean isCompletedNormally( )
 
-It returns true if the invoking task completed normally, that is, if it did not throw an
-exception and it was not cancelled via a call to cancel( ). It returns false otherwise.
+It returns true if the invoking task completed normally, that is, if it did not throw an exception and it was not cancelled via a call to cancel( ). It returns false otherwise.
 The second is isCompletedAbnormally( ), which is shown here:
-final boolean isCompletedAbnormally( )
+- final boolean isCompletedAbnormally( )
 
-It returns true if the invoking task completed because it was cancelled or because it
-threw an exception. It returns false otherwise.
-Restarting a Task
+It returns true if the invoking task completed because it was cancelled or because it threw an exception. It returns false otherwise.
 
-Normally, you cannot rerun a task. In other words, once a task completes, it cannot
-be restarted. However, you can reinitialize the state of the task (after it has
-completed) so it can be run again. This is done by calling reinitialize( ), as shown
-here:
-void reinitialize( )
+### Restarting a Task
 
-This method resets the state of the invoking task. However, any modification made
-to any persistent data that is operated upon by the task will not be undone. For
-example, if the task modifies an array, then those modifications are not undone by
-calling reinitialize( ).
+Normally, you cannot rerun a task. In other words, once a task completes, it cannot be restarted. However, you can reinitialize the state of the task (after it has
+completed) so it can be run again. This is done by calling reinitialize( ), as shown here:
+- void reinitialize( )
+
+This method resets the state of the invoking task. However, any modification made to any persistent data that is operated upon by the task will not be undone. For example, if the task modifies an array, then those modifications are not undone by calling reinitialize( ).
 Things to Explore
 
-The preceding discussion presented the fundamentals of the Fork/Join Framework
-and described several commonly used methods. However, Fork/Join is a rich
-framework that includes additional capabilities that give you extended control over
-concurrency. Although it is far beyond the scope of this book to examine all of the
-issues and nuances surrounding parallel programming and the Fork/Join Framework,
-a sampling of the other features are mentioned here.
-A Sampling of Other ForkJoinTask Features
+The preceding discussion presented the fundamentals of the Fork/Join Framework and described several commonly used methods. However, Fork/Join is a rich framework that includes additional capabilities that give you extended control over concurrency. Although it is far beyond the scope of this book to examine all of the issues and nuances surrounding parallel programming and the Fork/Join Framework, a sampling of the other features are mentioned here.
 
-In some cases, you will want to ensure that methods such as invokeAll( ) and fork( )
-are called only from within a ForkJoinTask. This is usually a simple matter, but
-occasionally, you may have code that can be executed from either inside or outside a
-task. You can determine if your code is executing inside a task by calling
-inForkJoinPool( ).
+#### A Sampling of Other ForkJoinTask Features
+
+In some cases, you will want to ensure that methods such as invokeAll( ) and fork() are called only from within a ForkJoinTask. This is usually a simple matter, but
+occasionally, you may have code that can be executed from either inside or outside a task. You can determine if your code is executing inside a task by calling inForkJoinPool( ).
 
 You can convert a Runnable or Callable object into a ForkJoinTask by using the adapt( ) method defined by ForkJoinTask. It has three forms, one for converting a Callable, one for a Runnable that does not return a result, and one for a Runnable that does return a result. In the case of a Callable, the call() method is run. In the case of Runnable, the run() method is run.
 
@@ -737,10 +685,10 @@ You can obtain an approximate count of the number of tasks that are in the queue
 ForkJoinTask defines the following variants of join() and invoke() that begin with the prefix quietly. They are shown here:
 In essence, these methods are similar to their non-quiet counterparts except they don’t return values or throw exceptions.
 You can attempt to “un-invoke” (in other words, unschedule) a task by calling tryUnfork().
-Several methods, such as getForkJoinTaskTag( ) and setForkJoinTaskTag(),
-support tags. Tags are short integer values that are linked with a task. They may be useful in specialized applications.
+Several methods, such as getForkJoinTaskTag( ) and setForkJoinTaskTag(), support tags. Tags are short integer values that are linked with a task. They may be useful in specialized applications.
 ForkJoinTask implements Serializable. Thus, it can be serialized. However, serialization is not used during execution.
-A Sampling of Other ForkJoinPool Features
+
+#### A Sampling of Other ForkJoinPool Features
 
 One method that is quite useful when tuning fork/join applications is ForkJoinPool’s override of toString( ). It displays a “user-friendly” synopsis of the state of the pool. To see it in action, use this sequence to start and then wait for the task in the FJExperiment class of the task experimenter program shown earlier:
 When you run the program, you will see a series of messages on the screen that describe the state of the pool. Here is an example of one. Of course, your output may
@@ -754,10 +702,11 @@ To shut down a pool, call shutdown( ). Currently active tasks will still be exec
 Here are a few tips to help you avoid some of the more troublesome pitfalls associated with using the Fork/Join Framework. First, avoid using a sequential threshold that is too low. In general, erring on the high side is better than erring on the low side. If the threshold is too low, more time can be consumed generating and switching tasks than in processing the tasks. Second, usually it is best to use the default level of parallelism. If you specify a smaller number, it may significantly reduce the benefits of using the Fork/Join Framework.
 
 In general, a ForkJoinTask should not use synchronized methods or synchronized blocks of code. Also, you will not normally want to have the compute() method use other types of synchronization, such as a semaphore. (The Phaser can, however, be used when appropriate because it is compatible with the fork/join mechanism.) Remember, the main idea behind a ForkJoinTask is the divide-andconquer strategy. Such an approach does not normally lend itself to situations in which outside synchronization is needed. Also, avoid situations in which substantial blocking will occur through I/O. Therefore, in general, a ForkJoinTask will not perform I/O. Simply put, to best utilize the Fork/Join Framework, a task should perform a computation that can run without outside blocking or synchronization.
+
 One last point: Except under unusual circumstances, do not make assumptions about the execution environment that your code will run in. This means you should not assume that some specific number of processors will be available, or that the execution characteristics of your program won’t be affected by other processes running at the same time.
 
-The Concurrency Utilities Versus Java’s
+### The Concurrency Utilities Versus Java’s
 
-Traditional Approach
+#### Traditional Approach
 Given the power and flexibility found in the concurrency utilities, it is natural to ask the following question: Do they replace Java’s traditional approach to multithreading
 and synchronization? The answer is a resounding no! The original support for multithreading and the built-in synchronization features are still the mechanism that should be employed for many, many Java programs. For example, synchronized, wait( ), and notify( ) offer elegant solutions to a wide range of problems. However, when extra control is needed, the concurrency utilities are available to handle the chore. Furthermore, the Fork/Join Framework offers a powerful way to integrate parallel programming techniques into your more sophisticated applications.
