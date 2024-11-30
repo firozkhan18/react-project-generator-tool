@@ -114,6 +114,7 @@ limit is reached and true if the countdown reaches zero.
 
 To signal an event, call the **`countDown()`** method, shown next:
 - void countDown()
+
 Each call to **`countDown() decrements the count associated with the invoking object.
 The following program demonstrates CountDownLatch. It creates a latch that requires five events to occur before it opens.
 
@@ -179,6 +180,7 @@ To begin, it helps to know that a Phaser works a bit like a CyclicBarrier, descr
 Phaser defines four constructors. Here are the two used in this section:
 - Phaser()
 - Phaser(int numParties)
+
 The first creates a phaser that has a registration count of zero. The second sets the registration count to numParties. The term party is often applied to the objects that register with a phaser. Although typically there is a one-to-correspondence between the number of registrants and the number of threads being synchronized, this is not required. In both cases, the current phase is zero. That is, when a Phaser is created, it is initially at phase zero.
 
 In general, here is how you use Phaser. First, create a new instance of Phaser.
@@ -187,13 +189,15 @@ Next, register one or more parties with the phaser, either by calling **`registe
 
 To register parties after a Phaser has been constructed, call register(). It is shown here:
 - int register()
+
 It returns the phase number of the phase to which it is registered.
 
 To signal that a party has completed a phase, it must call **`arrive()`** or some variation of **`arrive()`**. When the number of arrivals equals the number of registered parties, the phase is completed and the Phaser moves on to the next phase (if there is one). The arrive() method has this general form:
 
 - int arrive()
 
-This method signals that a party (normally a thread of execution) has completed some task (or portion of a task). It returns the current phase number. If the phaser has been terminated, then it returns a negative value. The **`arrive( ) method does not suspend execution of the calling thread. This means that it does not wait for the phase to be completed. This method should be called only by a registered party.
+This method signals that a party (normally a thread of execution) has completed some task (or portion of a task). It returns the current phase number. If the phaser has been terminated, then it returns a negative value. 
+The **`arrive()`** method does not suspend execution of the calling thread. This means that it does not wait for the phase to be completed. This method should be called only by a registered party.
 
 If you want to indicate the completion of a phase and then wait until all other registrants have also completed that phase, use **`arriveAndAwaitAdvance()`**. It is shown here:
 - int arriveAndAwaitAdvance()
@@ -236,7 +240,7 @@ One reason to override **`onAdvance()`** is to enable a phaser to execute a spec
 The MyPhaser constructor accepts one argument, which specifies the number of phases to execute. Notice that MyPhaser automatically registers one party. This behavior is useful in this example, but the needs of your own applications may differ.
 
 The output from the program is shown here:
-Inside **`main(), one instance of Phaser is created. It is passed 4 as an argument, which means that it will execute four phases and then stop. Next, three threads are
+Inside **`main()`**, one instance of Phaser is created. It is passed 4 as an argument, which means that it will execute four phases and then stop. Next, three threads are
 created and then the following loop is entered:
 
 This loop simply calls **`arriveAndAwaitAdvance()`** until the phaser is terminated.
@@ -275,7 +279,9 @@ Also defined is the interface ScheduledExecutorService, which extends ExecutorSe
 
 The concurrent API defines three predefined executor classes:
 ThreadPoolExecutor and ScheduledThreadPoolExecutor, and ForkJoinPool.
+
 ThreadPoolExecutor implements the Executor and ExecutorService interfaces and provides support for a managed pool of threads.
+
 ScheduledThreadPoolExecutor also implements the ScheduledExecutorService interface to allow a pool of threads to be scheduled. ForkJoinPool implements the Executor and ExecutorService interfaces and is used by the Fork/Join Framework.
 
 It is described later in this chapter.
@@ -285,6 +291,7 @@ Instead of each task using its own thread, the threads in the pool are used. Thi
 - static ExecutorService newCachedThreadPool( )
 - static ExecutorService newFixedThreadPool(int numThreads)
 - static ScheduledExecutorService newScheduledThreadPool(int numThreads)
+
 newCachedThreadPool() creates a thread pool that adds threads as needed but reuses threads if possible. newFixedThreadPool() creates a thread pool that consists of a specified number of threads. newScheduledThreadPool( ) creates a thread pool that supports thread scheduling. Each returns a reference to an ExecutorService that can be used to manage the pool.
 
 ### A Simple Executor Example
@@ -484,6 +491,7 @@ This means that the calling code waits until invoke() returns.
 To start a task without waiting for its completion, you can use execute(). 
 Here is one of its forms:
 - void execute(ForkJoinTask<?> task)
+
 In this case, task is started, but the calling code does not wait for its completion.
 Rather, the calling code continues execution asynchronously.
 
