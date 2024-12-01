@@ -1123,6 +1123,211 @@ Here, phase indicates the phase number on which awaitAdvance() will wait until a
 To register more than one party, call **`bulkRegister()`**. To obtain the number of registered parties, call getRegisteredParties(). You can also obtain the number of arrived parties and unarrived parties by calling **`getArrivedParties()`** and **`getUnarrivedParties()`**, respectively. To force the phaser to enter a terminated state, call **`forceTermination().
 
 Phaser also lets you create a tree of phasers. This is supported by two additional constructors, which let you specify the parent, and the **`getParent()`** method.
+
+---
+
+### Understanding the `Phaser` in Java
+
+The `Phaser` class is a synchronization tool that allows for more flexible thread synchronization across multiple phases. It’s used to manage a sequence of phases where multiple threads must synchronize at the end of each phase. The `Phaser` can be used to implement scenarios like order processing or multi-step computations where threads must coordinate at different stages of a process.
+
+### Key Concepts of `Phaser`
+1. **Phases**: A `Phaser` is organized into phases. Threads wait until all registered parties (threads) have completed the current phase before moving on to the next.
+2. **Parties**: The threads or tasks that are synchronized by the `Phaser` are called "parties".
+3. **Methods**:
+   - **`register()`**: Registers a new party with the `Phaser`. This can also be done through the constructor.
+   - **`arrive()`**: A thread calls this to signal that it has completed its task in the current phase.
+   - **`arriveAndAwaitAdvance()`**: A thread calls this to signal completion of its task and wait until all other threads complete the current phase.
+   - **`arriveAndDeregister()`**: This method signals the end of the phase and also deregisters the thread from the phaser, so it will no longer participate in future phases.
+   - **`getPhase()`**: Returns the current phase number.
+   - **`onAdvance()`**: A callback method that can be overridden to define custom behavior when a phase transitions (e.g., to terminate after a certain number of phases).
+   - **`forceTermination()`**: Forces the `Phaser` to enter a terminated state, causing it to stop any further phase transitions.
+
+### Example: Order Processing with Multiple Phases
+
+Imagine an order processing system with three phases:
+1. **Phase 1**: Validate customer information.
+2. **Phase 2**: Compute shipping costs and tax.
+3. **Phase 3**: Confirm payment and estimate shipping time.
+
+Each phase requires multiple threads to complete their tasks, and at the end of each phase, the threads need to synchronize before moving to the next phase.
+
+### Code Example Using `Phaser`
+
+Here’s an example that simulates the behavior of the `Phaser` with multiple threads involved in processing different phases:
+
+```java
+import java.util.concurrent.*;
+
+class MyThread implements Runnable {
+    private Phaser phaser;
+
+    public MyThread(Phaser phaser) {
+        this.phaser = phaser;
+        phaser.register();  // Register this thread as a party in the phaser
+    }
+
+    @Override
+    public void run() {
+        try {
+            // Phase 1: Validate customer information
+            System.out.println(Thread.currentThread().getName() + " is validating customer info.");
+            Thread.sleep(1000);  // Simulate task
+            phaser.arriveAndAwaitAdvance();  // Wait for others to finish phase 1
+
+            // Phase 2: Compute shipping costs and tax
+            System.out.println(Thread.currentThread().getName() + " is computing shipping costs.");
+            Thread.sleep(1000);  // Simulate task
+            phaser.arriveAndAwaitAdvance();  // Wait for others to finish phase 2
+
+            // Phase 3: Confirm payment and estimate shipping time
+            System.out.println(Thread.currentThread().getName() + " is confirming payment.");
+            Thread.sleep(1000);  // Simulate task
+            phaser.arriveAndAwaitAdvance();  // Wait for others to finish phase 3
+
+            phaser.arriveAndDeregister();  // Deregister this thread from the phaser
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+public class PhaserExample {
+    public static void main(String[] args) {
+        // Create a phaser with 1 registered party (main thread)
+        Phaser phaser = new Phaser(1);
+
+        // Create and start three threads, passing them the phaser
+        Thread t1 = new Thread(new MyThread(phaser), "Thread-1");
+        Thread t2 = new Thread(new MyThread(phaser), "Thread-2");
+        Thread t3 = new Thread(new MyThread(phaser), "Thread-3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        // Main thread (also a party in the phaser) executes its own tasks and waits for others
+        for (int i = 0; i < 3; i++) {
+            // Main thread is also involved in each phase
+            System.out.println("Main thread is performing phase " + (i + 1));
+            phaser.arriveAndAwaitAdvance();  // Wait for threads to complete each phase
+        }
+
+        // After all phases, terminate the phaser
+        phaser.forceTermination();
+        System.out.println("All phases completed, phaser terminated.");
+    }
+}
+```
+
+### Breakdown of the Code:
+1. **`MyThread` Class**:
+   - Each thread is a "party" in the `Phaser`.
+   - The thread performs tasks in three phases, waiting for all parties to complete each phase using `arriveAndAwaitAdvance()`.
+   - After the third phase, it calls `arriveAndDeregister()` to deregister itself.
+
+2. **`PhaserExample` Class**:
+   - The main method creates a `Phaser` and registers itself as the first party.
+   - It then starts three threads (`t1`, `t2`, `t3`), each of which is registered with the phaser and synchronized through the phases.
+   - The main thread also participates in all three phases.
+   - After all threads complete their tasks, the phaser is forcefully terminated using `forceTermination()`.
+
+### Output (Sample):
+```
+Main thread is performing phase 1
+Thread-1 is validating customer info.
+Thread-2 is validating customer info.
+Thread-3 is validating customer info.
+Main thread is performing phase 2
+Thread-1 is computing shipping costs.
+Thread-2 is computing shipping costs.
+Thread-3 is computing shipping costs.
+Main thread is performing phase 3
+Thread-1 is confirming payment.
+Thread-2 is confirming payment.
+Thread-3 is confirming payment.
+All phases completed, phaser terminated.
+```
+
+### Key Concepts:
+- **Multiple Phases**: The `Phaser` is designed for synchronizing tasks that occur in multiple phases. Each thread waits until all parties (including the main thread) have completed the current phase before proceeding to the next.
+- **`arriveAndAwaitAdvance()`**: This method blocks a thread until all registered parties have completed the current phase.
+- **`arriveAndDeregister()`**: Once a thread completes all phases, it can deregister from the `Phaser` to signal that it’s finished with the process.
+
+### Customizing Phase Transitions:
+You can override the `onAdvance()` method to define what should happen when a phase transition occurs. For example, you might want to terminate the `Phaser` after a certain number of phases, or implement custom logic for each phase.
+
+Here’s an example of overriding `onAdvance()`:
+
+```java
+class MyPhaser extends Phaser {
+    private int maxPhases;
+
+    public MyPhaser(int maxPhases) {
+        this.maxPhases = maxPhases;
+    }
+
+    @Override
+    protected boolean onAdvance(int phase, int numParties) {
+        if (phase >= maxPhases) {
+            return true;  // Terminate after reaching the maximum number of phases
+        }
+        return false;  // Continue to the next phase
+    }
+}
+```
+
+### Visualizing Phaser with Mermaid Diagram:
+
+Here’s a **Mermaid Sequence Diagram** that demonstrates how the threads synchronize in the Phaser process.
+
+```mermaid
+sequenceDiagram
+    participant M as Main Thread
+    participant T1 as Thread-1
+    participant T2 as Thread-2
+    participant T3 as Thread-3
+    participant P as Phaser
+
+    M->>P: Register (Phase 0)
+    T1->>P: Register (Phase 0)
+    T2->>P: Register (Phase 0)
+    T3->>P: Register (Phase 0)
+
+    M->>P: arriveAndAwaitAdvance() // Wait for Phase 1
+    T1->>P: arriveAndAwaitAdvance()
+    T2->>P: arriveAndAwaitAdvance()
+    T3->>P: arriveAndAwaitAdvance()
+
+    P->>P: Phase 1 Complete
+    M->>P: arriveAndAwaitAdvance() // Move to Phase 2
+    T1->>P: arriveAndAwaitAdvance()
+    T2->>P: arriveAndAwaitAdvance()
+    T3->>P: arriveAndAwaitAdvance()
+
+    P->>P: Phase 2 Complete
+    M->>P: arriveAndAwaitAdvance() // Move to Phase 3
+    T1->>P: arriveAndAwaitAdvance()
+    T2->>P: arriveAndAwaitAdvance()
+    T3->>P: arriveAndAwaitAdvance()
+
+    P->>P: Phase 3 Complete
+    M->>P: forceTermination() // Terminate Phaser
+    T1->>P: arriveAndDeregister()
+    T2->>P: arriveAndDeregister()
+    T3->>P: arriveAndDeregister()
+```
+
+This diagram illustrates the flow of phases with all parties synchronizing at each step. The threads (`T1`, `T2`, `T3`) and the `Main` thread are all synchronized using the `Phaser` at the end of each phase, and after all phases, the phaser is terminated.
+
+###
+
+ Summary:
+- **Phaser** provides a sophisticated mechanism for managing complex multi-phase synchronization scenarios.
+- It is more flexible than a `CyclicBarrier`, as it allows you to synchronize multiple phases and manage the number of parties dynamically.
+- You can customize the behavior of the phaser using the `onAdvance()` method to control when the phases should stop.
+
+---
+
 Using an Executor The concurrent API supplies a feature called an executor that initiates and controls the execution of threads. As such, an executor offers an alternative to managing threads through the Thread class.
 
 At the core of an executor is the Executor interface. It defines the following method:
