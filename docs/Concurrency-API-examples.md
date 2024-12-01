@@ -64,16 +64,21 @@ Here, num specifies the initial permit count. Thus, num specifies the number of 
 
 To acquire a permit, call the **`acquire()`** method, which has these two forms:
 - void acquire() throws InterruptedException
+    - The first form acquires one permit from the semaphore. 
+    - If a permit is available the thread aquires its and continue execution.
+    - If no permit is available the thread will block until a perimt become available.
+  
 - void acquire(int num) throws InterruptedException
-
-The first form acquires one permit. The second form acquires num permits. Most often, the first form is used. If the permit cannot be granted at the time of the call,
-then the invoking thread suspends until the permit is available.
+    - The second form acquires a specified number of permits from the semaphore. Most often, the first form is used.
+    - The thread will block until the requested number of perimts become available. 
+    - If the requested number of perimts is greater than the available permits, the thread will wait until enough permits are available.
+    - If the permit cannot be granted at the time of the call, then the invoking thread suspends until the permit is available.
 
 To release a permit, call **`release()`**, which has these two forms:
 - void release()
 - void release(int num)
-
-The first form releases one permit. The second form releases the number of permits specified by num.
+    - The first form releases one permit. 
+    - The second form releases the number of permits specified by num.
 
 To use a semaphore to control access to a resource, each thread that wants to use that resource must first call **`acquire()`** before accessing the resource. When the thread is done with the resource, it must call **`release()`**. 
 
