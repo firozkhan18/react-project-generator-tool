@@ -516,6 +516,154 @@ resume.
 
 CountDownLatch is a powerful yet easy-to-use synchronization object that is appropriate whenever a thread must wait for one or more events to occur.
 
+---
+The `CountDownLatch` is a useful synchronization aid in Java that allows one or more threads to wait for a set of events to occur before proceeding. It is especially helpful in situations where you want to wait for multiple tasks to complete before allowing further processing in the main thread or another part of your application.
+
+### Explanation of CountDownLatch
+
+- **Constructor**: 
+   - `CountDownLatch(int num)` — This constructor creates a `CountDownLatch` with a count of `num`, which specifies how many events need to occur before the latch opens.
+   
+- **Methods**:
+  - `void await() throws InterruptedException` — This method causes the calling thread to wait until the count of the latch reaches zero. If the latch is already at zero, the thread continues immediately.
+  - `boolean await(long wait, TimeUnit tu) throws InterruptedException` — This version of `await()` waits for the latch to reach zero or the specified time to elapse. If the latch opens before the timeout, it returns `true`; otherwise, it returns `false`.
+  - `void countDown()` — This method is called to signal that one event has occurred. Each call to `countDown()` decrements the latch's count by one.
+
+When the count reaches zero, all waiting threads are released.
+
+### Java Example Using CountDownLatch
+
+The following example demonstrates the use of `CountDownLatch` to synchronize threads. The main thread waits for 5 events (simulated by the worker thread), after which the latch opens and the main thread proceeds.
+
+#### Code Example
+
+```java
+import java.util.concurrent.CountDownLatch;
+
+class MyThread extends Thread {
+    private CountDownLatch latch;
+
+    public MyThread(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                // Simulate some work by the thread
+                System.out.println("Thread working: " + (i + 1));
+                Thread.sleep(1000); // Simulating time taken for each event
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            latch.countDown(); // Signal that one event has occurred
+        }
+    }
+}
+
+public class CountDownLatchExample {
+    public static void main(String[] args) {
+        // Create a CountDownLatch with a count of 5
+        CountDownLatch cdl = new CountDownLatch(5);
+
+        // Start the worker thread
+        MyThread worker = new MyThread(cdl);
+        worker.start();
+
+        try {
+            // Main thread waits until the latch's count reaches 0
+            System.out.println("Main thread is waiting for the latch to open...");
+            cdl.await(); // The main thread waits here until the latch count reaches 0
+            System.out.println("Main thread resumed, latch is open!");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+
+### How It Works:
+1. **Main Thread (`CountDownLatchExample`)**:
+   - A `CountDownLatch` (`cdl`) is created with an initial count of `5`, meaning it needs five events (calls to `countDown()`) before it opens.
+   - The main thread calls `cdl.await()`, which makes it wait until the latch count reaches zero.
+
+2. **Worker Thread (`MyThread`)**:
+   - This thread simulates some work (for example, by calling `Thread.sleep(1000)` to simulate delays).
+   - After each iteration, the worker thread calls `latch.countDown()`, decrementing the count of the latch.
+   - After five iterations, the latch count becomes zero, and the main thread can resume.
+
+3. **Synchronization**:
+   - The main thread will not continue until all five events have been signaled by `countDown()` calls in the worker thread. Only when the latch count reaches zero will the main thread resume execution and print "Main thread resumed, latch is open!".
+
+### Output Example
+
+```
+Main thread is waiting for the latch to open...
+Thread working: 1
+Thread working: 2
+Thread working: 3
+Thread working: 4
+Thread working: 5
+Main thread resumed, latch is open!
+```
+
+### Key Points:
+- **`await()`**: The main thread will block here and wait until the latch count is decremented to zero by the worker thread.
+- **`countDown()`**: The worker thread calls `countDown()` five times to signal that it has completed a part of its work.
+- The main thread only resumes after all five events are signaled by the worker thread.
+- **Thread Coordination**: This mechanism ensures that the main thread synchronizes with the completion of events in the worker thread.
+
+### Example With TimeOut
+
+You can also use the timed version of `await()`, which allows the main thread to wait for a specified amount of time before either resuming (if the latch count reaches zero) or continuing due to the timeout.
+
+```java
+cdl.await(2, TimeUnit.SECONDS); // Wait for a maximum of 2 seconds
+```
+
+This would wait up to 2 seconds for the latch count to reach zero. If the latch doesn’t reach zero within that time, the method will return `false` and the main thread will continue.
+
+### Use Cases for CountDownLatch:
+- **Parallel Task Completion**: Waiting for multiple threads to finish their work before proceeding with the next task (like in map-reduce frameworks).
+- **Testing**: Waiting for all parts of a test to be set up before starting the test.
+- **Event-driven Synchronization**: Waiting for one or more events to occur in concurrent applications (e.g., waiting for responses from multiple external services).
+
+### Summary:
+The `CountDownLatch` is a powerful synchronization mechanism that enables a thread to wait for multiple events to occur before continuing. It’s simple to use, and the decrementing mechanism ensures threads are coordinated effectively.
+
+---
+Here is the flow of the `CountDownLatch` in the example.
+
+```mermaid
+graph TD
+    A[Start] --> B[Main thread creates CountDownLatch (5)]
+    B --> C[Main thread calls await()]
+    C --> D[Worker thread starts]
+    D --> E[Worker thread performs work (loops 5 times)]
+    E --> F[Worker thread calls countDown()]
+    F --> G[Main thread waits for latch count to reach 0]
+    G --> H{Latch count == 0?}
+    H -- Yes --> I[Main thread resumes]
+    H -- No --> F
+    I --> J[Main thread prints "Latch is open!"]
+    J --> K[End]
+```
+
+### Explanation of the Diagram:
+
+1. **Start**: The program starts.
+2. **Main thread creates `CountDownLatch`**: The main thread creates a `CountDownLatch` with a count of 5.
+3. **Main thread calls `await()`**: The main thread calls `await()`, which causes it to wait until the latch count reaches zero.
+4. **Worker thread starts**: The worker thread starts and begins its work (looping 5 times).
+5. **Worker thread performs work**: Each iteration of the loop simulates some work being done by the worker thread.
+6. **Worker thread calls `countDown()`**: After completing each iteration, the worker thread calls `countDown()` to decrement the latch count.
+7. **Main thread waits**: The main thread is blocked at the `await()` call, waiting for the latch count to reach 0.
+8. **Latch count check**: The main thread checks if the latch count has reached 0. If not, it continues waiting for the worker thread to call `countDown()`.
+9. **Main thread resumes**: Once the latch count reaches 0, the main thread is unblocked and resumes execution.
+10. **Main thread prints**: The main thread prints "Latch is open!" to indicate that it has resumed after the latch count reached zero.
+11. **End**: The program ends.
+
 ### CyclicBarrier
 A situation not uncommon in concurrent programming occurs when a set of two or more threads must wait at a predetermined execution point until all threads in the set have reached that point. To handle such a situation, the concurrent API supplies the CyclicBarrier class. It enables you to define a synchronization object that suspends until the specified number of threads has reached the barrier point.
 - CyclicBarrier has the following two constructors:
