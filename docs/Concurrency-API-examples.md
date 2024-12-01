@@ -637,10 +637,10 @@ Here is the flow of the `CountDownLatch` in the example.
 
 ```mermaid
 graph TD
-    A[Start] --> B[Main thread creates CountDownLatch (5)]
-    B --> C[Main thread calls await()]
+    A[Start] --> B[Main thread creates CountDownLatch - 5]
+    B --> C[Main thread calls await]
     C --> D[Worker thread starts]
-    D --> E[Worker thread performs work (loops 5 times)]
+    D --> E[Worker thread performs work - loops 5 times]
     E --> F[Worker thread calls countDown()]
     F --> G[Main thread waits for latch count to reach 0]
     G --> H{Latch count == 0?}
