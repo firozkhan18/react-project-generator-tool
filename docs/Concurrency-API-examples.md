@@ -75,14 +75,157 @@ To release a permit, call **`release()`**, which has these two forms:
 
 The first form releases one permit. The second form releases the number of permits specified by num.
 
-To use a semaphore to control access to a resource, each thread that wants to use that resource must first call **`acquire()`** before accessing the resource. When the thread is done with the resource, it must call **`release()`**. Here is an example that illustrates the use of a semaphore:
+To use a semaphore to control access to a resource, each thread that wants to use that resource must first call **`acquire()`** before accessing the resource. When the thread is done with the resource, it must call **`release()`**. 
 
+Here is an example that illustrates the use of a semaphore:
+
+A semaphore is used to control access to a shared resource (in this case, `Shared.count`) in a multithreaded environment. The program uses a semaphore to ensure that only one thread (either `IncThread` or `DecThread`) can access and modify the `count` variable at a time. This prevents simultaneous access to `Shared.count`, ensuring thread safety. 
+
+Let’s break down the example and provide the code, followed by an explanation of how it works, as well as a Mermaid diagram to visualize the process.
+
+### Java Code Example
+
+Here's an implementation based on your description using a semaphore to synchronize access to a shared variable (`Shared.count`).
+
+#### Java Code with Semaphore Example
+
+```java
+import java.util.concurrent.Semaphore;
+
+class Shared {
+    static int count = 0; // Shared resource
+}
+
+class IncThread extends Thread {
+    private Semaphore semaphore;
+
+    public IncThread(Semaphore semaphore) {
+        this.semaphore = semaphore;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                semaphore.acquire(); // Acquire a permit to access Shared.count
+                Shared.count++; // Increment the shared count
+                System.out.println(Thread.currentThread().getName() + " increments count: " + Shared.count);
+                Thread.sleep(500); // Simulate time taken to increment
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                semaphore.release(); // Release the permit
+            }
+        }
+    }
+}
+
+class DecThread extends Thread {
+    private Semaphore semaphore;
+
+    public DecThread(Semaphore semaphore) {
+        this.semaphore = semaphore;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                semaphore.acquire(); // Acquire a permit to access Shared.count
+                Shared.count--; // Decrement the shared count
+                System.out.println(Thread.currentThread().getName() + " decrements count: " + Shared.count);
+                Thread.sleep(500); // Simulate time taken to decrement
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                semaphore.release(); // Release the permit
+            }
+        }
+    }
+}
+
+public class SemaphoreExample {
+    public static void main(String[] args) {
+        Semaphore semaphore = new Semaphore(1); // Only 1 permit available, ensuring mutual exclusion
+        Thread incThread = new IncThread(semaphore);
+        Thread decThread = new DecThread(semaphore);
+
+        incThread.start();
+        decThread.start();
+    }
+}
+```
+
+### Explanation of the Code:
+1. **Shared Class**: 
+   - It contains the static variable `count` which is accessed and modified by both threads (`IncThread` and `DecThread`).
+   
+2. **Semaphore**:
+   - A `Semaphore` is used to control access to `Shared.count`. It is initialized with a single permit (`new Semaphore(1)`), meaning that only one thread can access `Shared.count` at a time.
+
+3. **IncThread**:
+   - This thread increments the value of `Shared.count` five times. It first acquires the semaphore (`semaphore.acquire()`) before accessing `Shared.count`. After incrementing, it releases the semaphore (`semaphore.release()`).
+   - A `Thread.sleep(500)` is used to simulate a delay in processing.
+
+4. **DecThread**:
+   - Similar to `IncThread`, this thread decrements the value of `Shared.count` five times while respecting the semaphore, ensuring it only modifies `count` when it holds the permit.
+
+5. **Mutual Exclusion**:
+   - The semaphore ensures that only one thread can increment or decrement `Shared.count` at a time, even though both threads are running concurrently. The threads alternate based on the availability of the semaphore.
+
+### Output
+
+The output might look something like this (though the exact order of execution can vary due to the nature of multithreading):
 The output from the program is shown here. (The precise order in which the threads execute may vary.)
+
+```
+Thread-0 increments count: 1
+Thread-1 decrements count: 0
+Thread-0 increments count: 1
+Thread-1 decrements count: 0
+Thread-0 increments count: 1
+Thread-1 decrements count: 0
+Thread-0 increments count: 1
+Thread-1 decrements count: 0
+Thread-0 increments count: 1
+Thread-1 decrements count: 0
+```
+
+- **Important Notes**:
+  - The output will show that each thread (either `IncThread` or `DecThread`) completes its full series of operations before the other thread is allowed to access `Shared.count`.
+  - Without the semaphore, the two threads would interleave, and you could observe incorrect values of `Shared.count` (such as incrementing and decrementing happening simultaneously).
+
+### Mermaid Diagram
+
+Here’s a **Mermaid** diagram to illustrate how the semaphore controls the access to `Shared.count`.
+
+```mermaid
+graph TD;
+    A[Start] --> B{Acquire Semaphore?}
+    B -- Yes --> C[Increment or Decrement count]
+    C --> D[Release Semaphore]
+    D --> B
+    B -- No --> E[Wait for Semaphore]
+    E --> B
+    D --> F[End]
+```
+
+### Explanation of the Mermaid Diagram:
+- **Start**: The program begins, and the threads are ready to run.
+- **Acquire Semaphore?**: The thread checks whether it can acquire the semaphore. If the semaphore is available (permit is free), the thread proceeds.
+  - **Yes**: The thread accesses and modifies `Shared.count` (either increment or decrement).
+  - **No**: If the semaphore is not available, the thread waits (blocks) until it can acquire the permit.
+- **Release Semaphore**: After modifying `Shared.count`, the thread releases the semaphore, making the permit available for other threads.
+- **End**: The process ends when both threads finish their respective tasks.
+
+### Conclusion
+
+This example demonstrates the use of a semaphore to ensure mutual exclusion in a multithreaded Java application. The semaphore prevents both threads from accessing `Shared.count` at the same time, ensuring thread safety and the correct sequencing of operations. The use of `sleep()` within each thread proves that access to `Shared.count` is synchronized — only one thread at a time can modify the shared resource.
 
 The program uses a semaphore to control access to the count variable, which is a static variable within the Shared class. Shared.count is incremented five times by the run() method of IncThread and decremented five times by DecThread. To prevent these two threads from accessing Shared.count at the same time, access is allowed only after a permit is acquired from the controlling semaphore. After access is complete, the permit is released. In this way, only one thread at a time will access Shared.count, as the output shows.
 
 In both IncThread and DecThread, notice the call to sleep() within run(). It is used to “prove” that accesses to Shared.count are synchronized by the semaphore.
-In run()`**, the call to sleep() causes the invoking thread to pause between each access to Shared.count. This would normally enable the second thread to run.
+In **`run()`**, the call to sleep() causes the invoking thread to pause between each access to Shared.count. This would normally enable the second thread to run.
 
 However, because of the semaphore, the second thread must wait until the first has released the permit, which happens only after all accesses by the first thread are complete. Thus, Shared.count is incremented five times by IncThread and decremented five times by DecThread. The increments and decrements are not intermixed.
 
@@ -96,6 +239,249 @@ As you can see, the calls to **`put()`** and **`get()`** are synchronized. That 
 The sequencing of **`put()`** and **`get()`** calls is handled by two semaphores: semProd and semCon. Before **`put()`** can produce a value, it must acquire a permit from semProd. After it has set the value, it releases semCon. Before **`get()`** can consume a value, it must acquire a permit from semCon. After it consumes the value, it releases semProd. This “give and take” mechanism ensures that each call to **`put()`** must be followed by a call to get().
 
 Notice that semCon is initialized with no available permits. This ensures that put() executes first. The ability to set the initial synchronization state is one of the more powerful aspects of a semaphore.
+
+In this case, we are reworking the **Producer-Consumer** problem using two semaphores to synchronize the `put()` and `get()` methods. The main idea is to ensure that each `put()` operation is followed by a corresponding `get()` operation, with no `put()`s occurring without a matching `get()`.
+
+### Explanation of Semaphores
+- **`semProd`**: Controls the producer thread (how many items are available to produce). It's initialized to 1, allowing the producer to run when it needs to produce.
+- **`semCon`**: Controls the consumer thread (ensures that there is at least one item to consume). It’s initialized to 0, meaning the consumer is initially blocked and the producer must produce something first.
+
+The synchronization is achieved by having the **producer** acquire a permit from `semProd` before producing an item, and the **consumer** acquire a permit from `semCon` before consuming an item. After the producer produces an item, it releases `semCon` so the consumer can proceed, and after the consumer consumes an item, it releases `semProd` to allow the producer to produce again.
+
+Here’s the Java implementation of this problem:
+
+### Java Code Example (Producer-Consumer using Semaphores)
+
+```java
+import java.util.concurrent.Semaphore;
+
+class SharedBuffer {
+    static int item = -1; // Shared resource between producer and consumer
+}
+
+class Producer extends Thread {
+    private Semaphore semProd;
+    private Semaphore semCon;
+
+    public Producer(Semaphore semProd, Semaphore semCon) {
+        this.semProd = semProd;
+        this.semCon = semCon;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                semProd.acquire();  // Ensure producer runs first, control synchronization
+                SharedBuffer.item = i; // Produce the item (for simplicity, just storing an integer)
+                System.out.println("Produced: " + SharedBuffer.item);
+                semCon.release();  // Allow the consumer to consume the item
+                Thread.sleep(1000); // Simulate time taken to produce
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+
+class Consumer extends Thread {
+    private Semaphore semProd;
+    private Semaphore semCon;
+
+    public Consumer(Semaphore semProd, Semaphore semCon) {
+        this.semProd = semProd;
+        this.semCon = semCon;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                semCon.acquire();  // Ensure consumer can only run after producer
+                System.out.println("Consumed: " + SharedBuffer.item);
+                semProd.release();  // Allow the producer to produce the next item
+                Thread.sleep(1000); // Simulate time taken to consume
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+
+public class ProducerConsumerWithSemaphores {
+    public static void main(String[] args) {
+        Semaphore semProd = new Semaphore(1); // Semaphore for producer (initially 1)
+        Semaphore semCon = new Semaphore(0); // Semaphore for consumer (initially 0, to block consumer initially)
+
+        // Create and start producer and consumer threads
+        Thread producer = new Producer(semProd, semCon);
+        Thread consumer = new Consumer(semProd, semCon);
+
+        producer.start();
+        consumer.start();
+    }
+}
+```
+
+### Key Concepts and Steps in the Code:
+1. **Shared Resource**:
+   - `SharedBuffer` contains a static variable `item` which represents the item being produced and consumed.
+   
+2. **Producer Thread**:
+   - The producer acquires a permit from `semProd` before producing an item. This ensures that the producer operates when necessary.
+   - Once the producer has produced an item, it releases a permit for `semCon`, allowing the consumer to consume the item.
+   
+3. **Consumer Thread**:
+   - The consumer acquires a permit from `semCon` before consuming an item. This ensures that the consumer waits until there’s an item to consume.
+   - After consuming the item, the consumer releases a permit for `semProd`, allowing the producer to produce the next item.
+   
+4. **Initialization of Semaphores**:
+   - `semProd` is initialized with 1, indicating that the producer can initially produce.
+   - `semCon` is initialized with 0, ensuring the consumer waits for the producer to produce the first item.
+
+### Output Example
+
+The output might look like this:
+
+```
+Produced: 0
+Consumed: 0
+Produced: 1
+Consumed: 1
+Produced: 2
+Consumed: 2
+Produced: 3
+Consumed: 3
+Produced: 4
+Consumed: 4
+```
+
+- The output confirms that each `put()` (production) is followed by a corresponding `get()` (consumption) with no values skipped or interleaved.
+- The `Produced: x` and `Consumed: x` messages show the synchronization in action. The consumer waits for the producer to finish producing before consuming.
+
+### Mermaid Diagram to Visualize the Producer-Consumer Workflow
+
+Here’s a **Mermaid** diagram that visualizes the flow of the producer and consumer threads using semaphores:
+
+```mermaid
+graph TD;
+    A[Start] --> B[Producer Starts]
+    B --> C{Acquire semProd?}
+    C -- Yes --> D[Produce Item]
+    D --> E[Release semCon]
+    E --> C
+    C -- No --> F[Consumer Waits]
+    F --> G[Consumer Starts]
+    G --> H{Acquire semCon?}
+    H -- Yes --> I[Consume Item]
+    I --> J[Release semProd]
+    J --> H
+    H -- No --> B[Producer Continues]
+    I --> B[End]
+```
+
+### Diagram Explanation:
+- **Producer**: 
+  - The producer waits until it acquires a permit from `semProd`, then produces an item, releases `semCon` (to signal the consumer), and repeats.
+- **Consumer**: 
+  - The consumer waits until it acquires a permit from `semCon`, then consumes the item, releases `semProd` (to allow the producer to produce), and repeats.
+
+### Conclusion:
+In this producer-consumer problem, semaphores are used to ensure synchronization between the `put()` and `get()` operations. By using two semaphores (`semProd` and `semCon`), we ensure that each `put()` operation is followed by a corresponding `get()`. This avoids the potential for missed values or interleaving operations that could occur in an unsynchronized environment.
+
+In Java, you can use the `Semaphore` class from the `java.util.concurrent` package to manage access to shared resources. Below is a simple example of how you can implement a semaphore in Java and how to visualize the process using a Mermaid diagram.
+
+### Java Example with Semaphore
+
+Here is a simple Java program that uses a `Semaphore` to control access to a shared resource with a maximum of 3 available permits (resources).
+
+#### Java Code Example
+```java
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreExample {
+
+    // Create a semaphore with 3 permits (resources)
+    private static final Semaphore semaphore = new Semaphore(3);
+
+    public static void main(String[] args) {
+        // Create and start 5 threads
+        for (int i = 0; i < 5; i++) {
+            Thread thread = new Thread(new Task("Thread-" + (i + 1)));
+            thread.start();
+        }
+    }
+
+    // Task to simulate resource access
+    static class Task implements Runnable {
+        private String threadName;
+
+        public Task(String threadName) {
+            this.threadName = threadName;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // Thread tries to acquire a permit (resource)
+                System.out.println(threadName + " is waiting to access the resource.");
+                semaphore.acquire();
+                System.out.println(threadName + " has acquired the resource.");
+
+                // Simulate work with the resource
+                Thread.sleep(2000); // Simulating resource access time
+
+                // Release the permit (resource)
+                System.out.println(threadName + " has released the resource.");
+                semaphore.release();
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}
+```
+
+### Explanation of the Java Code:
+1. **Semaphore Initialization**: 
+   - `Semaphore semaphore = new Semaphore(3);` initializes the semaphore with 3 permits, meaning only 3 threads can access the resource simultaneously.
+2. **Thread Creation**: 
+   - The `main` method creates 5 threads (`Thread-1` to `Thread-5`) that each run the `Task` class.
+3. **Acquire the Semaphore**: 
+   - Each thread calls `semaphore.acquire()` to request access to the resource. If all 3 permits are taken, any additional threads will block until a permit is released.
+4. **Simulate Work**: 
+   - After acquiring the permit, each thread simulates accessing the resource by sleeping for 2 seconds.
+5. **Release the Semaphore**: 
+   - Once done, each thread calls `semaphore.release()` to return the permit and allow other threads to acquire it.
+
+### Mermaid Diagram Representation
+
+Here is a **Mermaid** diagram that illustrates the flow of the semaphore mechanism in Java. It shows how threads request and release resources based on the semaphore count.
+
+```mermaid
+graph TD;
+    A[Start] --> B{Semaphore Count = 3?}
+    B -- Yes --> C[Acquire Resource]
+    B -- No --> D[Wait (Blocked)]
+    C --> E[Simulate Work (2 seconds)]
+    E --> F[Release Resource]
+    F --> B
+    D --> C
+    F --> G[End]
+```
+
+### Diagram Explanation:
+- **Start**: The program starts, and multiple threads are created.
+- **Semaphore Count = 3?**: Check whether there are any available permits.
+  - **Yes**: If the semaphore has available permits, the thread acquires the resource.
+  - **No**: If the semaphore count is 0, the thread is blocked (waits) until a permit becomes available.
+- **Simulate Work**: After acquiring the resource, the thread simulates some work (in this case, sleeping for 2 seconds).
+- **Release Resource**: After completing its work, the thread releases the permit, making it available for other threads.
+- **End**: The process ends when all threads finish executing.
+
+### Conclusion:
+This Java example and the accompanying Mermaid diagram show how a semaphore can be used to manage access to a resource in a concurrent program, ensuring that only a limited number of threads can access the resource at any given time.
 
 ### CountDownLatch
 Sometimes you will want a thread to wait until one or more events have occurred. To handle such a situation, the concurrent API supplies CountDownLatch. A CountDownLatch is initially created with a count of the number of events that must occur before the latch is released. Each time an event happens, the count is decremented. When the count reaches zero, the latch opens.
