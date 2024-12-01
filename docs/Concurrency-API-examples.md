@@ -912,22 +912,22 @@ Here, V specifies the type of the data being exchanged.
 
 The only method defined by Exchanger is exchange( ), which has the two forms shown here:
 
-    - V exchange(V objRef) throws InterruptedException
+- V exchange(V objRef) throws InterruptedException
 
-        Here, objRef is a reference to the data to exchange. The data received from the other thread is returned.
+    Here, objRef is a reference to the data to exchange. The data received from the other thread is returned.
 
-        - It causes the current thread to block until the prtner thread arrives at the exchange point.
-        - Once both threads have arrives, they exchange their data, and the method returns the object provided by the partner thread.
-        - If the partner thread is not ready to exchange, the current thread blocked until the partner arrives.
+    - It causes the current thread to block until the prtner thread arrives at the exchange point.
+    - Once both threads have arrives, they exchange their data, and the method returns the object provided by the partner thread.
+    - If the partner thread is not ready to exchange, the current thread blocked until the partner arrives.
 
-    - V exchange(V objRef, long wait, TimeUnit tu) throws InterruptedException, TimeoutException
-  
-        - The second form of **`exchange()`** allows a time-out period to be specified.
-        - The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, **`exchange()`** synchronizes the exchange of the data.
-        - This method allows for a specified time-out period for the exchange opertion.
-        - It causes the current thread to block until the prtner thread arrives at the exchange point or until the specified timeout elapse.
-        - The objRef parameter specifieds the object to be exchanged and the timeout parameter specifies the maximum time the thread should wait.
-        - The tu parameter specifieds the TimeUnit for the timeout.
+- V exchange(V objRef, long wait, TimeUnit tu) throws InterruptedException, TimeoutException
+
+    - The second form of **`exchange()`** allows a time-out period to be specified.
+    - The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, **`exchange()`** synchronizes the exchange of the data.
+    - This method allows for a specified time-out period for the exchange opertion.
+    - It causes the current thread to block until the prtner thread arrives at the exchange point or until the specified timeout elapse.
+    - The objRef parameter specifieds the object to be exchanged and the timeout parameter specifies the maximum time the thread should wait.
+    - The tu parameter specifieds the TimeUnit for the timeout.
       
 Here is an example that demonstrates Exchanger. It creates two threads. One thread creates an empty buffer that will receive the data put into it by the second thread. In this case, the data is a string. Thus, the first thread exchanges an empty string for a full one. Here is the output produced by the program:
 
@@ -1386,12 +1386,52 @@ sequenceDiagram
 
 This diagram illustrates the flow of phases with all parties synchronizing at each step. The threads (`T1`, `T2`, `T3`) and the `Main` thread are all synchronized using the `Phaser` at the end of each phase, and after all phases, the phaser is terminated.
 
-###
-
- Summary:
+### Summary:
 - **Phaser** provides a sophisticated mechanism for managing complex multi-phase synchronization scenarios.
 - It is more flexible than a `CyclicBarrier`, as it allows you to synchronize multiple phases and manage the number of parties dynamically.
 - You can customize the behavior of the phaser using the `onAdvance()` method to control when the phases should stop.
+
+Here’s a detailed comparison of `CountDownLatch`, `CyclicBarrier`, and `Phaser` in a tabular format, highlighting their key features and differences:
+
+| **Feature**                        | **CountDownLatch**                              | **CyclicBarrier**                             | **Phaser**                                    |
+|------------------------------------|------------------------------------------------|----------------------------------------------|-----------------------------------------------|
+| **Purpose**                        | Used to block threads until a specific number of events occur (countdown reaches zero). | Used to synchronize a set of threads at a common barrier point. | Used to synchronize threads across multiple phases of execution. |
+| **Use Case**                       | One-time synchronization for waiting for other threads to complete. | Repeated synchronization, typically for multiple rounds or phases. | Multi-phase synchronization (e.g., different phases of a task that require coordination). |
+| **Reusability**                    | **Non-reusable**: Once the count reaches zero, it cannot be reused. | **Reusable**: Barrier can be reused for multiple cycles. | **Reusable**: Phaser can be reused across multiple phases. |
+| **Constructor**                    | `CountDownLatch(int count)`                    | `CyclicBarrier(int parties)`                  | `Phaser()` or `Phaser(int numParties)`        |
+| **Count/Parties**                  | A specified number of events (threads) to wait for. | Number of threads (parties) that must reach the barrier before proceeding. | Number of registered parties (threads). Can be dynamically adjusted. |
+| **Wait Method**                    | `await()` — blocks the thread until the count reaches zero. | `await()` — blocks the thread until all parties arrive at the barrier. | `arrive()`, `arriveAndAwaitAdvance()`, `awaitAdvance()`, etc. |
+| **Action After Countdown/Barrier** | No action can be executed after countdown. | Can trigger a specific action after the barrier is released. | Can execute actions at each phase transition, and `onAdvance()` method allows customizing phase behavior. |
+| **Behavior After Countdown**       | Once the countdown reaches zero, all waiting threads are released and the latch is no longer useful. | Once all parties reach the barrier, they are released and the barrier can be reused for the next cycle. | Once all parties finish a phase, the phase transitions to the next, and the phaser can be reused. |
+| **Phase Synchronization**          | No phases. Simply waits for a countdown to reach zero. | Supports synchronization of threads at specific points, often used in multiple phases. | Explicit support for multiple phases. Threads synchronize at each phase of execution. |
+| **Main Use Case**                  | Use when you need to wait for a set of threads to finish their work before proceeding (e.g., waiting for multiple workers to complete their tasks). | Use when you need threads to wait for each other at a common point and then continue (e.g., coordinating multiple rounds of parallel work). | Use when you have multiple phases of computation or tasks that require synchronization at each stage (e.g., order processing across multiple phases). |
+| **Behavior on Thread Arrival**     | Thread arrives and waits for countdown to reach zero. | Thread arrives and waits for all threads to reach the barrier. | Thread arrives and signals completion of a phase, waits for all threads to finish the current phase. |
+| **Interruptions**                  | Can be interrupted while waiting with `await()`. | Can be interrupted during `await()`. | Can be interrupted during phase waiting. |
+| **Exception Handling**             | Throws `InterruptedException` if the thread is interrupted while waiting. | Throws `InterruptedException` if the thread is interrupted while waiting. | Throws `InterruptedException`, `BrokenBarrierException`, or `TimeoutException` depending on method used. |
+| **Custom Phase Handling**          | No support for custom phase handling. | No support for custom phase handling. | Supports custom phase handling via `onAdvance()` to define when to stop or modify phase transitions. |
+| **Deregistering Parties**          | Not applicable. Once the latch count reaches zero, it’s done. | Not applicable. Threads that arrive at the barrier are just released. | Can deregister a party using `arriveAndDeregister()` to remove a thread from the phaser. |
+| **Example Use Case**               | Waiting for all tasks to complete before proceeding, e.g., waiting for all workers to finish. | Synchronizing multiple threads at specific points, e.g., parallel computation phases. | Synchronizing threads across multiple stages of a complex task, e.g., order processing with multiple validation, calculation, and confirmation steps. |
+| **Termination**                    | No explicit termination. Once count reaches zero, latch is no longer useful. | No explicit termination. Barrier can be reused unless terminated. | Can terminate after a specific number of phases by returning `true` in `onAdvance()` or using `forceTermination()`. |
+
+### Summary of Key Differences:
+1. **Reusability:**
+   - `CountDownLatch`: **Not reusable**—once the count reaches zero, it cannot be reused.
+   - `CyclicBarrier`: **Reusable**—you can reuse it for multiple cycles after each barrier release.
+   - `Phaser`: **Reusable**—you can synchronize threads across multiple phases, and dynamically register or deregister threads.
+
+2. **Phase Synchronization:**
+   - `CountDownLatch`: No support for phases. Simply waits for a countdown to reach zero.
+   - `CyclicBarrier`: Synchronizes threads at a single barrier point but can be used for multiple rounds of synchronization.
+   - `Phaser`: Explicit support for multiple phases of synchronization with custom phase transitions.
+
+3. **Custom Phase Handling:**
+   - `CountDownLatch` and `CyclicBarrier` don't offer direct support for custom behavior after synchronization (except CyclicBarrier’s optional action).
+   - `Phaser` allows for full control over phase transitions with the `onAdvance()` method.
+
+### When to Use Each:
+- **`CountDownLatch`**: Use when you need to wait for a fixed number of events or threads to complete before proceeding.
+- **`CyclicBarrier`**: Use when you need to synchronize threads at the same point multiple times (e.g., in rounds of work).
+- **`Phaser`**: Use for complex synchronization scenarios that involve multiple phases, with dynamic registration of threads and the ability to customize phase behavior.
 
 ---
 
