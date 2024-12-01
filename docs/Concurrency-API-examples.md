@@ -488,6 +488,8 @@ graph TD;
 ### Conclusion:
 This Java example and the accompanying Mermaid diagram show how a semaphore can be used to manage access to a resource in a concurrent program, ensuring that only a limited number of threads can access the resource at any given time.
 
+---
+
 ### CountDownLatch
 Sometimes you will want a thread to wait until one or more events have occurred. To handle such a situation, the concurrent API supplies CountDownLatch. A CountDownLatch is initially created with a count of the number of events that must occur before the latch is released. Each time an event happens, the count is decremented. When the count reaches zero, the latch opens.
 
@@ -667,6 +669,8 @@ graph TD
 9. **Main thread resumes**: Once the latch count reaches 0, the main thread is unblocked and resumes execution.
 10. **Main thread prints**: The main thread prints "Latch is open!" to indicate that it has resumed after the latch count reached zero.
 11. **End**: The program ends.
+
+---
 
 ### CyclicBarrier
 
@@ -1088,7 +1092,10 @@ sequenceDiagram
 - Once synchronized, the `Exchanger` facilitates the exchange of the filled string between the threads.
 - After the exchange, both threads can use the exchanged data.
 
+---
+
 ### Phaser
+
 Another synchronization class is called Phaser. Its primary purpose is to enable the synchronization of threads that represent one or more phases of activity. For example, you might have a set of threads that implement three phases of an order processing application. In the first phase, separate threads are used to validate customer information, check inventory, and confirm pricing. When that phase is complete, the second phase has two threads that compute shipping costs and all applicable tax. After that, a final phase confirms payment and determines estimated shipping time. In the past, to synchronize the multiple threads that comprise this scenario would require a bit of work on your part. With the inclusion of Phaser, the process is now much easier.
 
 To begin, it helps to know that a Phaser works a bit like a CyclicBarrier, described earlier, except that it supports multiple phases. As a result, Phaser lets you define a synchronization object that waits until a specific phase has completed. It then advances to the next phase, again waiting until that phase concludes. It is important to understand that Phaser can also be used to synchronize only a single phase. In this regard, it acts much like a CyclicBarrier. However, its primary use is to synchronize multiple phases.
@@ -1385,6 +1392,8 @@ This diagram illustrates the flow of phases with all parties synchronizing at ea
 
 ---
 
+### Executor
+
 Using an Executor The concurrent API supplies a feature called an executor that initiates and controls the execution of threads. As such, an executor offers an alternative to managing threads through the Thread class.
 
 At the core of an executor is the Executor interface. It defines the following method:
@@ -1396,10 +1405,11 @@ The ExecutorService interface extends Executor by adding methods that help manag
 - void shutdown()
 
 ExecutorService also defines methods that execute threads that return results, that execute a set of threads, and that determine the shutdown status. We will look at several of these methods a little later.
+
 Also defined is the interface ScheduledExecutorService, which extends ExecutorService to support the scheduling of threads.
 
 The concurrent API defines three predefined executor classes:
-ThreadPoolExecutor and ScheduledThreadPoolExecutor, and ForkJoinPool.
+**ThreadPoolExecutor** and **ScheduledThreadPoolExecutor**, and **ForkJoinPool**.
 
 ThreadPoolExecutor implements the Executor and ExecutorService interfaces and provides support for a managed pool of threads.
 
@@ -1458,7 +1468,7 @@ The following program illustrates Callable and Future by creating three tasks th
 
 The output is shown here:
 
-The TimeUnit Enumeration
+#### The TimeUnit Enumeration
 The concurrent API defines several methods that take an argument of type TimeUnit, which indicates a time-out period. TimeUnit is an enumeration that is used to specify the granularity (or resolution) of the timing. TimeUnit is defined within java.util.concurrent. It can be one of the following values:
 - DAYS
 - HOURS
