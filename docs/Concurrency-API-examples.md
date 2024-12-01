@@ -463,8 +463,8 @@ Here is a **Mermaid** diagram that illustrates the flow of the semaphore mechani
 graph TD;
     A[Start] --> B{Semaphore Count = 3?}
     B -- Yes --> C[Acquire Resource]
-    B -- No --> D[Wait (Blocked)]
-    C --> E[Simulate Work (2 seconds)]
+    B -- No --> D[Wait - Blocked]
+    C --> E[Simulate Work - 2 seconds]
     E --> F[Release Resource]
     F --> B
     D --> C
