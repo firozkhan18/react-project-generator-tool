@@ -889,19 +889,32 @@ Here’s a comparison between `CountDownLatch` and `CyclicBarrier` in tabular fo
 ### When to Use Each:
 - **Use `CountDownLatch`** when you need to wait for a specific number of events to occur before proceeding, and you don't need to reuse the synchronization mechanism (e.g., waiting for several threads to finish their tasks).
 - **Use `CyclicBarrier`** when you need to coordinate a set of threads that need to synchronize at multiple points during execution (e.g., multiple rounds of parallel processing).
-  
+
+---
+
 ### Exchanger
-Perhaps the most interesting of the synchronization classes is Exchanger. It is designed to simplify the exchange of data between two threads. The operation of an Exchanger is astoundingly simple: it simply waits until two separate threads call its **`exchange()`** method. When that occurs, it exchanges the data supplied by the threads. This mechanism is both elegant and easy to use. Uses for Exchanger are easy to imagine. For example, one thread might prepare a buffer for receiving information over a network connection. Another thread might fill that buffer with the information from the connection. The two threads work together so that each time a new buffer is needed, an exchange is made.
+
+Perhaps the most interesting of the synchronization classes is Exchanger. It is designed to simplify the exchange of data between two threads. 
+
+The operation of an Exchanger is astoundingly simple: it simply waits until two separate threads call its **`exchange()`** method. When that occurs, it exchanges the data supplied by the threads. This mechanism is both elegant and easy to use. Uses for Exchanger are easy to imagine. 
+
+For example, one thread might prepare a buffer for receiving information over a network connection. Another thread might fill that buffer with the information from the connection. The two threads work together so that each time a new buffer is needed, an exchange is made.
+
 Exchanger is a generic class that is declared as shown here:
 
 - Exchanger<V>
-Here, V specifies the type of the data being exchanged.
-The only method defined by Exchanger is exchange( ), which has the two forms
-shown here:
-- V exchange(V objRef) throws InterruptedException
-- V exchange(V objRef, long wait, TimeUnit tu) throws InterruptedException, TimeoutException
+    - Here, V specifies the type of the data being exchanged.
+The only method defined by Exchanger is exchange( ), which has the two forms shown here:
 
-Here, objRef is a reference to the data to exchange. The data received from the other thread is returned. The second form of **`exchange()`** allows a time-out period to be specified. The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, **`exchange()`** synchronizes the exchange of the data.
+- V exchange(V objRef) throws InterruptedException
+Here, objRef is a reference to the data to exchange. The data received from the other thread is returned. 
+    - It causes the current thread to block until the prtner thread arrives at the exchange point.
+    - Once both threads have arrives, they exchange their data, and the method returns the object provided by the partner thread.
+    - If the partner thread is not ready to exchange, the current thread blocked until the partner arrives.
+
+- V exchange(V objRef, long wait, TimeUnit tu) throws InterruptedException, TimeoutException
+    - The second form of **`exchange()`** allows a time-out period to be specified.
+    - The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, **`exchange()`** synchronizes the exchange of the data.
 
 Here is an example that demonstrates Exchanger. It creates two threads. One thread creates an empty buffer that will receive the data put into it by the second thread. In this case, the data is a string. Thus, the first thread exchanges an empty string for a full one. Here is the output produced by the program:
 
@@ -909,7 +922,7 @@ In the program, the **`main()`** method creates an Exchanger for strings. This o
 
 ---
 
-The `Exchanger` class in Java provides a straightforward way to synchronize two threads by allowing them to exchange data. Both threads involved must call the `exchange()` method on the same `Exchanger` object. The method does not return until both threads have called it, at which point the data is exchanged between them.
+The **`Exchanger`** class in Java provides a straightforward way to synchronize two threads by allowing them to exchange data. Both threads involved must call the **`exchange()`** method on the same **`Exchanger`** object. The method does not return until both threads have called it, at which point the data is exchanged between them.
 
 ### Key Concepts of `Exchanger`
 1. **Generics**: `Exchanger` is a generic class, meaning you can specify the type of data exchanged. For example, `Exchanger<String>` will exchange `String` objects.
