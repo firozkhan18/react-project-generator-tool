@@ -641,7 +641,7 @@ graph TD
     B --> C[Main thread calls await]
     C --> D[Worker thread starts]
     D --> E[Worker thread performs work - loops 5 times]
-    E --> F[Worker thread calls countDown()]
+    E --> F[Worker thread calls countDown]
     F --> G[Main thread waits for latch count to reach 0]
     G --> H{Latch count == 0?}
     H -- Yes --> I[Main thread resumes]
