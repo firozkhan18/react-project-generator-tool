@@ -907,6 +907,7 @@ Exchanger is a generic class that is declared as shown here:
 The only method defined by Exchanger is exchange( ), which has the two forms shown here:
 
 - V exchange(V objRef) throws InterruptedException
+
 Here, objRef is a reference to the data to exchange. The data received from the other thread is returned. 
     - It causes the current thread to block until the prtner thread arrives at the exchange point.
     - Once both threads have arrives, they exchange their data, and the method returns the object provided by the partner thread.
@@ -915,7 +916,12 @@ Here, objRef is a reference to the data to exchange. The data received from the 
 - V exchange(V objRef, long wait, TimeUnit tu) throws InterruptedException, TimeoutException
     - The second form of **`exchange()`** allows a time-out period to be specified.
     - The key point about exchange() is that it won’t succeed until it has been called on the same Exchanger object by two separate threads. Thus, **`exchange()`** synchronizes the exchange of the data.
-
+    
+    - This method allows for a specified time-out period for the exchange opertion.
+    - It causes the current thread to block until the prtner thread arrives at the exchange point or until the specified timeout elapse.
+    - The objRef parameter specifieds the object to be exchanged and the timeout parameter specifies the maximum time the thread should wait.
+    - The tu parameter specifieds the TimeUnit for the timeout.
+      
 Here is an example that demonstrates Exchanger. It creates two threads. One thread creates an empty buffer that will receive the data put into it by the second thread. In this case, the data is a string. Thus, the first thread exchanges an empty string for a full one. Here is the output produced by the program:
 
 In the program, the **`main()`** method creates an Exchanger for strings. This object is then used to synchronize the exchange of strings between the MakeString and UseString classes. The MakeString class fills a string with data. The UseString exchanges an empty string for a full one. It then displays the contents of the newly constructed string. The exchange of empty and full buffers is synchronized by the **`exchange()`** method, which is called by both classes’ **`run()`** method.
