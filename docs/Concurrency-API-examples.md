@@ -646,7 +646,7 @@ graph TD
     G --> H{Latch count == 0?}
     H -- Yes --> I[Main thread resumes]
     H -- No --> F
-    I --> J[Main thread prints "Latch is open!"]
+    I --> J[Main thread prints - Latch is open!]
     J --> K[End]
 ```
 
