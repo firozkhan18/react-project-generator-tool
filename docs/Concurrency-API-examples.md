@@ -495,22 +495,21 @@ CountDownLatch has the following constructor:
 - CountDownLatch(int num)
 
 Here, num specifies the number of events that must occur in order for the latch to open.
+
 To wait on the latch, a thread calls await(), which has the forms shown here:
 - void await( ) throws InterruptedException
-- boolean await(long wait, TimeUnit tu) throws InterruptedException
+      - The first form waits until the count associated with the invoking CountDownLatch reaches zero. If the count is already zero, the method returns immidietely.
 
-The first form waits until the count associated with the invoking CountDownLatch reaches zero. The second form waits only for the period of time specified by wait.
-The units represented by wait are specified by tu, which is an object the TimeUnit enumeration. (TimeUnit is described later in this chapter.) It returns false if the time
-limit is reached and true if the countdown reaches zero.
+- boolean await(long wait, TimeUnit tu) throws InterruptedException
+    - The second form waits only for the period of time specified by wait.
+    - The units represented by wait are specified by tu, which is an object the **`TimeUnit`** enumeration. It returns `false` if the time limit is reached and `true` if the countdown reaches zero.
 
 To signal an event, call the **`countDown()`** method, shown next:
 - void countDown()
-
-Each call to **`countDown() decrements the count associated with the invoking object.
-The following program demonstrates CountDownLatch. It creates a latch that requires five events to occur before it opens.
-
-The output produced by the program is shown here:
-
+    - Each call to **`countDown()`** decrements the count associated with the invoking object.
+    - It is used to decrement the count of the latch by 1.
+    - If the count becomes zero (meaning all tasks are completed) all waiting threads are released.
+  
 Inside **`main()`**, a CountDownLatch called cdl is created with an initial count of five. Next, an instance of MyThread is created, which begins execution of a new
 thread. Notice that cdl is passed as a parameter to MyThread’s constructor and stored in the latch instance variable. Then, the main thread calls **`await()`** on cdl, which causes execution of the main thread to pause until cdl’s count has been decremented five times.
 
@@ -670,12 +669,17 @@ graph TD
 11. **End**: The program ends.
 
 ### CyclicBarrier
-A situation not uncommon in concurrent programming occurs when a set of two or more threads must wait at a predetermined execution point until all threads in the set have reached that point. To handle such a situation, the concurrent API supplies the CyclicBarrier class. It enables you to define a synchronization object that suspends until the specified number of threads has reached the barrier point.
-- CyclicBarrier has the following two constructors:
-- CyclicBarrier(int numThreads)
-- CyclicBarrier(int numThreads, Runnable action)
 
-Here, numThreads specifies the number of threads that must reach the barrier before execution continues. In the second form, action specifies a thread that will be executed when the barrier is reached.
+A situation not uncommon in concurrent programming occurs when a set of two or more threads must wait at a predetermined execution point until all threads in the set have reached that point. To handle such a situation, the concurrent API supplies the CyclicBarrier class. It enables you to define a synchronization object that suspends until the specified number of threads has reached the barrier point.
+
+**Enables a group of threads to wait at a predefined execution point.**
+
+- CyclicBarrier has the following two constructors:
+    - CyclicBarrier(int numThreads)
+    - CyclicBarrier(int numThreads, Runnable action)
+
+        - Here, numThreads specifies the number of threads that must reach the barrier before execution continues. 
+        - In the second form, action specifies a thread that will be executed when the barrier is reached.
 
 Here is the general procedure that you will follow to use CyclicBarrier. First, create a CyclicBarrier object, specifying the number of threads that you will be waiting for. Next, when each thread reaches the barrier, have it call **`await()`** on that object. This will pause execution of the thread until all of the other threads also call **`await()`**. Once the specified number of threads has reached the barrier, await()`** will return and execution will resume. Also, if you have specified an action, then that thread is executed.
 
@@ -683,16 +687,11 @@ The await() method has the following two forms:
 - int await() throws InterruptedException, BrokenBarrierException
 - int await(long wait, TimeUnit tu) throws InterruptedException, BrokenBarrierException, TimeoutException
 
-The first form waits until all the threads have reached the barrier point. The second form waits only for the period of time specified by wait. The units represented by wait are specified by tu. Both forms return a value that indicates the order that the threads arrive at the barrier point. The first thread returns a value equal to the number of threads waited upon minus one. The last thread returns zero.
+    - The first form waits until all the threads have reached the barrier point. 
+    - The second form waits only for the period of time specified by wait. The units represented by wait are specified by tu.
+    - Both forms return a value that indicates the order that the threads arrive at the barrier point. The first thread returns a value equal to the number of threads waited upon minus one. The last thread returns zero.
 
-Here is an example that illustrates CyclicBarrier. It waits until a set of three threads has reached the barrier. When that occurs, the thread specified by BarAction
-executes.
-
-The output is shown here. (The precise order in which the threads execute may vary.)
-A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls **`await()`**. For example, if you change **`main()`** in the preceding program so that it looks like this:
-
-the following output will be produced. (The precise order in which the threads execute may vary.)
-As the preceding example shows, the CyclicBarrier offers a streamlined solution to what was previously a complicated problem.
+A CyclicBarrier can be reused because it will release waiting threads each time the specified number of threads calls **`await()`**. 
 
 ---
 
@@ -857,6 +856,40 @@ sequenceDiagram
 - After the action completes, all threads cross the barrier and continue execution.
 - The barrier is reset and ready for reuse for the next round of synchronization if needed.
 
+---
+
+Here’s a comparison between `CountDownLatch` and `CyclicBarrier` in tabular form to highlight the key differences and use cases:
+
+| **Feature**                        | **CountDownLatch**                              | **CyclicBarrier**                             |
+|------------------------------------|------------------------------------------------|----------------------------------------------|
+| **Purpose**                        | Used to make threads wait until a certain count reaches zero. | Used to synchronize threads at a common barrier point for each phase. |
+| **Use Case**                       | One-time synchronization for waiting for other threads to complete tasks. | Repeated synchronization of threads at a barrier, typically for multiple phases. |
+| **Behavior**                       | Blocks threads until the latch count reaches zero. Once counted down, it cannot be reused. | Blocks threads at a specified barrier point. After a barrier is released, it can be reused. |
+| **Reusability**                    | **Non-reusable**: Once the count reaches zero, it cannot be reset or reused. | **Reusable**: The barrier can be reused for multiple phases or cycles. |
+| **Constructor**                    | `CountDownLatch(int count)`                    | `CyclicBarrier(int parties)`                  |
+| **Count/Parties**                  | Number of threads to wait for (specified during construction). | Number of parties (threads) that must arrive at the barrier before it is released. |
+| **Wait Method**                    | `await()` — threads wait until the latch count reaches zero. | `await()` — threads wait until all parties arrive at the barrier. |
+| **Action After Countdown/Barrier** | No action can be triggered directly after countdown. | Can execute a barrier action after the barrier is released. |
+| **Behavior After Countdown**       | After the count reaches zero, all waiting threads are released. No further interaction is possible with the latch. | Once the barrier is broken (all threads arrive), threads are released, and the barrier can be reused. |
+| **Main Use Case**                  | One-time event completion synchronization (e.g., waiting for workers to complete before proceeding). | Multi-phase synchronization (e.g., parallel computation where threads need to sync at multiple points). |
+| **Interruptions**                  | Can be interrupted while waiting with `await()`. | Can also be interrupted during the `await()` phase. |
+| **Exception Handling**             | Throws `InterruptedException` if the thread is interrupted while waiting. | Throws `InterruptedException` if the thread is interrupted while waiting. |
+| **Example Use Case**               | Waiting for all threads to finish processing before moving on (e.g., after all database operations complete). | Performing parallel computations across threads that need to synchronize at multiple phases (e.g., in a parallel algorithm with multiple stages). |
+
+### Key Differences in Behavior:
+
+1. **One-time vs. Reusable**:  
+   - **`CountDownLatch`** is for one-time synchronization. Once the count reaches zero, the latch cannot be reused.
+   - **`CyclicBarrier`** is reusable and is typically used for multiple synchronization phases, with the barrier being reset after each phase.
+
+2. **Phase-Specific Synchronization**:
+   - **`CountDownLatch`** simply waits until a specified number of threads have finished their work, and it doesn’t deal with multiple phases.
+   - **`CyclicBarrier`** allows for multiple phases of synchronization. Each time all threads reach the barrier, they are released and can move on to the next phase.
+
+### When to Use Each:
+- **Use `CountDownLatch`** when you need to wait for a specific number of events to occur before proceeding, and you don't need to reuse the synchronization mechanism (e.g., waiting for several threads to finish their tasks).
+- **Use `CyclicBarrier`** when you need to coordinate a set of threads that need to synchronize at multiple points during execution (e.g., multiple rounds of parallel processing).
+  
 ### Exchanger
 Perhaps the most interesting of the synchronization classes is Exchanger. It is designed to simplify the exchange of data between two threads. The operation of an Exchanger is astoundingly simple: it simply waits until two separate threads call its **`exchange()`** method. When that occurs, it exchanges the data supplied by the threads. This mechanism is both elegant and easy to use. Uses for Exchanger are easy to imagine. For example, one thread might prepare a buffer for receiving information over a network connection. Another thread might fill that buffer with the information from the connection. The two threads work together so that each time a new buffer is needed, an exchange is made.
 Exchanger is a generic class that is declared as shown here:
