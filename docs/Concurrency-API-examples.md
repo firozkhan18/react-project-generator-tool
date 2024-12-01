@@ -65,7 +65,7 @@ Here, num specifies the initial permit count. Thus, num specifies the number of 
 To acquire a permit, call the **`acquire()`** method, which has these two forms:
 - void acquire() throws InterruptedException
     - The first form acquires one permit from the semaphore. 
-    - If a permit is available the thread aquires its and continue execution.
+    - If a permit is available the thread aquires it and continue execution.
     - If no permit is available the thread will block until a perimt become available.
   
 - void acquire(int num) throws InterruptedException
