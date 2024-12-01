@@ -863,15 +863,15 @@ Here’s a comparison between `CountDownLatch` and `CyclicBarrier` in tabular fo
 | **Feature**                        | **CountDownLatch**                              | **CyclicBarrier**                             |
 |------------------------------------|------------------------------------------------|----------------------------------------------|
 | **Purpose**                        | Used to make threads wait until a certain count reaches zero. | Used to synchronize threads at a common barrier point for each phase. |
-| [**Use Case**]()                       | One-time synchronization for waiting for other threads to complete tasks. | Repeated synchronization of threads at a barrier, typically for multiple phases. |
+| [**Use Case**]                       | One-time synchronization for waiting for other threads to complete tasks. | Repeated synchronization of threads at a barrier, typically for multiple phases. |
 | **Behavior**                       | Blocks threads until the latch count reaches zero. Once counted down, it cannot be reused. | Blocks threads at a specified barrier point. After a barrier is released, it can be reused. |
-| [**Reusability**]()                    | **Non-reusable**: Once the count reaches zero, it cannot be reset or reused. | **Reusable**: The barrier can be reused for multiple phases or cycles. |
+| [**Reusability**]                   | **Non-reusable**: Once the count reaches zero, it cannot be reset or reused. | **Reusable**: The barrier can be reused for multiple phases or cycles. |
 | **Constructor**                    | `CountDownLatch(int count)`                    | `CyclicBarrier(int parties)`                  |
-| [**Count/Parties**]()                  | Number of threads to wait for (specified during construction). | Number of parties (threads) that must arrive at the barrier before it is released. |
+| [**Count/Parties**]                 | Number of threads to wait for (specified during construction). | Number of parties (threads) that must arrive at the barrier before it is released. |
 | **Wait Method**                    | `await()` — threads wait until the latch count reaches zero. | `await()` — threads wait until all parties arrive at the barrier. |
 | **Action After Countdown/Barrier** | No action can be triggered directly after countdown. | Can execute a barrier action after the barrier is released. |
 | **Behavior After Countdown**       | After the count reaches zero, all waiting threads are released. No further interaction is possible with the latch. | Once the barrier is broken (all threads arrive), threads are released, and the barrier can be reused. |
-| [**Main Use Case**]()                  | One-time event completion synchronization (e.g., waiting for workers to complete before proceeding). | Multi-phase synchronization (e.g., parallel computation where threads need to sync at multiple points). |
+| [**Main Use Case**]               | One-time event completion synchronization (e.g., waiting for workers to complete before proceeding). | Multi-phase synchronization (e.g., parallel computation where threads need to sync at multiple points). |
 | **Interruptions**                  | Can be interrupted while waiting with `await()`. | Can also be interrupted during the `await()` phase. |
 | **Exception Handling**             | Throws `InterruptedException` if the thread is interrupted while waiting. | Throws `InterruptedException` if the thread is interrupted while waiting. |
 | **Example Use Case**               | Waiting for all threads to finish processing before moving on (e.g., after all database operations complete). | Performing parallel computations across threads that need to synchronize at multiple phases (e.g., in a parallel algorithm with multiple stages). |
