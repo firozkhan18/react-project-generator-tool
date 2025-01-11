@@ -86,3 +86,46 @@ To download and install Node.js on macOS, follow these steps:
    - Then, verify the installation with the same `node -v` and `npm -v` commands.
 
 That's it! You now have Node.js installed on your macOS machine.
+
+---
+To install Eclipse IDE on macOS, follow these steps:
+
+### Step 1: Download Eclipse IDE
+1. Visit the official Eclipse download page: [https://www.eclipse.org/downloads/](https://www.eclipse.org/downloads/).
+2. Select the **Eclipse IDE for Java Developers** (or another package depending on your needs).
+3. Click the **Download** button, and the download will start for the macOS version.
+
+### Step 2: Install Eclipse IDE
+1. Once the `.dmg` file is downloaded, open it by double-clicking the file.
+2. In the window that appears, drag the **Eclipse** icon to the **Applications** folder. This installs Eclipse to your system.
+
+### Step 3: Launch Eclipse IDE
+1. Go to the **Applications** folder and find **Eclipse**.
+2. Double-click on the **Eclipse** icon to launch the IDE.
+3. On the first launch, you may be asked to choose a **workspace** directory where your projects will be stored. You can either select a default location or choose a custom folder.
+
+### Step 4: Install Java (if necessary)
+Eclipse is primarily used for Java development, so you may need to have the **Java Development Kit (JDK)** installed on your macOS system.
+
+1. To check if Java is installed, open the **Terminal** and run:
+
+   ```bash
+   java -version
+   ```
+
+2. If Java is not installed, you can download and install the JDK from the [Oracle website](https://www.oracle.com/java/technologies/javase-downloads.html) or use a package manager like **Homebrew** to install it:
+
+   ```bash
+   brew install openjdk
+   ```
+
+3. After installation, configure Eclipse to use the installed JDK by going to **Eclipse > Preferences > Java > Installed JREs**, and adding the appropriate JDK.
+
+### Step 5: Start Using Eclipse
+Once Eclipse is installed and Java is configured, you can start using the IDE to create and manage Java (or other) projects. You can install additional plugins based on your specific development needs.
+
+---
+
+That's it! You should now have Eclipse IDE installed and ready for use on your macOS system.
+
+---
