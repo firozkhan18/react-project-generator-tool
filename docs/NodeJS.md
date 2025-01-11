@@ -1,3 +1,27 @@
+To switch between applications on a MacBook, you have several options:
+
+### 1. **Using Command + Tab (App Switcher)**
+   - Hold down the **Command (⌘)** key and press the **Tab** key. This will bring up the App Switcher.
+   - While holding Command, continue to press **Tab** to cycle through the open applications.
+   - Once the desired application is highlighted, release the **Command (⌘)** key to switch to that app.
+
+### 2. **Using Mission Control**
+   - Swipe up with **three or four fingers** on the trackpad (depending on your settings) to enter **Mission Control**.
+   - This will display all your open windows, including different desktops and full-screen apps.
+   - Click on the window or application you want to switch to.
+
+### 3. **Using the Dock**
+   - Click the application icon in the **Dock** (the row of icons at the bottom of the screen) to switch to that app.
+   - If the app is already running, clicking its icon will bring it to the front.
+
+### 4. **Using Exposé or Trackpad Gestures**
+   - If you're using macOS with gestures enabled, you can swipe left or right with **three fingers** on the trackpad to switch between full-screen apps or desktops.
+   - Swiping down with **three fingers** will show you all open windows of the currently active application.
+
+Each of these methods allows you to quickly switch between open applications on your MacBook. Let me know if you need more details!
+
+---
+
 To check the directory and file structure on a MacBook, you can use several methods, including the Finder, the Terminal, or Disk Utility. Below are the steps for each method:
 
 ### 1. **Using Finder**
