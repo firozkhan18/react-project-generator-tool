@@ -121,6 +121,13 @@ Eclipse is primarily used for Java development, so you may need to have the **Ja
 
 3. After installation, configure Eclipse to use the installed JDK by going to **Eclipse > Preferences > Java > Installed JREs**, and adding the appropriate JDK.
 
+### Step 5: Start Using Eclipse
+Once Eclipse is installed and Java is configured, you can start using the IDE to create and manage Java (or other) projects. You can install additional plugins based on your specific development needs.
+
+---
+
+That's it! You should now have Eclipse IDE installed and ready for use on your macOS system.
+
 ---
 To install Docker Desktop on macOS, follow these steps:
 
@@ -179,13 +186,5 @@ To install IntelliJ IDEA on macOS, follow these steps:
      ```
 
 That's it! IntelliJ IDEA should now be installed and ready for use on your macOS system.
-
----
-### Step 5: Start Using Eclipse
-Once Eclipse is installed and Java is configured, you can start using the IDE to create and manage Java (or other) projects. You can install additional plugins based on your specific development needs.
-
----
-
-That's it! You should now have Eclipse IDE installed and ready for use on your macOS system.
 
 ---
