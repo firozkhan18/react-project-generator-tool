@@ -188,3 +188,52 @@ To install IntelliJ IDEA on macOS, follow these steps:
 That's it! IntelliJ IDEA should now be installed and ready for use on your macOS system.
 
 ---
+
+To install Git on macOS, follow these steps:
+
+### 1. **Check if Git is already installed**
+   Open the Terminal app (you can find it using Spotlight search) and type the following command:
+
+   ```bash
+   git --version
+   ```
+
+   - If Git is already installed, it will show the version number.
+   - If it's not installed, you'll see a message asking you to install it.
+
+### 2. **Install Git using Homebrew (recommended)**
+   Homebrew is a popular package manager for macOS. If you don't have Homebrew installed, you can install it first:
+
+   - Open Terminal and run the following command:
+
+     ```bash
+     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+     ```
+
+   After Homebrew is installed, run this command to install Git:
+
+   ```bash
+   brew install git
+   ```
+
+### 3. **Install Git using Xcode Command Line Tools (alternative method)**
+   - Git is also included in Xcode Command Line Tools, which you can install by running:
+
+     ```bash
+     xcode-select --install
+     ```
+
+   - A popup will appear asking you to install the command line tools. Follow the on-screen instructions.
+
+### 4. **Verify Git Installation**
+   After installation, verify Git was installed correctly by typing:
+
+   ```bash
+   git --version
+   ```
+
+   This should display the installed version of Git.
+
+Let me know if you need further help!
+
+---
