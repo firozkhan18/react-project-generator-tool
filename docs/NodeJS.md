@@ -1,3 +1,46 @@
+To check the directory and file structure on a MacBook, you can use several methods, including the Finder, the Terminal, or Disk Utility. Below are the steps for each method:
+
+### 1. **Using Finder**
+   - Open **Finder** (the smiley face icon on the dock).
+   - In the sidebar, you should see various sections like **Favorites**, **Locations**, etc.
+   - Under **Locations**, click on **Macintosh HD** (or whatever your main disk is called).
+   - From here, you can navigate through directories and subdirectories to see the file structure. You can also enable the path bar at the bottom of Finder if you want to see the full directory path.
+
+### 2. **Using Terminal**
+   - Open **Terminal** (Applications > Utilities > Terminal).
+   - To view the directory structure, use the `ls` command:
+     - To view the contents of the current directory:  
+       ```
+       ls
+       ```
+     - To view detailed information (including subdirectories and hidden files):
+       ```
+       ls -la
+       ```
+     - To navigate to different directories, use the `cd` command:
+       ```
+       cd /path/to/directory
+       ```
+     - To view the structure of subdirectories, you can use the `tree` command (you may need to install it via Homebrew if it’s not already available):
+       ```
+       brew install tree
+       tree
+       ```
+     - To view the directory structure of the root disk (e.g., **Macintosh HD**), use:
+       ```
+       cd /
+       ls
+       ```
+
+### 3. **Using Disk Utility**
+   - Open **Disk Utility** (Applications > Utilities > Disk Utility).
+   - Select the disk you want to inspect from the list of drives on the left.
+   - This will give you information about the disk’s partitioning, capacity, and health, but it won't show you the file directory structure.
+
+These methods should help you explore and verify the directory and file structure on your MacBook. Let me know if you need more details on any of these steps!
+
+---
+
 Here are some useful MacBook M1 (or any macOS) shortcut keys that can improve your productivity:
 
 ### System & Window Management:
