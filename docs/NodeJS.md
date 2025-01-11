@@ -153,6 +153,34 @@ To install Docker Desktop on macOS, follow these steps:
 Now you should have Docker Desktop installed and ready to use on your macOS!
 
 ---
+
+To install IntelliJ IDEA on macOS, follow these steps:
+
+1. **Download IntelliJ IDEA**:
+   - Go to the [official IntelliJ IDEA website](https://www.jetbrains.com/idea/).
+   - Click on the "Download" button. Choose the version suitable for your needs (either the **Community** or **Ultimate** edition). The Community edition is free and open-source.
+
+2. **Install the downloaded file**:
+   - Once the download is complete, open the `.dmg` file.
+   - Drag the **IntelliJ IDEA** icon into the **Applications** folder.
+
+3. **Open IntelliJ IDEA**:
+   - Go to the **Applications** folder and double-click on the IntelliJ IDEA icon to launch the application.
+   - On the first launch, you might see a security prompt asking if you're sure you want to open the app. Click "Open."
+
+4. **Configure IntelliJ IDEA**:
+   - When IntelliJ IDEA starts, you can choose to import settings from a previous installation or configure it as a new installation.
+   - After this, you'll be ready to start using IntelliJ IDEA.
+
+5. **Install Java Development Kit (JDK)** (if not already installed):
+   - If you plan to use IntelliJ IDEA for Java development, ensure you have the JDK installed. You can download it from [Oracle’s website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) or install it via Homebrew:
+     ```
+     brew install openjdk
+     ```
+
+That's it! IntelliJ IDEA should now be installed and ready for use on your macOS system.
+
+---
 ### Step 5: Start Using Eclipse
 Once Eclipse is installed and Java is configured, you can start using the IDE to create and manage Java (or other) projects. You can install additional plugins based on your specific development needs.
 
