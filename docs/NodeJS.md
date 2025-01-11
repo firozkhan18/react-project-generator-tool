@@ -1,3 +1,84 @@
+Here is a more comprehensive table of the uses of all the keys on a MacBook keyboard:
+
+| **Key**                    | **Function**                                                                 |
+|----------------------------|-------------------------------------------------------------------------------|
+| **Esc**                     | Exit full-screen, close pop-up windows, cancel operations.                    |
+| **F1**                      | Decrease screen brightness.                                                  |
+| **F2**                      | Increase screen brightness.                                                  |
+| **F3**                      | Mission Control (view all open windows).                                     |
+| **F4**                      | Open Launchpad (view apps).                                                  |
+| **F5**                      | Refresh the current window or page (in browsers or Finder).                  |
+| **F6**                      | Mute the volume.                                                             |
+| **F7**                      | Rewind media playback.                                                      |
+| **F8**                      | Play/Pause media playback.                                                  |
+| **F9**                      | Fast forward media playback.                                                |
+| **F10**                     | Decrease the volume.                                                         |
+| **F11**                     | Toggle full-screen mode for apps.                                            |
+| **F12**                     | Increase the volume.                                                         |
+| **Caps Lock**               | Toggle capitalization (uppercase/lowercase).                                 |
+| **Shift**                   | Capitalize letters, modify other key functions when used with other keys.    |
+| **Control (⌃)**             | Modifier key used for shortcuts (e.g., right-click, copy, paste, etc.).       |
+| **Option (⌥)**              | Modifier key for shortcuts, typing special characters, or switching between apps. |
+| **Command (⌘)**             | Main modifier key for macOS shortcuts (e.g., copy, paste, open, save, etc.). |
+| **Spacebar**                | Activate Spotlight search, play/pause media, or scroll down a page.          |
+| **Return/Enter**            | Confirm action or create a new line in text editors.                         |
+| **Delete**                  | Delete text to the left (backspace), delete files in Finder.                 |
+| **Forward Delete**          | Delete text to the right (Fn + Delete).                                      |
+| **Tab**                     | Move between fields or options (e.g., in forms or between UI elements).      |
+| **Fn**                      | Modify other key functions (e.g., F1-F12, arrow keys, page up/down).         |
+| **Arrow keys (↑↓←→)**       | Navigate through text, items, or interfaces (up, down, left, right).         |
+| **Command + Tab**           | Switch between open applications.                                            |
+| **Command + Space**         | Open Spotlight for search.                                                   |
+| **Command + Q**             | Quit the current application.                                                |
+| **Command + W**             | Close the current window or tab.                                             |
+| **Command + T**             | Open a new tab in web browsers or other apps.                                |
+| **Command + C**             | Copy the selected item or text.                                              |
+| **Command + V**             | Paste the copied item or text.                                              |
+| **Command + Z**             | Undo the last action.                                                       |
+| **Command + Shift + 3**     | Capture a screenshot of the entire screen.                                   |
+| **Command + Shift + 4**     | Capture a selected portion of the screen.                                    |
+| **Command + Shift + 5**     | Open screen recording and screenshot options.                                |
+| **Command + P**             | Print the current document or page.                                          |
+| **Command + A**             | Select all items or text.                                                   |
+| **Command + E**             | Eject a disk or external drive.                                              |
+| **Command + R**             | Reload the current page in web browsers or Finder.                          |
+| **Command + N**             | Open a new window or file.                                                   |
+| **Command + H**             | Hide the current application window.                                         |
+| **Command + M**             | Minimize the current window.                                                 |
+| **Command + Shift + N**     | Create a new folder in Finder.                                               |
+| **Command + Shift + T**     | Reopen the last closed tab in browsers.                                      |
+| **Command + F**             | Open the find bar to search in the current document.                         |
+| **Command + I**             | Open the "Get Info" window for files or folders.                             |
+| **Command + L**             | Highlight the URL bar in web browsers.                                       |
+| **Command + D**             | Bookmark a page in browsers or duplicate a file in Finder.                   |
+| **Command + K**             | Open the "Connect to Server" window in Finder.                               |
+| **Command + Shift + S**     | Open the "Save As" dialog box.                                               |
+| **Command + Shift + Q**     | Log out of your macOS session.                                               |
+| **Command + Shift + H**     | Open the home folder in Finder.                                              |
+| **Command + Shift + A**     | Open the Applications folder in Finder.                                      |
+| **Command + Shift + U**     | Open the Utilities folder in Finder.                                         |
+| **Command + Shift + G**     | Open the "Go to Folder" dialog in Finder.                                    |
+| **Control + D**             | Delete the character to the right of the cursor (in some text fields).       |
+| **Control + E**             | Move the cursor to the end of the line (in some text fields).               |
+| **Control + A**             | Move the cursor to the beginning of the line (in some text fields).          |
+| **Control + F**             | Move the cursor forward (right) one character (in some text fields).         |
+| **Control + P**             | Move the cursor up one line (in some text fields).                           |
+| **Control + N**             | Move the cursor down one line (in some text fields).                         |
+| **Control + B**             | Move the cursor left one character (in some text fields).                    |
+| **Control + V**             | Move the cursor down one page (in some text fields).                         |
+| **Option + Command + Esc**  | Force quit applications.                                                     |
+| **Option + Command + L**    | Open the Downloads folder in Finder.                                         |
+| **Option + Command + P**    | Toggle the display of the path bar in Finder.                                |
+| **Option + Command + S**    | Open the Sidebar in Finder.                                                  |
+| **Option + Shift + Volume Up/Down** | Adjust the volume in smaller increments.                                   |
+| **Option + Shift + Brightness Up/Down** | Adjust screen brightness in smaller increments.                            |
+| **Option + Left Arrow**     | Move the cursor to the previous word.                                        |
+| **Option + Right Arrow**    | Move the cursor to the next word.                                            |
+
+This table covers the key functions on a MacBook, including the function keys (F1 to F12), special keys like Command, Option, Shift, and their most common shortcuts, both for navigation and for system operations.
+
+---
+
 The **Launchpad** on a MacBook is a feature that provides an easy way to access and organize all of your installed applications. It displays your apps in a grid, similar to the home screen on an iPhone or iPad.
 
 ### How to Access Launchpad:
