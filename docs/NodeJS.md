@@ -121,6 +121,38 @@ Eclipse is primarily used for Java development, so you may need to have the **Ja
 
 3. After installation, configure Eclipse to use the installed JDK by going to **Eclipse > Preferences > Java > Installed JREs**, and adding the appropriate JDK.
 
+---
+To install Docker Desktop on macOS, follow these steps:
+
+1. **Download Docker Desktop**:
+   - Visit the official Docker website: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop).
+   - Click on "Download for Mac" (ensure you select the version compatible with your macOS architecture, either Intel or Apple Silicon).
+
+2. **Install Docker Desktop**:
+   - Once the `.dmg` file has been downloaded, open it.
+   - Drag the Docker icon into the Applications folder.
+
+3. **Launch Docker Desktop**:
+   - Go to your Applications folder and click on Docker to launch it.
+   - The Docker icon will appear in the top menu bar once it starts.
+
+4. **Grant permissions**:
+   - If prompted, allow Docker to access necessary permissions for installation and setup.
+   - Docker might require you to enter your macOS administrator password during the installation.
+
+5. **Complete Setup**:
+   - Docker Desktop will begin setting up and may require a few minutes.
+   - Once Docker is up and running, you should see the Docker icon in your menu bar. 
+
+6. **Verify Installation**:
+   - Open Terminal and run the following command to verify Docker is installed and working:
+     ```bash
+     docker --version
+     ```
+
+Now you should have Docker Desktop installed and ready to use on your macOS!
+
+---
 ### Step 5: Start Using Eclipse
 Once Eclipse is installed and Java is configured, you can start using the IDE to create and manage Java (or other) projects. You can install additional plugins based on your specific development needs.
 
