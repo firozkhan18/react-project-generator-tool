@@ -1,3 +1,63 @@
+Here are some common macOS commands you can use in the Terminal:
+
+### Basic File and Directory Commands:
+1. **`pwd`** – Prints the current directory path.
+2. **`ls`** – Lists the contents of a directory.
+   - Use `ls -l` for detailed information (permissions, ownership, size).
+   - Use `ls -a` to show hidden files.
+3. **`cd [directory]`** – Changes the current directory.
+4. **`mkdir [directory_name]`** – Creates a new directory.
+5. **`rm [file]`** – Removes a file.
+   - Use `rm -r [directory]` to remove a directory and its contents.
+   - Use `rm -f [file]` to force delete.
+6. **`cp [source] [destination]`** – Copies a file or directory.
+7. **`mv [source] [destination]`** – Moves a file or directory (can also rename).
+8. **`touch [file_name]`** – Creates a new empty file.
+9. **`cat [file]`** – Displays the contents of a file.
+
+### System Information:
+1. **`top`** – Displays real-time system information (CPU, memory usage, etc.).
+2. **`df -h`** – Displays disk space usage in human-readable format.
+3. **`uptime`** – Shows how long the system has been running, with load averages.
+4. **`system_profiler`** – Displays detailed information about your system hardware and software.
+
+### Network Commands:
+1. **`ping [host]`** – Sends ICMP Echo requests to a host to test connectivity.
+2. **`ifconfig`** – Displays or configures network interfaces.
+3. **`netstat`** – Displays network connections and routing tables.
+4. **`ssh [user]@[hostname]`** – Connects to a remote system via SSH.
+5. **`curl [URL]`** – Transfers data from or to a server (often used to test APIs or download files).
+
+### Process Management:
+1. **`ps`** – Lists active processes.
+   - Use `ps aux` for more detailed output.
+2. **`kill [PID]`** – Terminates a process by its Process ID (PID).
+3. **`top`** – Displays real-time information about running processes and system stats.
+
+### Package Management (Homebrew):
+1. **`brew install [package]`** – Installs a package using Homebrew.
+2. **`brew update`** – Updates Homebrew and its formulae.
+3. **`brew upgrade`** – Upgrades installed packages.
+
+### Disk and File Permissions:
+1. **`chmod [permissions] [file]`** – Changes the permissions of a file or directory.
+2. **`chown [user]:[group] [file]`** – Changes the owner and group of a file.
+3. **`ls -l`** – Shows file permissions and ownership.
+
+### File Searching:
+1. **`find [directory] -name [filename]`** – Finds files by name within a directory.
+2. **`grep [pattern] [file]`** – Searches for a pattern in a file.
+
+### System Shutdown and Restart:
+1. **`sudo shutdown -h now`** – Shuts down the system immediately.
+2. **`sudo shutdown -r now`** – Restarts the system immediately.
+3. **`sudo reboot`** – Restarts the system.
+
+If you need more details or have a specific task in mind, feel free to ask!
+
+---
+
+
 There are several **types of Node.js installations** that you can use on macOS, each catering to different needs. These methods can be categorized based on the installation approach and the way they handle version management:
 
 ### 1. **Standard Installation**
