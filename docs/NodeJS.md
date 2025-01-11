@@ -1,3 +1,74 @@
+Here are some useful MacBook M1 (or any macOS) shortcut keys that can improve your productivity:
+
+### System & Window Management:
+1. **Command (⌘) + Space** – Open Spotlight search.
+2. **Command (⌘) + Tab** – Switch between open applications.
+3. **Command (⌘) + ` (backtick)** – Switch between windows of the same application.
+4. **Command (⌘) + H** – Hide the current window.
+5. **Command (⌘) + M** – Minimize the current window.
+6. **Command (⌘) + Option + M** – Minimize all windows of the current app.
+7. **Command (⌘) + Q** – Quit the current application.
+8. **Command (⌘) + W** – Close the current window.
+9. **Command (⌘) + Option + W** – Close all windows of the current app.
+10. **Command (⌘) + N** – Open a new window (in supported apps).
+11. **Command (⌘) + Shift + N** – Create a new folder in Finder.
+12. **Control + Command (⌘) + Q** – Lock your Mac.
+13. **Command (⌘) + Option + Esc** – Force quit applications.
+
+### Finder Shortcuts:
+1. **Command (⌘) + Shift + G** – Go to a specific folder.
+2. **Command (⌘) + F** – Search within Finder.
+3. **Command (⌘) + I** – Show information about a file or folder.
+4. **Command (⌘) + Delete** – Move selected item to the Trash.
+5. **Command (⌘) + Shift + Delete** – Empty the Trash.
+
+### Text Editing:
+1. **Command (⌘) + C** – Copy selected text or item.
+2. **Command (⌘) + X** – Cut selected text or item.
+3. **Command (⌘) + V** – Paste copied or cut text or item.
+4. **Command (⌘) + Z** – Undo the last action.
+5. **Command (⌘) + Shift + Z** – Redo the last undone action.
+6. **Command (⌘) + A** – Select all items.
+7. **Command (⌘) + F** – Find text within a document.
+8. **Command (⌘) + S** – Save the current document.
+9. **Command (⌘) + P** – Print the current document.
+
+### Screenshot & Screen Recording:
+1. **Command (⌘) + Shift + 3** – Capture the entire screen.
+2. **Command (⌘) + Shift + 4** – Capture a selected portion of the screen.
+3. **Command (⌘) + Shift + 5** – Open screen recording options.
+4. **Command (⌘) + Shift + 6** – Capture the Touch Bar (if applicable).
+
+### Virtual Desktops & Multitasking:
+1. **Control + Up Arrow** – Show all open windows (Mission Control).
+2. **Control + Down Arrow** – Show windows of the current app.
+3. **Control + Left/Right Arrow** – Switch between different desktops (Spaces).
+4. **F3** – Open Mission Control (all windows view).
+5. **Command (⌘) + Option + D** – Show or hide the Dock.
+
+### Accessibility:
+1. **Command (⌘) + Option + F5** – Open the Accessibility options.
+2. **Command (⌘) + Option + Plus (+)** – Zoom in (if enabled).
+3. **Command (⌘) + Option + Minus (-)** – Zoom out (if enabled).
+
+### Safari Browser Shortcuts:
+1. **Command (⌘) + T** – Open a new tab.
+2. **Command (⌘) + Shift + T** – Reopen the last closed tab.
+3. **Command (⌘) + R** – Reload the current page.
+4. **Command (⌘) + L** – Focus the address bar.
+5. **Command (⌘) + D** – Bookmark the current page.
+
+### Miscellaneous:
+1. **Command (⌘) + Option + P** – Show/hide the path bar in Finder.
+2. **Command (⌘) + Shift + P** – Show/hide the preview pane in Finder.
+3. **Command (⌘) + Shift + U** – Open the Utilities folder.
+4. **Option + Volume Up/Down** – Adjust volume in smaller increments.
+5. **Option + Brightness Up/Down** – Adjust screen brightness in smaller increments.
+
+These shortcuts work across most macOS versions, including the M1 MacBook. If you're looking for more specific shortcuts for apps or other tasks, feel free to ask!
+
+---
+
 Here are some common macOS commands you can use in the Terminal:
 
 ### Basic File and Directory Commands:
